@@ -39,4 +39,4 @@ Tectonic is Facebook’s file system that was revealed in 2021. In many ways, it
 
 We hope our selection of file systems teaches us many important lessons in system design. Let’s dive in!
 
-[Evolution of distributed file systems]
+[Evolution of distributed file systems](./storage.jpg)
