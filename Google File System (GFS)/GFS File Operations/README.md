@@ -78,4 +78,14 @@ Let’s take an example to understand the right data for a snapshot. A client re
 
 In this case, the snapshot does not contain the right data because the snapshot was taken for x. However, it might contain something else. The system has to stop all mutations at the time of the snapshot so that we have the right data in the copy.
 
+```
+Question
+How are GFS operations different from Unix file systems?
 
+Answer
+GFS provides the standard file system operations with two additional operations unique to GFS: the snapshot and record append operation.
+
+A snapshot generates a cost-efficient copy of a file or directory tree, enabling users to instantly create copies of large datasets. With the help of a snapshot operation, users are able to create a checkpoint of the system’s current state, prior to committing any changes so that they can easily revert back if needed.
+
+The record append operation enables multiple clients to append their data concurrently in the same file while also guaranteeing the atomicity of each append operation. It facilitates the implementation of multi-way merge results and producer-consumer queues in which multiple clients are allowed to append without requiring any additional locks.
+```
