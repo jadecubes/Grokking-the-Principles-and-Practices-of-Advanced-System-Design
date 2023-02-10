@@ -3,7 +3,7 @@ We saw the high-level architecture of GFS in the previous lesson, along with its
 
 The illustration below shows all of the operations that GFS clients can perform on files or directories.
 
-[GFS API]
+[GFS API](./api.jpg)
 
 ## Directory operations
 GFS clients can perform the following simple directory-level operations. The semantics for these operations are the same as those of the Unix file system.
@@ -18,7 +18,7 @@ GFS clients can perform the following simple directory-level operations. The sem
 The inode (index node) is a data structure in a Unix-style file system that defines file system object (FSO) model like files or directories. Each inode stores the attributes and disk block locations of the object's data. Attributes of a file or a directory object may include metadata like times of last change, access, and modification, with owner and permission data. A directory is a list of inodes with their assigned names. The list includes an entry for itself, its parent, and each of its children. [source: Wikipedia]
 ```
 
-[Lookup table]
+[Lookup table](./lookup.jpg)
 
 ## File operations
 GFS client API allows the users to perform the following file operations.
