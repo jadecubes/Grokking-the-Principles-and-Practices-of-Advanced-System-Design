@@ -17,7 +17,8 @@ The network-attached storage (NAS) system consists of a file-level storage serve
 
 
 
-[The traditional networked file systems]
+[The traditional networked file systems](./traditional.jpg)
+
 The storage area network (SAN) system consists of a cluster of commodity storage devices connected to each other, providing block-level data storage to the clients over the network. SAN systems are easy to scale by adding more storage devices. However, these systems are difficult to manage because of the complexity of the second network — the Fiber Channel (FC). To set up the Fiber Channel, we need dedicated host bus adapters (HBAs) to be deployed on each host server, switches, and specialized cabling. It is difficult to monitor where failure has occurred in this complex system. Data inconsistency issues among replicas may appear in this case. Rebalancing the load on the storage devices might also be difficult to handle with this architecture.
 
 Note: SAN deployments are special-purpose networks apart from the usual Ethernet networks. This duplicate network, while good for segregating storage traffic, is expensive in terms of dollar cost.
@@ -65,7 +66,7 @@ A chunk is a unit of data storage in GFS.
 ```
 
 
-[Architecture of GFS]
+[Architecture of GFS](./gfs.jpg)
 
 
 - The client is a GFS application program interface through which the end users perform the directory or the file operations.
