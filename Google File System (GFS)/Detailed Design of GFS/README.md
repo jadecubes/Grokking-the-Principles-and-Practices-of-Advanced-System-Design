@@ -110,7 +110,6 @@ If we maintain the chunk locations persistently on the master's hard disk, we mu
 
 The choice to not keep chunk locations persistently helps keep the master and chunkservers in sync because chunkservers fail, so they leave and rejoin the cluster, change names, and more. The chunkserver has the right information about what chunks it holds and what not. The master keeps itself up to date by asking the chunkservers about the chunks they hold. This is done via regular heartbeat messages between the master and the chunkservers.
 
-Point to ponder
 ```
 Question
 After a master’s failure, a new master is initiated that builds its state by replaying the operation log replicated on a remote machine and collecting the list of chunks from all chunkservers. What happens if the location of the chunk present on a chunkserver is unknown to the new master, and the client requests that data?
