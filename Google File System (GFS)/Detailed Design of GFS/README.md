@@ -18,7 +18,7 @@ In the first lesson, we discussed the GFS architecture at a high level with the 
 
 In the first lesson, we discussed the GFS architecture at a high level with the following illustration. Let's discuss it in detail considering the assumptions above, and we will see why the GFS was designed in this way.
 
-[Architecture of GFS]
+[Architecture of GFS](./architecture.jpg)
 
 A single storage server, even with a large amount of storage space, wouldn't work to cope with the following requirements:
 
@@ -32,7 +32,7 @@ To manage large files efficiently, the files are split into multiple chunks of t
 
 A GFS cluster comprises many chunkservers and a single master, as shown in the illustration below. The master stores namespaces, access control information, file-to-chunk mapping, and current chunk placement. Other system-wide tasks, such as choosing the primary replica to perform write operations, garbage collection for unreferenced chunks, and migrating chunks among chunkservers, are also managed by the master.
 
-[Single master managing multiple chunk servers]
+[Single master managing multiple chunk servers](./master.jpg)
 
 
 The master regularly needs to communicate with the chunkservers to determine the chunks they store, the storage space they are left with to manage chunk placement, and whether they are operational. All this communication between the master and the chunkservers is done through heartbeat messages.
