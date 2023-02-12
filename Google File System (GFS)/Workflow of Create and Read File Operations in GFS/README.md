@@ -40,20 +40,20 @@ The four conditions listed above are necessary for a deadlock. This means that i
 ## Read file
 To read data from a file, the user request is first processed by the GFS client which identifies the chunk index in order to reach a specific chunk that contains the required data. As we know, the file is divided into fixed-size chunks; the chunk index can easily be computed using the offset provided by the user's application. Let's take an example of a video file of size 200 MBs. On GFS, it is stored in multiple chunks, each consisting of 64 MBs. The last chunk may have some bytes that are not filled when the file size is not a multiple of 64. The following illustration shows the metadata that the master stores for each file.
 
-[Metadata stored at the master node (file to chunk mapping, and chunk metadata consisting of chunk IDs and their locations)]
+[Metadata stored at the master node (file to chunk mapping, and chunk metadata consisting of chunk IDs and their locations)](./master.jpg)
 
 Let's say the user wants to read the data starting from the 64^{th} megabyte, as shown in the following illustration. The GFS client can easily find that it is the very initial part of chunk 2 (64–127 MB).
 ```
 Note: The large streaming read operations at GFS read about 1 MB of data per read operation.
 ```
 
-[File1: The red line shows the data that is already read, and the black line shows the data that is requested]
+[File1: The red line shows the data that is already read, and the black line shows the data that is requested](./file1.jpg)
 
 In the illustration above, the 64^{th} megabyte is the starting point of the data the client wants to read. The total data to be read is one MB. The chunk index is calculated by dividing the starting byte value by the chunk size and adding 1 to it, which turns out to be chunk 2 in this example. The GFS client also calculates the byte range for the data to be read from chunk 2. When an end-user performs a read operation, it considers the file stored as a whole, so the starting byte the user wants to read data onward is based on the complete file size. For example, 64^{th} megabyte of the file_1 is the 0^{th} byte of chunk 2 and if we have to read 1 MB of data, the byte range will be(0–1) megabyte on chunk 2.
 
 The following illustration shows the workflow for a read operation. For simplicity, we use the variables W, X, Y, and Z instead of the actual IP addresses for the chunkservers.
 
-[There is a GFS client, the master node containing file and chunk metadata, and a pool of chunkservers containing data chunks]
+[Read](./read)
 
 ```
 The metadata is cached at the client side to perform further read operations on the same chunk without master interaction that help lessen burden on the master. The large chunk size also helps in reducing the load on the master.
