@@ -1,9 +1,13 @@
 # Workflow of Create and Read File Operations in GFS
-Since the GFS is a system that stores and retrieves data from files at a large scale, we must know how it performs different file operations. We listed the file operations that it supports in this lesson. This lesson focuses on the create and read file operations. The rest of the operations are discussed in the upcoming lessons.
+Since the GFS is a system that stores and retrieves data from files at a large scale, we must know how it performs different file operations. We listed the file operations that it supports in lesson of GFS File Operations. This lesson focuses on the create and read file operations. The rest of the operations are discussed in the upcoming lessons.
 
 
 ## Create a file
 To create a file, the client needs to connect to the master node. The master creates a file in the directory specified by the client and updates the namespace. Many other operations can be performed by different clients on the same directory concurrently. Master needs to manage such concurrent requests. The master acquires two types of locks to guarantee the atomicity and correctness of file creation operation.
+
+```
+The GFS namespace is a lookup table that contains the full pathnames of files and directories and the associated metadata. Each pathname is stored in a separate table row, and the mapping to the metadata is recorded in the same row in a different column.
+```
 
 A read lock is acquired on the directory name (full path to the directory) to make sure that the directory in which the file is being created is not deleted or renamed by another client during the file creation operation.
 
