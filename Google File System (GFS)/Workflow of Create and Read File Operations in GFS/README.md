@@ -15,13 +15,15 @@ A write lock is acquired on the file name (full path to the file) to serialize t
 
 The master releases the locks acquired by an operation when it is done with that operation and has responded to the client. The following illustration shows the workflow for file creating operations.
 
+[Create](./create)
+
 GFS allows multiple metadata operations to be performed at the same time by using fine-grained locks. For example, the master doesn't lock the whole namespace to perform an operation. Instead, it just acquires locks on a small region of the namespace where the operation has to be performed. Other operations that have nothing to do with that region will not be delayed. They will acquire locks on their regions and be executed at the same time. The master uses two types of locks: a read lock, and a write lock. We can acquire a read lock on a region that is already read-locked but we can't acquire a write lock on a region that is already write-locked. Operations that just need read lock can run concurrently. One operation doesn't need to wait for the other operation to release the lock. Operations that require a write lock on the same region (conflicting locks) are serialized properly.
 ```
 Note: Locking resources can decimate the performance if not done carefully (for example coarse-grained locks, or heavy contention on locks by concurrent clients). Fine-grained locking often provides better performance and scales well with increasing requests (the hope is that after fine-grained locks, clients requests will be spread out to many different locks).
 
 ```
 
-[Locks are acquired in an order to ensure that both aren’t waiting on each other and no deadlock is produced]
+[Locks are acquired in an order to ensure that both aren’t waiting on each other and no deadlock is produced](./lock.jpg)
 
 
 In operating systems, there are four necessary conditions if a deadlock happens:
