@@ -22,6 +22,15 @@ GFS allows multiple metadata operations to be performed at the same time by usin
 Note: Locking resources can decimate the performance if not done carefully (for example coarse-grained locks, or heavy contention on locks by concurrent clients). Fine-grained locking often provides better performance and scales well with increasing requests (the hope is that after fine-grained locks, clients requests will be spread out to many different locks).
 
 ```
+```
+Question
+What happens if the master dies after locking something?
+
+Answer
+Since the information about the locks is stored in the master’s memory, the locks’ state is lost if a master fails. The master writes metadata mutations in persistent (local disk and remote storage) storage and then performs the operation. If a mutation is in the log, the new master will act on it by taking the required locks anew. If the master fails before writing to the log, clients need to retry the mutation later. Client connections to the failed master can time-out, in which case clients might not be sure if the mutation happened or not. For most such cases, a retry from the client will be required.
+```
+Deadlocks are a concern whenever locks are involved. Deadlocks are avoided by acquiring locks on the directories path and file name path in order, from left to right of the full pathname, as shown in the following illustration. Therefore, the master always takes locks for all clients in a well-specified left-to-right order.
+
 
 [Locks are acquired in an order to ensure that both aren’t waiting on each other and no deadlock is produced](./lock.jpg)
 
