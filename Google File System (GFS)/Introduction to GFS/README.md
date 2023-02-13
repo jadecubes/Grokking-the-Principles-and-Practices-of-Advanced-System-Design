@@ -128,4 +128,5 @@ Checkpoint the master state when the log grows beyond a certain size. Load the l
 
 ## Bird’s eye view
 In the coming lessons, we will design and evaluate GFS. The following concept map is a quick summary of the problem GFS solves and its novelties.
+[Overview](./birdview.jpg)
 
