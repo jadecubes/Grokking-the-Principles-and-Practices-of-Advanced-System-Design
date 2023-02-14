@@ -63,7 +63,7 @@ Let's analyze how the table above holds true.
 ### Random write
 1. Serial success: The serial success of random write operations ensures that the region is defined and, therefore, consistent. A write on the same region actually overwrites the data in that region. If these operations are executed in a sequence on each replica, each write operation overwrites the data written by the previous write operation, and at the end, the region contains the complete data written by the last write operation. The successful serial execution of random writes will leave the region defined and, by implication, consistent. It is important to note that, in case of a failure on any of the replicas, the successful execution of an operation involves a limited number of retries by the GFS client. Retrying the operation will apply the mutation on all replicas, including those that had already applied the write on them. Since a write operation on a region overwrites what was already written, the retry won’t cause any inconsistency among replicas.
 
-[Serial success](./random_write_serial_success)
+[Serial success](./random_write)
 
 2. Concurrent success: The concurrent success of random write operations on a region results in a consistent but potentially undefined region. This is because one write operation can interrupt the other, resulting in mingled fragments from multiple writes. An example is shown in the section above, states of a file region after data mutation, where we described an undefined region.
 
@@ -73,14 +73,14 @@ Both the serial or concurrent success of record append operations result in defi
 
 1. Serial success: One might think about how the serial execution of record append operations produces inconsistent regions in between the defined regions and why the regions are not just defined.
 
-[Serial success](./record_append_serial_suucess)
+[Serial success](./record_append_serial_success)
 
 The record append operation writes data at the system’s chosen offset, which should be higher than the end of the file data. To report success for an append operation, data must be appended at the same offset on all replicas. If the operation fails on any of the replicas, the client retries the operation on all replicas. It produces record duplicates at the replicas that have already performed this operation successfully and empty spaces/padding at the replica that previously failed to perform the operation, as shown in the illustration below. This is why the serial success of the append operations produces inconsistent regions in between the defined regions.
 
 2. Concurrent success: One might also think about how concurrent execution of record append operations results in defined regions that are intermixed with the inconsistent regions. Why don’t they result in totally undefined regions, as in the case of random writes?
 
 In the case of random writes, the offset at which the data is to be written is provided by the clients, while in the record appends, the client just pushes the data, and the data is written at the offset chosen by the system. The data from current appends will be written at the different offsets, so there is no chance of data overlapping; thus, it results in defined regions.
-[Concurrent success](./record_append_concurrent_suucess)
+[Concurrent success](./record_append_concurrent_success)
 
 
 3. Failure: The failure of serial or concurrent record append operations results in inconsistent data among multiple replicas.
