@@ -2,7 +2,7 @@
 ## Metadata
 The master node stores all of the metadata in memory and serves user requests from there for good performance. Some part of the metadata is stored persistently on the hard disk of the master and also replicated on remote machines, while some metadata is not, as shown in the following illustration. (The part of the metadata that is not persistently stored can be rebuilt if needed. At times, such data is called a soft state.)
 
-[Metadata stored in the master's memory vs. metadata stored persistently on the hard disk]
+[Metadata stored in the master's memory vs. metadata stored persistently on the hard disk](./vs.jpg)
 
 ```
 Note: In February 2017, AWS's S3 storage system suffered an outage. As part of the recovery, some subsystems needed a full restart, which took many hours. One of the reasons for this delay was because the soft state was being rebuilt. Since such restarts are uncommon for services like S3 (that often haven't been restarted in years), the designer might forget how large their systems have become over the years and how it will impact restart time. As designers, we need to be mindful about the total size of the system state, and how long it could take to rebuild it.
