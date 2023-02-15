@@ -35,7 +35,7 @@ When a new server is designated as a primary master, we can update the record in
 ## Synchronous replication
 In synchronous replication, we respond to a client's request only when we are done logging the metadata changes to the operation log placed on the master's hard disk and on all the replicas. The client can see the changes thereafter. The illustration below shows how synchronous replication takes place.
 
-[Synchronous replication]
+[Synchronous replication](./sync_replication)
 
 Failures can occur on the master. Let’s see how the master handles the client’s operations when it fails while performing a metadata change operation.
 
