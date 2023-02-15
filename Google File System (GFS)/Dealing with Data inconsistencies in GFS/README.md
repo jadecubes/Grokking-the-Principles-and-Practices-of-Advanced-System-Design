@@ -22,7 +22,7 @@ The failed mutations resulting in inconsistent data among replicas and data inco
 ### Stale data
 The failed mutations result in data inconsistency among replicas because some replicas couldn't apply the mutation due to a failure at the chunkservers. Replicas that miss the mutation become stale and such replicas shouldn't be used for serving the read requests or to apply any further mutation. If we do, the clients will get different data from replicas. GFS detects stale replicas using chunk version numbers and deletes such replicas as soon as possible. Let's see how chunk version numbers are maintained and who does it.
 
-[Stale data]
+[Stale data](./stale_data)
 
 The master node maintains each chunk's version number. It increases the version number of a chunk upon granting a new lease and asks all chunk replicas to update the chunk version number. Suppose a replica is not available because the chunkserver holding it is down. In that case, the chunk version number won’t get updated on that replica. When the chunkserver restarts after a failure, it sends a heartbeat message to the master to report its state, including the set of chunks and their version number. If the master finds a replica with a version number lower than the one it has for that replica, then it marks that replica as stale. The stale replicas are not used to serve any user requests and are removed in regular garbage collection.
 ```
