@@ -1,14 +1,14 @@
 # Quiz on GFS
 
 
-Question 1
+**Question 1**
 Do all the chunks of a file have a lease associated with them all the time?
 
 Answer
 No, not all the time. If there are no mutations to be performed on a chunk, there is no need to associate a lease with it. When a client requests a mutation on that chunk, the master will give the lease to that chunk for a limited time. If the mutations are in progress and the lease time is going to expire, the extension can be requested from the master.
 
 
-Question 2
+**Question 2**
 Why is there a pipelined way of data flow in writes?
 
 Answer
@@ -24,7 +24,7 @@ The network distance between two machines can be measured accurately and is ofte
 
 
 
-Question 3
+**Question 3**
 Why are appends always defined while concurrent random writes might not?
 
 Answer
@@ -33,7 +33,7 @@ For appends, the system chooses the offset at which the data has to be written s
 
 
 
-Question 4
+**Question 4**
 What if a failed master comes back up while a new one is initiated? How will such a situation be managed?
 
 Answer
@@ -45,7 +45,7 @@ The problem occurs when the failed master comes back, and some clients have acce
 
 
 
-Question 5
+**Question 5**
 How can a client find the right chunk in the presence of padding?
 
 Answer
