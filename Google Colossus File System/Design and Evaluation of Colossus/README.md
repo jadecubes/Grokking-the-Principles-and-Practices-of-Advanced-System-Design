@@ -4,7 +4,7 @@ We’ve seen the architecture of Colossus and its components in the previous les
 
 With GFS clusters, applications themselves are responsible for partitioning data across different GFS cluster instances. The need for multiple GFS clusters arises because a single cluster is not scalable enough to meet the growing data demands of the application. As we’ve discussed in the previous lesson, the reason for these scalability issues was the single master. Colossus comes with a control plane that replaces the single master in GFS, and makes the Colossus cluster scalable to exabytes of data and hundreds of thousands of machines.
 
-[A typical Colossus cluster]
+[A typical Colossus cluster](./cluster.jpg)
 
 The control plane is the foundation of the Colossus file system. As shown in the illustration above, there are many clients that are sharing the same storage pool (D file servers): the Youtube servers storing and retrieving their data, Google Cloud storage attached to Google Compute Engine VMs, and Ads MapReduce nodes. All of these clients are able to share the same storage pool with the help of the Colossus control plane that is managing the underlying storage pool. The control plane is providing an illusion to the clients that they have isolated file systems. Let's see how the control plane manages all this at such a large scale.
 ```
@@ -18,7 +18,7 @@ Colossus was primarily developed to address metadata scaling issues that were en
 
 Bigtable is Google’s sparsely filled table, scalable to billions of rows and thousands of columns. This allows us to store terabytes or even petabytes of data. With low latency, it offers a high read and write throughput. Each row in Bigtable consists of a single key and multiple values, as shown in the illustration below. Multiple columns can be grouped into a column family. Each cell holds a unique version of the data, identified by a timestamp.
 
-[The structure of Bigtable]
+[The structure of Bigtable](./bigtable.jpg)
 
 Bigtable is partitioned horizontally. Each partition is known as a tablet in Bigtable. Tablets are distributed among multiple nodes (also called tablet servers) in the Bigtable cluster. Each node is responsible to serve requests for the tablets it contains. It is important to note that these nodes don't store tablets, but they just store pointers to the set of tablets. The actual tablets are stored on GFS/Colossus in SSTable format files. A Bigtable cluster is all about partitioning Bigtable data into tablets, balancing and rebalancing the load on the tablet servers (this happens quickly because we just have to update the pointers and not move the tablets) by splitting or merging the tablets. A high-level architecture of the Bigtable cluster is shown in the illustration below.
 
@@ -26,7 +26,7 @@ Bigtable is partitioned horizontally. Each partition is known as a tablet in Big
 An SSTable provides a persistent, ordered immutable map from keys to values, where both keys and values are arbitrary byte strings. [source: Bigtable Documentation]
 ```
 
-[The architecture of Bigtable]
+[The architecture of Bigtable](./arch.jpg)
 
 A cluster's maximum throughput and the number of concurrent requests it can handle can both increase with the addition of nodes. Cluster replication is used to manage cluster failover.
 
