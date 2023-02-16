@@ -22,6 +22,10 @@ Bigtable is Google’s sparsely filled table, scalable to billions of rows and t
 
 Bigtable is partitioned horizontally. Each partition is known as a tablet in Bigtable. Tablets are distributed among multiple nodes (also called tablet servers) in the Bigtable cluster. Each node is responsible to serve requests for the tablets it contains. It is important to note that these nodes don't store tablets, but they just store pointers to the set of tablets. The actual tablets are stored on GFS/Colossus in SSTable format files. A Bigtable cluster is all about partitioning Bigtable data into tablets, balancing and rebalancing the load on the tablet servers (this happens quickly because we just have to update the pointers and not move the tablets) by splitting or merging the tablets. A high-level architecture of the Bigtable cluster is shown in the illustration below.
 
+```
+An SSTable provides a persistent, ordered immutable map from keys to values, where both keys and values are arbitrary byte strings. [source: Bigtable Documentation]
+```
+
 [The architecture of Bigtable]
 
 A cluster's maximum throughput and the number of concurrent requests it can handle can both increase with the addition of nodes. Cluster replication is used to manage cluster failover.
