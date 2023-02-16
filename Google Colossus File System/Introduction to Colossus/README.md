@@ -11,7 +11,7 @@ All of Google's applications, including Google Cloud Storage services, use Googl
 
 An increase in the volume of data from a few hundred terabytes to multiple petabytes makes it difficult for the single master to maintain metadata at such a large scale. The metadata storage requirements also grow with the volume of data. Scanning through a large volume of metadata adds to the operation cost. Applications like MapReduce request many files simultaneously, generating a large number of metadata requests at the master simultaneously. A single master capable of performing thousands of operations per second becomes a bottleneck for such clients.
 
-[The Google Cloud services (the services that all run on the same file system infrastructure) scale when the underlying file system scales]
+[The Google Cloud services (the services that all run on the same file system infrastructure) scale when the underlying file system scales](./file_sys.jpg)
 
 At the time GFS was being developed, most workloads had high throughput requirements rather than low latency. Therefore, Google focused on providing a high throughput file system. The GFS design is not good for latency-sensitive applications because of the single point of failure. There is a single master for all the metadata operations. Even if GFS had the mechanism to recover the master, it might still be unavailable for a minute. This downtime is not a significant problem for batch-oriented applications that require high throughput and can bear a latency of a few seconds. However, for applications like video serving, downtime is unacceptable.
 
@@ -29,7 +29,7 @@ Video serving in comparison to other interactive applications can be handled wit
 ```
 To meet the requirements above, Google developed a file system that is an extension of GFS called Colossus. Scalability and latency issues were highlighted by GFS's centralized metadata model. As a result, Colossus introduced a distributed metadata model that is more scalable and highly available. The disaggregation of a metadata store and increased availability are the major differences between GFS and Colossus and is shown in the following illustration.
 
-[A single master-based metadata model (GFS) vs. a distributed metadata model (Colossus)]
+[A single master-based metadata model (GFS) vs. a distributed metadata model (Colossus)](./gfs_colossus.jpg)
 
 Let's look at the overall architecture of Colossus.
 
@@ -45,7 +45,7 @@ In a full replication, there will be an N number of data copies. For erasure cod
 
 - Control plane: A control plane consists of front-end metadata servers called curators that are horizontally scalable. Curators carry out the control operations such as file creation operations from the clients. There can be hundreds of master nodes, each managing 100 million files. We can reduce the latency by moving to a distributed-master file system.
 
-[Architecture of Colossus]
+[Architecture of Colossus](./arch.jpg)
 
 - Metadata database: All curators keep their metadata in Bigtable, Google's high-performance database. This makes it easier to work around the scale issues presented in the GFS single master design for metadata. By storing file metadata in Bigtable, Colossus scales over the largest GFS clusters by more than 100x.
 
@@ -56,7 +56,7 @@ In a full replication, there will be an N number of data copies. For erasure cod
 ## Mapping GFS components to Colossus
 The replacement of GFS components with Colossus components is shown in the illustration below. The fundamental replacement is the Colossus distributed metadata service.
 
-[Mapping GFS components to Colossus’s file system components]
+[Mapping GFS components to Colossus’s file system components](./mapping.jpg)
 
 In this lesson, we’ve seen the limitations of GFS's scalability and availability for a growing number of applications and data. The major bottleneck at GFS was its single master metadata service. Colossus introduced a distributed metadata model to cope with the growing demands. We’ve seen the high-level design of Colossus and will dig into the details of how it all works in the next lesson.
 ```
