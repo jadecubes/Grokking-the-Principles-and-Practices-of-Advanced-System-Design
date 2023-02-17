@@ -34,7 +34,7 @@ If any of the other incoming requests arrive, the load balancer will forward tho
 
 This cycle is shown in the illustration below:
 
-[Weighted round-robin load balancing technique]
+[Weighted round-robin load balancing technique](./wrr.jpg)
 
 ```
 In the above scenario, we talked about an approach that is called CWRR, Classical Weighted Round Robin.
