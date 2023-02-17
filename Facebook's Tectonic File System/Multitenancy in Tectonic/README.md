@@ -74,6 +74,54 @@ For Tectonic, 50 TrafficGroups are way too many to manage. We need to further cl
 
 [TrafficGroup and TrafficClasses within a cluster]
 
+The fair share of ephemeral resources is achieved using the following three steps:
+
+1. Each tenant allocates the required ephemeral resources based on TrafficGroup and TrafficClasses.
+2. All the spare ephemeral resources in each tenant are made available to be used by tenants cluster-wide, according to the TrafficClass.
+3. All the unused ephemeral resources (allocated or unallocated) within a tenant are shared with the TrafficGroup within the tenant of a high TrafficClass.
+This gives every tenant an equal or fair opportunity to utilize ephemeral resources within a cluster.
+
+Any TrafficGroup that has completed their majority work has spare ephemeral resource. There are two ways to share these resources with lower TrafficClass’s TrafficGroup:
+
+1. Within the tenant (high priority)
+2. To another tenant
+In this way, the same set of ephemeral resources that a single TrafficGroup once used can serve other TrafficGroups to meet their requirements.
+
+Let’s learn more about how we manage to share ephemeral resources globally (at the cluster level and mostly across tenants) and locally (at the storage nodes level and mostly within a tenant).
+
+
+
 ##### Sharing resources globally
+We got a general idea of how to achieve a fair share of ephemeral resources within and among tenants. To do this, we use the rate limiter, which implements the modified leaky bucket algorithm. The modified leaky bucket algorithm tracks the demand for each tracked resource in each tenant and TrafficGroup over the most recent brief period of time using high-performance, near-realtime distributed counters.
+
+All this is done using the following steps:
+
+1. Whenever a request comes, it requests for the incremented bucket counter.
+2. Before entertaining the request, the client library has to look for spare capacity.
+  - First, it will look for the spare capacity within the same TrafficGroup.
+  - Secondly, it will look for the spare capacity in a different TrafficGroup within the same tenant.
+  - Lastly, it will look for the spare capacity in the different tenants with the same TrafficClass priority.
+3. If the spare capacity is found, the request will be sent to the backend. Otherwise, it can be either delayed or rejected based on its timeout.
+This rate limiter avoids potentially wasted requests since failed requests put back pressure on the client.
+
 #### Sharing resources locally
+Global fair sharing of resources was not the only issue. We also have to avoid the local hotspots for storage and metadata nodes. The monitoring of the resources quota is done by using a weighted round-robin (WRR) scheduler for skipping specific TrafficGroup to avoid excessive use of a resource quota. In a cluster, the storage nodes must take precautionary measures to abstain from high-latency requests, such as data warehouse requests, and from using all the resources when the small IO request, such as blob storage requests, are in progress. If Gold TrafficClass requests on storage nodes are obstructed by lower-priority requests, Gold TrafficClass requests are allowed to have delays in their latency targets.
+
+The following three optimizations are used by storage nodes to ensure low latency for the requests of the Gold TrafficClass:
+
+1. In WRR, we have used greedy optimization allowing low-latency requests to give up their turn for the high TrafficClass if the request can be completed after the completion of the high TrafficClass. We do this so that they won’t be stuck behind a low-priority request.
+2. We can apply a limit for every disk to n number of non-Gold requests to be active. WRR will block all the incoming non-Gold requests from scheduling unless any of the Gold request or active non-Gold request is completed. This allows the blob storage requests to be entertained simultaneously with warehouse requests.
+3. We have given disks enough liberty to rearrange the IO requests in hand. For example, our system may serve an upcoming non-Gold request earlier than an existing Gold request. If the Gold request has been pending for a specific time period, we stop scheduling the non-Gold requests to a disk.
+By combining these three techniques, we can effectively manage the latency profile of a relatively large number of blob storage requests compared to warehouse requests.
+
 ### Multitenant access control
+Secure access to resources only by authorized clients is necessary. Each tenant is given specific access control, and they are not allowed to violate this access control, whether between different tenants or within a tenant. The Client Library interacts with each layer of the system directly, so we must enforce access control at every layer for every read and write operation. These access controls should be lightweight.
+
+We have introduced token-based authentication in our system specifying the access of a resource through a token. For high-level client requests, such as opening a file, each layer of the system will generate a token for the next layer. The payload of the token contains the details of the resource for which the request has been granted by giving full access control. Once the token is granted, it is verified for the specified resource in the payload, and this verification is done in tens of microseconds. To minimize the access control overhead, we use piggybacking token-passing technique on our existing protocols.
+
+```
+Piggybacking: The process of delaying the acknowledgment until the next dataframe is available so that it can attach the acknowledgment of the received data along with the data to send.
+```
+
+In this lesson, we studied the challenges and their solutions to provide a secure and efficient storage-sharing substrate to multiple tenants. In the next lesson, we’ll understand how different tenants can get specific optimizations for their workloads.
+
