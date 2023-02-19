@@ -1,7 +1,7 @@
 # ZippyDB Design
 In Tectonic design, metadata management is critical in achieving our goals of scalability, availability, and durability. A special-purpose key-value store (ZippyDB) is the cornerstone of our Metadata Store. In this lesson, we’ll focus on ZippyDB’s design. Following is the overall architecture of the Tectonic.
 
-[The architecture of Tectonic]
+[The architecture of Tectonic](./tectonic.jpg)
 
 ## ZippyDB–the key-value store
 ZippyDB is a general-purpose, consistent, and geographically distributed key-value store created by Facebook on top of RocksDB. ZippyDB is an end-to-end managed service that provides usual key-value operations (get, put, del, etc.) because of the underlying RocksDB storage engine, ZippyDB enables the system to perform a large amount of write operations efficiently while providing good performance for the read workload.
