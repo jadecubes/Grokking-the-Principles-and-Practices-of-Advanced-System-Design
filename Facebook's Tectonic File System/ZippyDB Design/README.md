@@ -37,7 +37,7 @@ Partial reads and writes: The process of reading or writing partial data from/to
 
 A snapshot read is an extremely cheap operation that uses snapshot handlers to perform multiple reads that are consistent with each other. When read or write operations occur simultaneously on the same file, a snapshot of that file is generated, and the client with a read request is propagated to the snapshot, as shown in the slides below. (In some sense, snapshots make a replica of data as needed and enable non-blocking reads when writes are in progress.) A new client will also go to the block, but when it will realize that the block is locked, the snapshot handler will redirect that client to the snapshot so that it can start reading.
 
-[ZippyDB]
+[ZippyDB](./zippydb)
 
 Reading or writing partial data can leave data inconsistent. We implement read-modify-write on the server side to avoid inconsistency in partial write operations. We can perform partial read operations by combining data of different blocks and trying to get most of the data from the same node.
 
@@ -51,7 +51,7 @@ ZippyDB has the following components:
 6. Request handler: This checks where the request should go. For a read request, it is moved toward the store to read requested keys and values, and for a write request, it forwards it to the data shuttle.
 7. Zippy-clients: This uses the ZippyDB-client library to generate read or write requests.
 
-[The architecture of ZippyDB]
+[The architecture of ZippyDB](./zippydbarch.jpg)
 
 ### Architecture
 In ZippyDB, shards are the units on a tier containing data regarding a use case. On the server side, the shard is the basic unit of management, and each shard contains multiple replicas of data placed geographically for fault tolerance. Depending on the configuration, we can either use Paxos or async replication.
@@ -69,7 +69,7 @@ Async replication: In this process, the data is written on the primary node and 
 
 A subset of replicas within a shard is synchronously replicated between nodes. These replicas are a part of the Paxos quorum group. Most of the Paxos replica logs provide persistence of data in write operations and also write the data to RocksDB on the primary node. Once the write operation is completed, the client gets notified about the write operation, and it provides highly durable writes.
 
-[ZippyDB]
+[ZippyDB](./internal)
 
 Some of the shard replicas (possibly a remote one) that were left out from the synchronous replication are managed via asynchronous replication.
 
@@ -77,7 +77,7 @@ Additional replicas can be generated to manage read load. Such replicas are call
 
 Clients can use an appropriate combination of these synchronous and asynchronous replication schemes.They can also configure between the number of follower replicas and quorum size, where the quorum size tells us the number of followers that have to acknowledge the leader before the acknowledgement is sent to the client. It enables users to choose their ideal combination of consistency, durability, read performance, and write performance.
 
-[Async]
+[Async](./async)
 
 ## Data consistency model
 ZippyDB divides time into small epochs. For each epoch, ZippyDB assigns a known primary replica for a shard. This primary replica is the Paxos leader for writing. All the writes come to the primary, which is then synchronously written to the majority quorum and asynchronously to some remote replicas. Such a mechanism provides strongly consistent write operations. Clients might opt for a looser consistency model if they need to.
@@ -122,7 +122,7 @@ Zippy-Clients are application services embedded with the ZippyDB client, a local
 
 The following illustration summarizes the main steps of the shard management, replication, read, and write workflow:
 
-[The skeleton of the ZippyDB server]
+[The skeleton of the ZippyDB server](./zippydbclients)
 
 ## How Tectonic uses ZippyDB
 ZippyDB hosts the file system's metadata, and its durability and integrity are critical for Tectonic. Tectonic uses a separate instance of ZippyDB for security and performance-isolation reasons. This instance uses strongly consistent writes and reads. ZippyDB, an end-to-end managed service, can be considered a BlackBox that provides durable, scalable, and highly performant key-value services to Tectonic.
