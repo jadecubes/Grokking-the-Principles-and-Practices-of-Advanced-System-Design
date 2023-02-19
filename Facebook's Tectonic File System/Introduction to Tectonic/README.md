@@ -4,11 +4,11 @@ Over the years, organizations have built large distributed storage systems to me
 
 Note: In system design, we often start with a specialized system that is optimized for a specific use case. Over time it might be possible to consolidate many such specialized systems into one general system, until we get some new use case that a general system is not able to meet. The design activity acts like a pendulum between specialized and general systems over here.
 
-[Systems often swing between specialized and generalized systems over time]
+[Systems often swing between specialized and generalized systems over time](./swing.jpg)
 
 The Facebook service is a canonical example where data needs are diverse in terms of workload, and overall data size is huge and increasing. In the following lesson, we’ll discuss Facebook’s storage systems to better understand specialization versus generalization, in the context of storage systems.
 
-[The global data growth rate in one decade is about 50 folds (Source: IDC’s Digital Universe Study, sponsored by EMC, December 2012)]
+[The global data growth rate in one decade is about 50 folds (Source: IDC’s Digital Universe Study, sponsored by EMC, December 2012)](./growth.jpg)
 
 ## Facebook: From a constellation of storage systems to Tectonic
 There are numerous different tenants and hundreds of use cases/applications per tenant, for a variety of storage needs. Blob storage and data warehousing are two major storage applications with different workload characteristics and storage needs.
@@ -34,7 +34,7 @@ On the other hand, the f4 system was bottlenecked on storage capacity, while the
 The disks’ storage capacities grew steadily over time while the IOPS per disk essentially stayed the same. This means that the IOPS per terabyte has declined over time. This trend concerns applications that are IOPS-bound (like a blob store).
 ```
 
-[Storage]
+[Storage](./fb)
 
 As a second example application, data warehousing not only needs an enormous amount of data capacity but also the ability to crunch this data to extract business intelligence. Facebook was using multiple clusters of HDFS in a federated fashion. A single HDFS cluster can scale from many Terabytes to a few Petabytes. However, this is not enough for the warehousing application, and multiple HDFS clusters were in use where data was divided between HDFS clusters. Clients were required to keep track of their data to know the HDFS clusters on which the data resides. Going forward, warehouse application data needs are approaching upto multiple Exabytes, and the federated strategy is not only operationally complex but also hard to scale.
 ```
@@ -82,7 +82,7 @@ Following are our non-functional requirements:
 ## High-level design
 Tectonic will primarily be within a data center file system running on a cluster of servers. A typical cluster can span from hundreds to thousands of servers. A tectonic system consists of three major types of components—a Metadata Store, many Chunk Stores, and some stateless background services. The high-level architecture is shown in the illustration below (we’ll discuss every component of the architecture in detail in the coming lessons).
 
-[The architecture of Tectonic]
+[The architecture of Tectonic](./tectonic.jpg)
 
 - The client application uses a Client Library through which the end users perform the file and data operations.
 
@@ -103,3 +103,4 @@ Note: A single Tectonic cluster can store multiple exabytes of data efficiently 
 
 ## Bird’s eye view
 In the next lessons, we’ll design and evaluate Tectonic. The following concept map is a quick summary of the problem Tectonic solves and its novelties.
+[Overview](./birds.jpg)
