@@ -122,7 +122,7 @@ Zippy-Clients are application services embedded with the ZippyDB client, a local
 
 The following illustration summarizes the main steps of the shard management, replication, read, and write workflow:
 
-[The skeleton of the ZippyDB server](./zippydbclients)
+[The skeleton of the ZippyDB server](./zippyclients)
 
 ## How Tectonic uses ZippyDB
 ZippyDB hosts the file system's metadata, and its durability and integrity are critical for Tectonic. Tectonic uses a separate instance of ZippyDB for security and performance-isolation reasons. This instance uses strongly consistent writes and reads. ZippyDB, an end-to-end managed service, can be considered a BlackBox that provides durable, scalable, and highly performant key-value services to Tectonic.
