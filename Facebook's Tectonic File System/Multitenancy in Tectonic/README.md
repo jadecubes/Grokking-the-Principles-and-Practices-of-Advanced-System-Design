@@ -2,7 +2,7 @@
 ## Preamble
 Remember that one of the primary goals of Tectonic is to efficiently utilize storage resources for many use cases of multiple groups of clients. We call these groups, tenants. Multitenancy allows multiple tenants to share underlying resources, though the challenge is to do so in a way that there is performance isolation between the tenants’ workloads.
 
-[Multitienancy]
+[Multitienancy](./tenants.jpg)
 Multiple tenants were using their dedicated, special-purpose storage systems. When they will migrate to our system, they want the following:
 
 - A sufficient amount of resources as per their needs.
@@ -22,7 +22,9 @@ This lesson discusses the issues above and their solutions in detail. The high-l
 - Static vs. dynamic resource allocation: Tectonic system uses quotas for some resource types (for example, storage capacity), which are adjusted manually since needs change. Additionally, such resources are isolated from others, for example, on different storage nodes.
 
 - Application priorities within a tenant: Since each tenant can have many applications, Tectonic enables a tenant to mark each application in one of the available traffic groups. It is similar to the nice values associated with processes in the Linux operating system. They convey relative priority to our system.
-
+```
+We use nice values in the Linux operating system to set the priority of the process.
+```
 - Across tenant priorities: Tectonic then takes all the traffic group markings from all the tenants and then sorts them into one of the three service buckets. (It is analogous to the multi-level feedback-based queues in the Linux OS, where each queue gets a different service from the OS.) A form of admission control is used where applications tell their needs, and the system ensures that the needs match the tenant/application profile.
 
 - Rules enforcement: Tectonic then uses different policing mechanisms to ensure that every application gets its fair share and that there is performance isolation.
