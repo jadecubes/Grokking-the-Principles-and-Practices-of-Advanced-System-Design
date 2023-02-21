@@ -30,9 +30,15 @@ We break down the metadata information into three parts and store them in the re
 
 - Name layer: This layer profiles the user-readable directory names to subdirectories and files, and file names to file objects.
 
+[Name layer](./structure.jpg)
+
 - File layer: This layer profiles the number of blocks of file objects.
 
+[File layer](./block.jpg)
+
 - Block layer: This layer profiles disk locations (list) for each block. It also stores the reverse-index of disk-to-block for maintenance purposes. Blocks are either RS encoded (for space efficiency) or replicated as they are.
+
+[Block layer](./encoded.jpg)
 
 ```
 Layered Metadata Schema
@@ -65,15 +71,17 @@ The system uses the following steps to get the chunk:
 
 1. Use the filename from the current directory in the Name layer.
 file_info, file_id = get(directory_id, filename)
+
 2. Use that file_id from the Name layer to access the blocks in the File layer.
 block_id = get(file_id_)
+
 3. Use that block_id from the File layer to check which disks these blocks are located in the Block Layer.
 disk_id = get(block_id)
 4. Use that block_id from the File layer and disk_id from the Block layer to access and get the chunk address that contains the data on the Chunk Store.
 chunk_info = get(disk_id, block_id)
 5. Go to the chunk server and perform the operation on the data.
 
-[How to get]
+[How to get](./fetch)
 
 ### Caching sealed objects
 Due to the limited throughput of the metadata shard, we have to minimize the load of reading requests on the meta-data shard. For that purpose, we make some data immutable by sealing them. We can seal directories, files, and blocks. Sealing directories doesn’t lock their subdirectories but restrains adding objects to them. Now the client can cache sealed objects metadata for a longer time, reducing the load on the metadata shard.
