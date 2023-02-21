@@ -12,6 +12,8 @@ Now, we consider two tenants, data warehousing and blob store, as our examples t
 
 The following illustration shows the summary of the optimizations for both tenants.
 
+[Overview](./opt.jpg)
+
 ## Optimizing writes on data warehouse
 Writing data once and reading it many times later is a dominant pattern in workloads for data warehouses. The file is only accessible to readers for certain workloads after the file is closed by its creator. As a result, the file becomes immutable forever. Since the data can only be read once the file creator is done writing, we prioritize write requests with low latency over the low latency append requests.
 
@@ -24,11 +26,11 @@ Since we will perform write operations on a large amount of data, these write op
 ### RS-encoded asynchronous writes
 The write-once-read-many design pattern is used by Tectonic to decrease the overall file write time while increasing IO and network performance. Applications can buffer writes up to the block size because this approach doesn’t involve partial file reads. The blocks are subsequently RS-encoded by applications, and then the storage nodes store the chunks of data in them, as shown below.
 
-[Asnc]
+[Asnc](./async)
 
 The data that will be lived longer is normally encoded using RS(15,9), while the data that will be lived for a shorter period of time is usually encoded with RS(6,3). In RS(n,k), n is the total number of bits after encoding, whereas k is the original data bits, and its decoder can perform error correction up to t symbols where t= (n-k)/2. In RS(15,9), where n=15 and k=9, t will be (15−9)/2 =3. This means that the encoding for long-lived data with RS(15,9) will perform error correction up to 3 symbols anywhere in its basic data unit. In RS(6,3), where n=6 and k=3, t will be (6−3)/2 which is 1.5. This means that the encoding for short-lived data with RS(6,3) will be able to correct about 1.5 corrupted symbols per basic data unit.
 
-[The Reed-Solomon packet containing data and parity bits]
+[The Reed-Solomon packet containing data and parity bits](./rs.jpg)
 
 ```
 Note: It is a well-known bound from the coding theory that for RS(n, k) decoding is only possible if (n−k)≥2t, where k was the original message size. n is the code words size after encoding and 2t are the parity bits. Some notations use RS′ (10,4) (where 10 is the size of the original data, and 4 represents 2t parity bits) to explicitly tell about 2t. We will use RS(14,10) in our notation. Usually, it is clear from the context which notation is being used but we should be careful.
@@ -57,7 +59,7 @@ Tail latency: It represents a high response time (more than 98%) of requests fro
 Reservation requests: A smaller request just as a ping from the system to a storage node to confirm whether the node is available for the write operation.
 ```
 
-[Hedged quorum writes]
+[Hedged quorum writes](./write)
 
 With a highly loaded cluster, the hedging method becomes more effective. In an empirical study, after applying hedged quorum in a test cluster with 80% of throughput utilization, they experienced approximately 20
 % improvement in the 72MB full-block write and 99th percentile latency for RS(15,9)-encoding.
@@ -84,7 +86,7 @@ Partial block quorum appends provide us durability, low-latency, and consistent 
 2. Another data center keeps the second copy sent by blob storage.
 Even partial block quorum appends can cause issues such as incomplete or missed append operations that can cause different variations of the chunk replicas of different sizes if not handled carefully. For example, we perform 3× replication of the append operation performed by 3 different clients A, B, and C. Client A commits 512 bytes of the append operation, but unfortunately, the second replica fails. Similarly, Client B also commits 512 bytes of the append operation, but the first replica fails this time. Client C also commits 512 bytes of the append operation, but the third replica failed this time, as shown below.
 
-[Consistent appends on partial blocks]
+[Consistent appends on partial blocks](./appends)
 
 Now, all the chunks are of the same size – 1MB. However, each copy is different than the other one. The actual size of the append, which is 1.5MB, is different from all the stored chunks. When the reader comes to read the file, expectations would be to read a 1.5MB chunk based on the information provided by the metadata, but none of these chunks have a size of 1.5MB. Giving any chunk to the reader will contain inaccurate and incomplete data.
 
@@ -95,9 +97,9 @@ To avoid this, we have to control who is allowed to append the block and when th
 
 A single appender with this ordering of operations provides consistency.
 
-[The blob storage write latency]
+[The blob storage write latency](./latency1.jpg)
 
-[The blob storage write latency]
+[The blob storage write latency](./latency2.jpg)
 
 ```
 Pan, Satadru, Theano Stavrinos, Yunqiao Zhang, Atul Sikaria, Pavel Zakharov, Abhinav Sharma, Mike Shuey, et al. Facebook’s tectonic filesystem: Efficiency from exascale. In 19th USENIX Conference on File and Storage Technologies (FAST 21), pp. 217-231. 2021.
