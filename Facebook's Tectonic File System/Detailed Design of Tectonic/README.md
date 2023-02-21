@@ -97,10 +97,16 @@ The cluster’s storage nodes are used to store files in individual chunks and u
 
 ## Background stateless services
 There was a need for such services which maintain the consistency between different layers of metadata, manage to rebalance data across different storage nodes, repair lost data for durability, and handle the rack drains, and store system usage statistics. These services work on a single shard at a time.
-
+```
+A rack drain is a kind of decommissioning done by the service. The control plane of the service wants to stop using a specific rack, and for that, it will need to move data and user requests elsewhere. One reason for such a drain can be planned rack maintenance.
+```
 Some of the services are as follows:
 
 - Garbage collection: This service interacts with the metadata store and uses lazy object deletion to clean up metadata to keep the metadata to data mapping consistent.
+
+```
+It keeps the data available for a specific period of time and then deletes its metadata information from the metadata store.
+```
 
 - Rebalancer: This service interacts with both of the stores, Metadata and Chunk, and handles replica chunks’ movement (relocation and deletion). This movement is caused in case of hardware failures, increased capacity of the Chunk Store, and to manage rack drains.
 
