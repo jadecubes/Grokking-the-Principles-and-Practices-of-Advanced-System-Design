@@ -52,7 +52,7 @@ Whenever the client needs to access a file, it has to first go to the Name layer
 The resource limiting the provision of metadata activities is the number of queries per second (QPS). For the Metadata Store to be able to withstand load spikes, each shard must match the QPS criterion. A maximum of 
 10K QPS can be handled by each production shard. This limitation is placed on the metadata nodes’ resources by the current isolation approach. The cluster’s metadata shards’ QPS for the three layers (Name, Block, and File) are shown in the graph below. All shards are beneath this limit at the File and Block levels.
 
-[Peak metadata load](./peek.jpg)
+[Peak metadata load](./peak.jpg)
 
 
 As a result of holding extremely hot directories over the span of these 3 days, almost 1% of Name layer shards exceed the QPS limit. A backoff is followed by a new attempt to process the small portion of unprocessed metadata queries. As a result of the backoff, the metadata nodes are able to handle retried requests effectively and remove the majority of the first surge. This method allows Tectonic to handle the significant increases in metadata demand from the data warehouse successfully, and all other shards operate below their limit.
