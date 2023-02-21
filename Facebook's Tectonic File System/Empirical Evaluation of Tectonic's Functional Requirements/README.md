@@ -36,9 +36,9 @@ Peak 3	     0.57	              0.11	             0.68
 
 The table above shows the normalized disc time demand of the production cluster for three days of daily peak of blob storage and data warehouse, along with the supply of disc time by running each on their own cluster. To account for cluster space that has been used, we normalize by total disc time. The two graphs (aggregated cluster IOPS and bandwidth) below represent the same three days of traffic by the daily peaks. On each of the three days, there is a bigger demand than there is supply for data warehouses, necessitating disc overprovisioning to manage it independently.
 
-[Aggregate cluster IOPS]
+[Aggregate cluster IOPS](./1.jpg)
 
-[Aggregate cluster bandwidth]
+[Aggregate cluster bandwidth](./2.jpg)
 
 
 
@@ -47,12 +47,12 @@ The table above shows the normalized disc time demand of the production cluster 
 
 Whenever the client needs to access a file, it has to first go to the Name layer of the Metadata Store with the filename to get the file’s metadata. Hash-partitioning (uniform distribution of workload) of all the layers of the Metadata Store is not much useful for the Name layer since it gets a lot of requests. Neither the File nor the Block layer gets as hot as the single directory of the Name layer does. As the demand for the Metadata Store fluctuates, hotspots in the metadata shards may develop.
 
-[Metadata hotspots]
+[Metadata hotspots](./hotspots)
 
 The resource limiting the provision of metadata activities is the number of queries per second (QPS). For the Metadata Store to be able to withstand load spikes, each shard must match the QPS criterion. A maximum of 
 10K QPS can be handled by each production shard. This limitation is placed on the metadata nodes’ resources by the current isolation approach. The cluster’s metadata shards’ QPS for the three layers (Name, Block, and File) are shown in the graph below. All shards are beneath this limit at the File and Block levels.
 
-[Peak metadata load]
+[Peak metadata load](./peek.jpg)
 
 
 As a result of holding extremely hot directories over the span of these 3 days, almost 1% of Name layer shards exceed the QPS limit. A backoff is followed by a new attempt to process the small portion of unprocessed metadata queries. As a result of the backoff, the metadata nodes are able to handle retried requests effectively and remove the majority of the first surge. This method allows Tectonic to handle the significant increases in metadata demand from the data warehouse successfully, and all other shards operate below their limit.
