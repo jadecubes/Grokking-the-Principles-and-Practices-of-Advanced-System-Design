@@ -24,6 +24,7 @@ fine-grained partitioning: A technique that reorganizes the data blocks into chu
 ```
 shard: A unit of data management
 ```
+[Store](./tectonic.jpg)
 
 ### Layers of the Metadata Store
 We break down the metadata information into three parts and store them in the respective layer, similar to the data mapping on the hard disk. The Metadata Store has the following logical layers, which are implemented as stateless microservices on top of ZippyDB:
