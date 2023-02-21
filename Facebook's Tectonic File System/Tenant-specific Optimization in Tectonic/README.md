@@ -68,6 +68,7 @@ With a highly loaded cluster, the hedging method becomes more effective. In an e
 The study is Taken from the paper: Pan, Satadru, Theano Stavrinos, Yunqiao Zhang, Atul Sikaria, Pavel Zakharov, Abhinav Sharma, Mike Shuey, et al. Facebook’s tectonic filesystem: Efficiency from exascale. In 19th USENIX Conference on File and Storage Technologies (FAST 21), pp. 217-231. 2021.
 ```
 
+[Latency](./writelatency.jpg)
 
 ## Optimizing blob storage
 With the increase of objects, it becomes challenging to index all the objects in blob storage. Log-structured files are used to store the blobs by appending them to the file. Blobs are located using a map that links the blobID to the blob’s position in the file. Since the blobs are smaller in size, less than block size S, we’ll perform partial-block operations for blobs rather than full-block operations.
@@ -112,7 +113,7 @@ The fact that Haystack and Tectonic’s blob storage have similar read and write
 ### Re-encoding blocks
 As we already discussed, applying RS-encoding on full blocks is IO efficient, but small partial block appends are inefficient. Therefore, instead of RS-encoding after each small append, we use three-way replication until a full block of data is written. When a block is full, it is sealed for any further mutation. At that point, our system reads the block from the replicated storage and RS-encodes it for storage efficiency. The number of IOPS used this way is fewer as compared to IOPS that would have been needed had we RS-encoded after each append.
 
-[Re-encoded]
+[Re-encoded](./encoding)
 
 In this lesson, we learned about the optimization of storage (non-ephemeral resources). In the upcoming lesson, we’ll learn about how Tectonic performed during production and the tradeoffs between simplicity and performance.
 
