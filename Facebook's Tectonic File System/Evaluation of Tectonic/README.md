@@ -49,7 +49,7 @@ The system ensures the integrity of the data by using checksums. For the verific
 3. We’ll convert transformed data (D′) back to original data (D) by using the inverse function (I) of transformation (T) to verify the data such that D=I(D′).
 4. We’ll compare the checksum of inverted transformed data (CS [ID'])with the checksum of original data (CS[D]). If both are equal, data is not corrupted. Otherwise, data is corrupted.
 
-[Data Integerity](./data_integrity)
+[Data Integerity](./data_integerity)
 
 The checksum (to compute RS-encoded data) is computationally expensive. Though this tradeoff to save storage space is viable for our system. Additionally, special-purpose processors (ASICs) can be employed to speed up RS encoding and decoding.
 
