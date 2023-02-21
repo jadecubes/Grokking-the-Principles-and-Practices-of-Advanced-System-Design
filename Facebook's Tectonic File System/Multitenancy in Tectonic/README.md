@@ -3,6 +3,7 @@
 Remember that one of the primary goals of Tectonic is to efficiently utilize storage resources for many use cases of multiple groups of clients. We call these groups, tenants. Multitenancy allows multiple tenants to share underlying resources, though the challenge is to do so in a way that there is performance isolation between the tenants’ workloads.
 
 [Multitienancy](./tenants.jpg)
+
 Multiple tenants were using their dedicated, special-purpose storage systems. When they will migrate to our system, they want the following:
 
 - A sufficient amount of resources as per their needs.
@@ -74,7 +75,7 @@ For Tectonic, 50 TrafficGroups are way too many to manage. We need to further cl
 - The silver class is for normal-latency requests.
 - The bronze class is for background services.
 
-[TrafficGroup and TrafficClasses within a cluster]
+[TrafficGroup and TrafficClasses within a cluster](./traffic.jpg)
 
 The fair share of ephemeral resources is achieved using the following three steps:
 
