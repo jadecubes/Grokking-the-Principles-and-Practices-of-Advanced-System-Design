@@ -104,7 +104,7 @@ Integer counters         Cells can be used as integer counters in Bigtable.
 MapReduce jobs           Bigtable can be used in MapReduce jobs as both an input source and an output target due to a set of wrappers.
 
 Writing scripts          Clients can also write Sawzall scripts (a language created by Google) to guide server-side data processing.
-
+```
 Here are some commonly used APIs:
 
 - Set(): For writing cells in a row.
