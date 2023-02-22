@@ -33,4 +33,4 @@ Spanner provided the ability of transactions across shards with external consist
 We hope our selection of distributed database systems teaches us many important lessons in system design. Let's dive in!
 
 
-[Evolution of distributed databases]
+[Evolution of distributed databases](./timeline.jpg)
