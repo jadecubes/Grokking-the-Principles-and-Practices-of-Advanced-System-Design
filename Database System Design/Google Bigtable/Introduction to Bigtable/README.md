@@ -32,7 +32,7 @@ Scalability and flexibility are major challenges for relational databases. Relat
 The CAP theorem tells us why it is challenging to have a strongly consistent and highly available system under common faults such as network partitioning.
 ```
 
-[Vertical scalability in a relational database]
+[Vertical scalability in a relational database](./vertical.jpg)
 ### Performance
 Relational databases are known to be slower due to the following reasons:
 
@@ -46,7 +46,7 @@ Relational databases are known to be slower due to the following reasons:
 
 - Relational databases, like phone books that record contact numbers and addresses, are organized and have predetermined schemas. There is a procedure in relational databases that verifies that the added data matches the schema of the table, which takes time (different integrity checks). Non-relational databases, like file directories that store anything from a person’s constant information to their shopping preferences, are unstructured, scattered, and feature a dynamic schema.
 
-[Relational databases vs. non-relational databases]
+[Relational databases vs. non-relational databases](./vs.jpg)
 
 Here are some of the differences between relational and non-relational databases: (Source: MongoDB)
 
