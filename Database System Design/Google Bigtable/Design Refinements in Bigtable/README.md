@@ -8,7 +8,7 @@ Regarding the implementation, different locality groups mean different files on 
 
 It also provides various other knobs, and a particular one that many clients have found helpful is that clients can state whether or not a locality group should be memory-mapped. That is, whether or not the server should serve the data directly out of memory rather than reading from the underlying Google File System.
 
-[Group of columns forming a locality group]
+[Group of columns forming a locality group](./locality.jpg)
 
 Here’s a picture of what this means for the model. Bigtable takes the tablets and cuts them in the column dimension as well. It might, for example, store half the content in one locality group because we only access that relatively infrequently, and it might store the other half in another. We can say we will serve the right-hand locality group out of memory to make access much faster in the above illustration.
 
@@ -27,7 +27,7 @@ Tablet servers increase read performance by using two levels of caching.
 The scan cache is for temporal locality, while the block cache helps with spatial locality.
 ```
 
-[Scan vs. block cache]
+[Scan vs. block cache](./vs.jpg)
 
 ## Bloom filters
 Every read operation must read from all of the SSTables that comprise a tablet. If certain SSTables are not present in memory, the read operation may result in several disk accesses. Bigtable employs Bloom filters to decrease the number of disk accesses.
@@ -66,4 +66,4 @@ As previously stated, one of the most challenging and time-consuming jobs while 
 - Then, the source server conducts another (typically extremely rapid) minor compaction to reflect any new log entries that came while the first minor compaction was being executed.
 - After the second minor compaction is finished, the tablet can be loaded onto another tablet server without the requirement for recovery.
 
-[Speed up]
+[Speed up](./speedup)
