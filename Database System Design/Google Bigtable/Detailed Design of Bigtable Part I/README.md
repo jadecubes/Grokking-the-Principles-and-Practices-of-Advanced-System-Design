@@ -64,6 +64,9 @@ The Paxos algorithm provides a mechanism that enables distributed systems to con
 #### Uses in Bigtable
 1. Chubby is utilized in Bigtable to ensure there is only one operational master. The master keeps a session lease with the Chubby client and renews it on a regular basis to keep its position as a master.
 2. Chubby saves the bootstrap location of the Bigtable data.
+```
+This is a file kept in Chubby with the location of the root tablet in it. This will be discussed later on.
+```
 3. It is used to learn about new tablet servers and the failures of old ones.
 4. Keep Bigtable schema information (the column family information for each table).
 5. Access Control Lists (ACLs) are also stored in Chubby.
