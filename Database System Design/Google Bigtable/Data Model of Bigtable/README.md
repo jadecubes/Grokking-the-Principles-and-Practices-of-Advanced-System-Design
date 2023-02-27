@@ -14,7 +14,7 @@ Multi-dimensional sorted map: A map essentially means a key/value store. The mul
 3. Column name: It uniquely determines the column.
 4. Timestamp: The columns can have different versions of a value uniquely determined by timestamps.
 
-[Dimensions of Bigtable]
+[Dimensions of Bigtable](./dimension.jpg)
 
 A row key, column key, and timestamp are used to index the map. All map’s values are uninterpreted arrays of bytes. Bigtable treats all data as raw byte strings.
 ```
@@ -36,7 +36,7 @@ Bigtable keeps the data in lexicographic order by row key e.g., 5 > 10 lexicogra
 ## Columns
 The following syntax is used to define a column key: family:qualifier. In the example below, we’ve used theUserdetails:Name column key, where Userdetails is the column family and Name is the qualifier. Column family names must be printable (so that the Bigtable system can use them, for example for the locality, by keeping members of a column family nearby), but qualifiers could be any string. Access control, disk, and memory accounting are handled at the column-family level.
 
-[Data model]
+[Data model](./model.jpg)
 
 ## Column families
 The column keys are organized into sets called column families. These column families constitute the primary unit of access control. Normally, columns that are related to each otherare combined into a column family for fast reading and writing.
@@ -52,7 +52,7 @@ In a multi-dimensional indexed system, often writing a new value (against a new 
 ```
 If we allow any number of versions of a cell to exist, data might get unwieldy. Hence, garbage collection is necessary over time. Bigtable has two per-column-family options for automatically garbage-collecting cell versions. First, the user can only request the most recent “N” versions of a cell be retained. The second option is to keep versions that are new enough, such as when only the versions that are less than five days old are kept.
 
-[Timestamps]
+[Timestamps](./time.jpg)
 
 ## High-level design
 As mentioned earlier, we are designing a database that is literally a Bigtable containing huge datasets. So, how can we take the data in such a massive table, divide all the work, and distribute it over thousands of machines? Firstly, we will introduce an abstraction known as the tablet. The tablet is a dynamic partition of the row space. We’ll break up the row space dynamically. We’ll allocate one part of the row space to one server and another part of the row space to the other. This provides us with parallelism. It also provides a mechanism for clients to control locality, allowing them to select row keys in such a way that their data receives spatial locality based on the access patterns they expect.
@@ -68,13 +68,13 @@ Tablet servers: All tablet servers are in charge of a certain group of tablets g
 One master server can have its issues (like the risk of being a single point of failure), though such centralized control drastically reduces the complexity of the overall system compared to a design where we could have multiple masters. Complexity can make the dollar cost of designing and operating a system quite high. The designs of a system should reflect the current (and near-future) needs and evolve from there.
 ```
 
-[High-level architecture]
+[High-level architecture](./hld.jpg)
 
 One of the system’s characteristics is that one tablet is owned by one server. In contrast, one server often owns several tablets, so the server is responsible for handling reads and writes to a large number of tablets in the system. For example, we might have tens of thousands of tablets in total, and each server could handle a couple of hundred tablets.
 
 Load balancing is expressed in terms of tablets. So, if one server has too much load in terms of data or reads/writes requests, we migrate tablet ownership from one server to another. The tablets could become imbalanced (in terms of the amount of data or number of reads and writes coming for them) in comparison to other tablets. The data is actually stored as files in an underlying file system, which is the Google File System. This means that when we move tablets around, we don’t have to move the data, we just move the ownership of the data. The following picture depicts how a typical table can be sharded as tablets.
 
-[Tablets]
+[Tablets](./tables.jpg)
 
 The first tablet may contain our application’s home page, as well as the page’s contents. We also may have collected some data, such as the language. The first tablet is located on server one. We might have another tablet on server two that is overloading, either because the tablet itself is too huge or because it has too much load, so we might need to split it apart. The system will automatically split and downsize tablets, and we will be able to move one of the new tablets from server two to server three. This is how our system will handle load balancing.
 
