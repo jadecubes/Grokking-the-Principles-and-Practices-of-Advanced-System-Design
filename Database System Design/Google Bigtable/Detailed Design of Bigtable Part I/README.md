@@ -8,7 +8,7 @@ Here’s a list of major components in our Bigtable design:
 - Chubby
 Let’s discuss the components of Bigtable design in detail.
 
-[Detailed design of Bigtable]
+[Detailed design of Bigtable](./dd.jpg)
 
 ### SSTable
 The data is kept as files in Bigtable using the Google File System (GFS), a persistent distributed file storage system. Sorted String Table, or SSTable for short, is the file format that Bigtable uses to store its data. It is a persistent, ordered, immutable map of keys to values, where both the keys and the values are random byte strings. They are used to store the persistent state of tablets. Multiple SSTable comprise a tablet. There are operations to search up a particular key’s linked value and to loop over all key/value pairings within a defined key range. An SSTable is made up of a series of blocks, which are normally 64 KB in size but can be configured to be a different size.
@@ -22,12 +22,12 @@ When the SSTable is accessed, a block index is loaded into memory and utilized t
 - Permanent deletion of outdated data is handled by the garbage collector.
 - It helps to split tablets quickly.
 
-[SSTable]
+[SSTable](./sst.jpg)
 
 ### Memtable
 To increase write efficiency, Bigtable stores recent modifications in an in-memory, mutable sorted buffer called memtable. The memtable grows in size whenever a write operation is carried out. When the size of a memtable hits a certain limit, the memtable is paused, a new memtable is produced, and the paused memtable is transformed to an SSTable and stored in GFS.
 
-[Memtable]
+[Memtable](./mem)
 
 ### Why use SSTable with memtable?
 Once it’s on the disk, an SSTable is essentially immutable since inserting or deleting would necessitate a significant I/O rewrite of the file. Despite this, it’s an excellent solution for static indexes. It is read in the index, and we’re always one disk seek away. Alternatively, we can simply map the entire file to memory. Random reads are quick and simple.
@@ -73,3 +73,4 @@ This is a file kept in Chubby with the location of the root tablet in it. This w
 ```
 Note: For a detailed explanation of Chubby, you can go through The Chubby Lock Service.
 ```
+[Chubby](./chubby.jpg)
