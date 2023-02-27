@@ -20,12 +20,12 @@ As tablets can migrate from server to server due to load balancing, tablet serve
   - The position of a tablet is stored in the Metadata table under a row key that encodes the tablet’s table identity and end row (the end row helps in identifying the start of the next tablet’s information). Every Metadata row holds about one KB of information in memory. The three-level hierarchy method can handle 2^34 tablets with a reasonable restriction of 128 MB Metadata tablets (This simply means that a tablet can contain information for 128000 tablets in memory. If the root tablet contains information for 128000 Metadata tablets and each of these tablets also contains information for 128000 user tablets, the total becomes around 2^34).
   - The Metadata table also stores secondary information, such as a log of all events related to each tablet; for instance, this could be the time a server begins servicing a tablet. This data is useful for troubleshooting and analyzing performance.
 
-[Tablet location]
+[Tablet location](./loc)
 
 - Tablet positions are cached by the client library. In the event that the client cannot determine the position of a tablet, or if the cached location information turns out to be inaccurate, the client will iteratively climb up the tablet location hierarchy. If the client does not have any stored information in its cache, the locating algorithm will require three round trips within the network, one of which is to Chubby. Since outdated cache entries are only found after a miss, the locating technique might take more than three round trips if the client’s cache is outdated.
 - Even though tablet locations are maintained in memory, eliminating the need for GFS visits, we lower this cost further in the usual scenario by making the client library prefetch tablet locations. When reading the Metadata table, the client library retrieves the metadata for multiple tablets at the same time.
 
-[Empty cache]
+[Empty cache](./locate)
 
 
 ## How to assign the tablets
@@ -35,7 +35,7 @@ Upon starting, a tablet server creates a file (which has a unique name) in Chubb
 
 The master is in charge of determining whether a tablet server seems to be no longer serving its tablets and reassigning them as quickly as technically possible. The master regularly requests each tablet server for the condition of its lock on the file in Chubby to determine when a tablet server is no longer servicing its tablets. If a tablet server indicates that it has failed its lock, or if the master has not been able to access a server in the past few tries, the master tries to obtain an exclusive lock on the server’s file. If the master is successful in obtaining the lock, this indicates that Chubby is still functioning and the tablet server is either inactive or experiencing difficulty connecting to Chubby. In this case, the master deletes the server file of the tablet server to make sure that it doesn’t serve anymore. Once it removes the server’s file, the master can shift all the tablets, which were once allocated to a server, into the group of unassigned tablets.
 
-[How]
+[How](./assign)
 
 When a master’s Chubby session runs out, it terminates itself to protect the Bigtable cluster from networking problems between Chubby and the master. Nonetheless, as previously stated, the distribution of tablets across tablet servers is unaffected by the loss of a master.
 
@@ -52,12 +52,12 @@ GFS saves a tablet’s persistent state. Updates are saved in a commit log, whic
 ### Write operation
 When a write request is received by a tablet server, it is checked to ensure that the request is properly formatted and that the writer has permission to make the change. To determine who is authorized to write, we can scan the list of authorized editors in the Chubby file. The list can usually be found in the Chubby client cache. A legitimate mutation is recorded in the GFS commit log. We employ a group commit to increase the throughput of several minor alterations. After the write has been committed in the commit log, its contents are loaded into the memtable, which is in memory.
 
-[Write]
+[Write](./write)
 
 ### Read operation
 A read operation is also evaluated for well-formedness and sufficient authorization when it reaches a tablet server. A legitimate read operation is accomplished on a combined view of the series of SSTable and the memtable. The combined view can be created effectively because the Memtable and SSTables are sorted.
 
-[Read]
+[Read](./read)
 
 While tablets are separated and merged, incoming read and write operations can carry on with the help of compactions.
 ## Compactions
@@ -69,14 +69,14 @@ The size of the memtable grows when write operations are completed. When the siz
 It decreases the tablet server’s memory use.
 In the event that this server fails, it decreases the amount of information that must be read during recovery from the commit log. Incoming read/write operations can proceed without interruption as compactions occur.
 
-[Compaction]
+[Compaction](./minor)
 
 ### Merging compaction
 Every minor compaction results in the creation of a new SSTable. If this behavior was allowed to continue unchecked, read operations may be required to integrate updates from a random number of SSTables. Merging compaction is conducted to minimize the amount of SSTables, which examines the data of a few SSTables and the memtable and writes out a new SSTable. When the compaction is complete, the input SSTables and memtables can be disposed of as they are already copied to the new SSTable.
 
-[Compaction]
+[Compaction](./merging)
 
 ### Major compaction
 Major compaction is a merging compaction that merges all SSTables into a single SSTable. SSTables produced by major compactions do not include any deletion information or deleted data, however, SSTables produced by non-major compactions might include deleted entries. Bigtable performs major compactions to free up resources that were being utilized by deleted data and also promptly removes the deleted data from the system. This is especially important for services that handle sensitive information, such as users’ financial information.
 
-[Compaction]
+[Compaction](./major)
