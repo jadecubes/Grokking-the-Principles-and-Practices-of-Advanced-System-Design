@@ -59,7 +59,7 @@ The replicas discussed up to this point have been full replicas. These replicas 
 The major elements of Megastore for a scenario with two complete replicas and one witness replica are depicted in the illustration below:
 
 
-[Example of a Megastore architecture]
+[Example of a Megastore architecture](./arch.jpg)
 
 A client library and auxiliary servers are used to deploy Megastore. The client library, which includes the implementation of Paxos and other algorithms, is connected to various applications. These algorithms assist in tasks such as choosing a replica for read operations, synchronizing lagging replicas, and more.
 
@@ -76,7 +76,7 @@ Each replica keeps track of changes and metadata about the log entries for the g
 
 When a log replica has an incomplete log prefix, we refer to it as having “holes.” The illustration below shows this scenario containing several typical log replicas for a Megastore entity group (Source). Since each replica has been informed that the other replicas will never seek a copy, log positions 0-99 have been entirely scavenged, and position 100 is partially scavenged. All replicas recognize log position 101. Log position 102 discovered a low quorum in A and C. Position 103 is notable because it is accepted by A and C, leaving B with a hole at 103. A contradictory write attempt at position 104 on replicas A and B has blocked consensus.
 
-[The write ahead log]
+[The write ahead log](./writeahead.jpg)
 
 ### Reads
 Before a read or a write operation can be initiated, at least one replica must be updated to reflect all the changes that have been committed to the log. This involves copying and applying all previous mutations to the replica. This is referred to as the catchup process. The algorithm for a current read is as follows:
@@ -91,7 +91,7 @@ Before a read or a write operation can be initiated, at least one replica must b
 4. Validate: This sends a validation message to the coordinator stating that the pair of the entity group and replica now accurately represent all committed writes if the local replica was chosen and was not already up-to-date. There is no need to wait for a response because if the request does not succeed, the next read will try again.
 5. Query data: Using the timestamp of the given log location, read the selected replica. If the chosen replica gets offline, choose another, conduct catchup, and read from it instead.
 
-[Reads]
+[Reads](./reads)
 
 ### Writes
 Megastore monitors the next available log position, the previous write’s time, and the subsequent leader replica after executing the read algorithm. When a commit is made, all the changes that are waiting to be made to the state are grouped together, along with a timestamp and the name of the next leader candidate, and presented as the proposed consensus value for the next log slot. If this value is chosen by the distributed consensus, it is copied to all full replicas. Otherwise, the whole transaction is terminated, and the read phase must be restarted from scratch.
@@ -104,7 +104,7 @@ Coordinators maintain a record of which entity groups are up-to-date in their re
 4. Invalidate: For any full replicas that did not accept the value, the coordinator should be invalidated.
 5. Apply: The modifications in values will be applied to the maximum feasible number of replicas.
 
-[Writes]
+[Writes](./writes)
 
 ## Coordinator availability
 Coordinator processes are run within every data center and solely maintain track of their local replica. It might seem that the failure of a full replica, including both the coordinator and Bigtable, will lead to inaccessibility in the write algorithm described above, since each full replica must either accept the write or have its coordinator invalidated.
