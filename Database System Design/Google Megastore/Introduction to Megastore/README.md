@@ -13,7 +13,7 @@ The demands above have trade-offs. Relational databases offer comprehensive capa
 
 Hence, finding a globally scalable system that allows ACID (atomicity, consistency, isolation, and durability) transactions is hard.
 
-[There is no such globally scalable system that allows ACID transactions]
+[There is no such globally scalable system that allows ACID transactions](./overview.jpg)
 
 ## Megastore
 To fulfill the storage needs of modern interactive web services, Megastore was developed. It provides higher availability and consistency by combining NoSQL's scalability with the ease of RDBMS. In a nutshell, Megastore provides completely serializable ACID semantics over fine-grained data partitions. Partitioning this way provides a seamless failover across data centers and synchronously replicates each write over a wide area network with acceptable latency.
@@ -28,6 +28,8 @@ Serializable: In concurrency control of databases, transaction processing (trans
 ACID: In computer science, ACID (atomicity, consistency, isolation, durability) is a set of properties of database transactions intended to guarantee data validity despite errors, power failures, and other mishaps. In the context of databases, a sequence of database operations that satisfies the ACID properties (which can be perceived as a single logical operation on the data) is called a transaction. For example, a transfer of funds from one bank account to another, even involving multiple changes such as debiting one account and crediting another, is a single transaction. [source: Wikipedia]
 Fine-grained: Divided into many small pieces
 ```
+
+[Megastore: A suitable option](./option.jpg)
 ## Requirements
 Let’s list the requirements for designing a distributed storage system for managing interactive online services.
 ```
