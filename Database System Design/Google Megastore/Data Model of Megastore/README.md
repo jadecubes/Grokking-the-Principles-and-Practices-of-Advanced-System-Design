@@ -113,14 +113,14 @@ To find the next available position of the log, a current read is executed befor
 The write cycle below is derived from https://storage.googleapis.com/pub-tools-public-publication-data/pdf/36971.pdf
 ```
 
-[Writes lifecycle]
+[Writes lifecycle](./writes.jpg)
 
 Although the write operation makes a great effort to wait for the closest replica to apply, it can revert to the client at any time after the commit.
 
 ### Queues
 The transactional messaging among groups of entities are handled through queues. They can be used for inter-group operations, batching many changes into a single transaction, or deferring work. A transaction on an entity group may atomically receive or send more than one message in addition to modifying its entities. Every message has a single entity group for both sending and receiving. If they vary, delivery is asynchronous, as shown in the illustration below:
 
-[Operations between entity groups]
+[Operations between entity groups](./opqueue.jpg)
 
 Queues provide a method for performing actions that affect several entity groups.
 
