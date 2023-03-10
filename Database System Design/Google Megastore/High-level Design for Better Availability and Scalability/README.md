@@ -11,7 +11,7 @@ The components involved in the high-level design of our system are as follows:
 - Bigtable: For scalable fault-tolerant storage within a particular data center, we utilize Google’s Bigtable, which allows us to handle arbitrary read and write throughput by distributing operations across several rows.
 The following illustration shows the high-level design of Megastore components within a data center.
 
-[The high-level design of Megastore components within a data center]
+[The high-level design of Megastore components within a data center](./arch.jpg)
 
 In this design problem, our primary concern is to provide better transactions with stronger consistency, availability, and scalability. Megastore uses the following two approaches to provide high availability and scalability:
 
@@ -76,7 +76,7 @@ To upgrade our replication strategy and improve the overall performance of the u
 ### Entity groups
 To increase throughput and minimize failures, the data is partitioned into entity sets in Megastore. These sets are replicated over a vast geographic area both independently and synchronously. Within every data center, the partitioned data is kept in a NoSQL datastore, which is scalable. The illustration below shows the replication in those entity groups.
 
-[Scalable replication]
+[Scalable replication](./scalable_rep.jpg)
 
 In an entity group, entities are changed using single-phase ACID transactions (Paxos is used to replicate the commit record). While Megastore’s efficient asynchronous messaging is often used for inter-entity group operations, more costly two-phase commits can also be used. A transaction in a transmitting entity group queues one or more messages, and transactions in recipient entity groups read those messages atomically and execute the resulting modifications.
 
@@ -88,7 +88,7 @@ Indexes inside an entity group follow ACID semantics, but those between differen
 Single-phase ACID transactions: The transactions where all rows involved in the operations of a transaction exist in a single shard of a distributed database. (Source: https://www.yugabyte.com/tech/distributed-acid-transactions/ )
 ```
 
-[Operations between entity groups]
+[Operations between entity groups](./op.jpg)
 
 ### How to select entity group boundaries
 Entity groups are used to establish the a priori data grouping that will facilitate swift operations. The boundaries should not be too fine-grained since they may need much more cross-group operations, but putting excessive unrelated data in a single group serializes unrelated writes and reduces performance.
