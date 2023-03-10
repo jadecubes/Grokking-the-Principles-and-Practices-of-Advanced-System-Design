@@ -59,4 +59,4 @@ In the next lessons, we will design and evaluate Megastore. The following concep
 ```
 History of Megastore: Developer frustrations with key-value-based stores such as Bigtable prompted Google to shift towards a relational database-like architecture—something closer to the traditional relational data model. Google's Bigtable, the most well-known key-value store, is still in widespread usage today at Google. A relational schema system, cross-row transactions, consistent replication, and a strong query language were necessities for developing many OLTP (online transaction processing) applications that were either missing in Bigtable or for applications that had to circumvent or implement them at the application level. An initial solution to these issues included constructing transaction processing systems like Megastore on top of Bigtable. In the next lesson, we will discuss how Megastore ensures availability and scalability.
 ```
-[Overview]
+[Overview](./megastore.jpg)
