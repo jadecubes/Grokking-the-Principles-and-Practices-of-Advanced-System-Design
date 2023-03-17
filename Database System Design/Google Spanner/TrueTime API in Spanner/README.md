@@ -25,15 +25,18 @@ The argument t is of the TTstamp type. TrueTime reports an interval of time, TTi
 Spanner paper: Corbett, James C., Jeffrey Dean, Michael Epstein, Andrew Fikes, Christopher Frost, Jeffrey John Furman, Sanjay Ghemawat et al. "Spanner: Google’s globally distributed database." ACM Transactions on Computer Systems (TOCS) 31, no. 3 (2013): 1-22.
 ```
 
-For an event, e, consider the absolute time t_ abs (e). The TrueTime API will guarantee the following for an invocation:
+For an event, e, consider the absolute time t_abs (e). The TrueTime API will guarantee the following for an invocation:
 
+```
 tt=TT.now(),tt.earliest<=t_abs(e_now)<=tt.latest where e_now is the invocation event.
+```
 
+**Question**
 
-Question
 Why is the error bound half of the interval’s width?
 
-Answer
+**Answer**
+
 Consider s to be a timestamp returned by the TrueTime API. When we request TT.now() at s, we get an interval of the earliest and latest timestamps. Ideally, the difference between s and earliest or s and latest is ϵ. It means the total interval is twice the ϵ.
 [TrueTime]
 
