@@ -1,6 +1,7 @@
 # Quiz on Colossus
 
 **Question 1**
+
 What is the difference between GFS and Colossus?
 
 Answer
@@ -11,6 +12,7 @@ Answer
 
 
 **Question 2**
+
 What makes Colossus scalable to exabytes of data?
 
 Answer
@@ -18,6 +20,7 @@ The control plane consisting of horizontally scalable metadata servers (called c
 
 
 **Question 3**
+
 Bigtable says that it uses Colossus to store its data persistently. On the other hand, Colossus uses Bigtable to achieve scalability. Is this codependence logical?
 
 Answer
