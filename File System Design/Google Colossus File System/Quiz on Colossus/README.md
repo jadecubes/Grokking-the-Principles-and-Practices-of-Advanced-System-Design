@@ -5,6 +5,7 @@
 What is the difference between GFS and Colossus?
 
 Answer
+
 - A GFS cluster is scalable to hundreds of terabytes of data, while a Colossus cluster is scalable to exabytes.
 - GFS is not good for storing small files, while Colossus’s design makes it suitable for small files as well.
 - GFS was designed for batch-oriented workload; thus, it provides high throughput, but latency could be large in GFS. Colossus design supports high read/write throughput with minimal latency.
@@ -16,6 +17,7 @@ Answer
 What makes Colossus scalable to exabytes of data?
 
 Answer
+
 The control plane consisting of horizontally scalable metadata servers (called curators) and a scalable metadata database makes Colossus scalable to exabytes of data.
 
 
@@ -24,6 +26,7 @@ The control plane consisting of horizontally scalable metadata servers (called c
 Bigtable says that it uses Colossus to store its data persistently. On the other hand, Colossus uses Bigtable to achieve scalability. Is this codependence logical?
 
 Answer
+
 Well, it seems so. Colossus documentation doesn’t have a clear explanation of it. For most codependence instances, we often bootstrap the process by special means. We have speculatively described a possible solution in the following. Though we encourage you to think of alternative ways
 
 Solution sketch: Bigtable uses a hierarchy to locate data shards. The first level is stored in another service called Chubby to bootstrap that lookup process. Usually, whenever someone writes into a Colossus, the associated metadata goes to a Bigtable instance. But when this specific Bigtable instance puts its data into Colossus, it especially puts the location metadata using a lean hierarchy (probably just one level) of shards. The main Colossus metadata can use many instances of such Bigtable to scale.
