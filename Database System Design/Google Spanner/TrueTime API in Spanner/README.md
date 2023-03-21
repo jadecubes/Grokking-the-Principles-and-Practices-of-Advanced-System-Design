@@ -39,7 +39,7 @@ Why is the error bound half of the interval’s width?
 **Answer**
 
 Consider s to be a timestamp returned by the TrueTime API. When we request TT.now() at s, we get an interval of the earliest and latest timestamps. Ideally, the difference between s and earliest or s and latest is ϵ. It means the total interval is twice the ϵ.
-[TrueTime]
+[TrueTime](./eps.png)
 
 
 ## Real-time dependency in TrueTime
@@ -63,7 +63,7 @@ Note: The average value of ϵ is the same for all replicas. However, it can vary
 
 Now, we have a real-time dependency. T2 that started after T1 ended. This waiting ensures that if we have these two timestamps where there’s a real-time dependency, then their uncertainty intervals from TrueTime will not overlap. Since uncertainty TrueTime intervals do not overlap, the commit timestamp for T1 will be a lower timestamp than the commit timestamp for T2. By having these uncertainties with non-overlapping periods, we have eliminated the possibility of the timestamps getting reordered or being inconsistent with causality.
 
-[TrueTime]
+[TrueTime](./TT)
 
 The key here is waiting to commit. In a real system, we want to wait for the minimum time. So we now need to do two things:
 
@@ -107,14 +107,14 @@ For more details, you can refer to Marzullo’s paper, Marzullo, Keith, and Susa
 
 The following slides explain how TrueTime’s time master servers work with the GPS and atomic clocks in multiple data centers. In every data center, we have time handlers. GPS timemasters have GPS receivers attached, and few have atomic clocks. When a client needs to call the TrueTime API, the client communicates to the local daemon. The daemon (a background service that runs on all nodes in the data center) mostly contacts GPS time masters and sometimes contacts atomic clock time masters to get the redundancy of different time references. Marzullo's algorithm is run, which intersects time intervals to determine a time reference. The API gives an interval from the earliest to the latest.
 
-[TrueTime]
+[TrueTime](./GPS)
 
 ## Minimize uncertainty in TrueTime
 A daemon alerts of increasing time uncertainty between synchronizations. The value comes from using the worst-case scenario for possible local clock drift. It is also influenced by the unpredictability of the time taken by masters and the lag in receiving information from them. This will result in a sawtooth function of time. Throughout every poll period, the function ranges between 1 ms to 7 ms. On average, it is 4 ms. The sawtooth boundaries of 0 to 6 ms result from the present settings for the poll interval (30 seconds) and the applied drift rate (200 microseconds/second). One millisecond is lost because of slow messages reaching the time masters. In the presence of setbacks, deviations from this sawtooth are possible. For instance, when the time master is unavailable on rare occasions, it can result in data center-wide increases in ϵ. Similarly, occasionally isolated ϵ spikes can result from overburdened machines or network connectivity.
 
 The following slides show the progress of epsilon on a node over time that forms a sawtooth each time the client requests to the TrueTime API.
 
-[TrueTime]
+[TrueTime](./uncertainty)
 
 ## Summary
 
