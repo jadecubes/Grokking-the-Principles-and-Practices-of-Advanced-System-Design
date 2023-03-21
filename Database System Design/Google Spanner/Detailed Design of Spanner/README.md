@@ -7,7 +7,7 @@ Universe is the term for a Spanner deployment. Since Spanner handles data on a g
 
 3. Strong network infrastructure: We should have a redundant and highly available network that provides global connectivity to make high performance for Spanner possible.
 
-[Components of Spanner]
+[Components of Spanner](./org.png)
 
 First, we will understand how the components work together in Spanner's deployment. In the next lessons, we will learn about the TrueTime API, which makes Spanner unique. Moreover, we will also learn how a strong network helps Spanner to be a strongly consistent database.
 
@@ -30,7 +30,7 @@ The implementation of the universe master and placement driver are both singleto
 
 The following illustration shows the placement of servers in the Spanner universe:
 
-[The Spanner server organization]
+[The Spanner server organization](./server.png)
 
 ```
 Question 1
@@ -77,7 +77,7 @@ The Paxos algorithm defines three different roles:
 
 Each server in the system can serve multiple roles.
 
-[Design]
+[Design](./design.png)
 
 #### The basic idea behind Paxos
 The quorum is a crucial idea in the Paxos protocol. In particular, the majority of quorums are used in the Paxos protocol. In a system with 2k nodes, a majority quorum would be at least k+1 nodes. Proposers need a majority quorum to move on with a proposal.
@@ -115,13 +115,13 @@ It is important to remember that this method will only be secure if the clock sk
 
 The following slides illustrate how Spanner uses Paxos:
 
-[The use]
+[The use](./paxos)
 
 To create a bag of mappings that are replicated in the same way over and over, the Paxos state machines are employed. Each duplicate has its corresponding tablet where the key-value mapping state is kept. To perform a write, the Paxos protocol must be initiated at the leader, while readers can use any sufficiently up-to-date replica to get the state directly from the underlying tablet. This collection of replicas forms a Paxos group.
 
 An elected leader replica handles all incoming write requests from the client. The leader replicates the write requests to the replicas of the group through a Paxos round. The leader replicates the write requests to the Paxos group's replicas through a Paxos round. Followers are the remaining replicas, and they can serve the read requests. The following illustration demonstrates this:
 
-[The spanserver software stack]
+[The spanserver software stack](./stack.png)
 
 ### Concurrency control via lock table
 A lock table is implemented on each server to enforce the concurrency control mechanism at leader replicas. The two-phase locking state is kept in the lock table, which associates key ranges with the states of the lock. A long-lived Paxos leader is essential for the smooth operation of the lock table. Long-lived transactions such as report generation, which can take minutes, are challenging in distributed systems as the write and read operations are on hold until such transactions are completed. Other operations skip the lock table while transactional reads and synchronous operations acquire locks from it.
