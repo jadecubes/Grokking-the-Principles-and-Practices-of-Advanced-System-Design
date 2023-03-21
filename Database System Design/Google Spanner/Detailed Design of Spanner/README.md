@@ -77,6 +77,8 @@ The Paxos algorithm defines three different roles:
 
 Each server in the system can serve multiple roles.
 
+[Design]
+
 #### The basic idea behind Paxos
 The quorum is a crucial idea in the Paxos protocol. In particular, the majority of quorums are used in the Paxos protocol. In a system with 2k nodes, a majority quorum would be at least k+1 nodes. Proposers need a majority quorum to move on with a proposal.
 
