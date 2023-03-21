@@ -41,7 +41,7 @@ The advantages of snapshot isolation are utilized by the read-only transaction. 
 A snapshot read is where we read from the past without acquiring a lock. When performing a snapshot read, a client can either provide a timestamp themselves, or the system can determine the timestamp on the basis of an upper bound on the timestamp’s expiration provided by the client. A snapshot read can be executed on any up-to-date replica in either scenario.
 
 
-[Snapshot reads do not require locks]
+[Snapshot reads do not require locks](./db.png)
 
 Once a timestamp has been chosen, the commit is unavoidable for both snapshot reads and read-only transactions. The commit does not happen if the data has been garbage collected at that timestamp. Therefore, clients can escape a retry loop's buffering of results by receiving them immediately. Clients can continue their queries on other servers if a server goes down by sending the same timestamp and reading location.
 
@@ -50,11 +50,11 @@ Timed leases are used in our Paxos implementation for sustainable leadership, th
 
 For leader election, Paxos uses the Bully algorithm. If the proposer is not proposing to be a leader, any node can aim to be a leader. For a particular node to be accepted by the cluster, the node sends its server IDs to all peers within the cluster. The peers respond with their server ID. If all responses are smaller than the node's server ID, that node becomes the leader.
 
-[Leader leases]
+[Leader leases](./leader_leases1)
 
 If a peer receives the ID of a node that wants to be a leader, and its ID is greater than the received ID, then instead of returning its ID, it starts an election to become the leader. The bully algorithm avoids livelock issues.
 
-[Leader leases]
+[Leader leases](./leader_leases2)
 
 After a successful write, a replica's lease vote is automatically extended, and the leader will ask for a lease vote extension if it is about to expire. The lease interval of the leader starts when it receives the necessary number of votes to constitute a quorum, and the lease interval will end when the leader no longer has a quorum of votes. Within a Paxos group, a Paxos leader can change over time for different reasons. Spanner enforces a disjointness invariant, which implies that lease intervals of leaders are disjointed across all leaders of the shard over time.
 
@@ -66,7 +66,7 @@ Spanner implementation allows an abdication of a Paxos leader by freeing the lea
 
 The abdication of the Paxos leader is explained in the following slides:
 
-[Abdication]
+[Abdication](./leader_leases3)
 
 To work, for each Paxos group, we require a disjointness invariant to be true, which means that the lease intervals of each Paxos group leader should be disjointed from other Paxos group leaders.
 
@@ -91,7 +91,7 @@ The t_abs is the absolute of time, then the invariant becomes: if t_abs (e_1_com
 Absolute of time is the actual wall clock time, a hypothetically calculated ideal time with precision and no drift. Spanner ensures that its TT.now()'s absolute time is always within the closed interval [earliest, latest] that Spanner tells with each invocation to the TrueTime API.
 ```
 
-[Transactions]
+[Transactions](./read_write)
 
 The following protocols are followed to assign timestamps to transactions. These protocols ensure the invariant is followed. The commit request's arrival event at the coordinator leader is e_i_server for the write transaction Ti.
 
@@ -99,7 +99,7 @@ The following protocols are followed to assign timestamps to transactions. These
 
 2. Commit wait: The coordinator leader waits until TT.after(s_i) or TT.now().earliest>s_i is true. After the wait, the client can see the updated data. The commit wait also makes sure that for Ti, s_i < t_abs (e_i_commit).
 
-[Transactions]
+[Transactions](./eps)
 
 This is the monotonicity invariant that allows Spanner to reliably decide if a replica's state is up-to-date enough to fulfill a read. While traditional databases employ strict two-phase locking and single-version storage to guarantee external consistency. When traditional databases perform a "strong read," requesting the latest data, Spanner gains a read lock on the data, preventing any updates on the data that is part of the read transaction.
 
