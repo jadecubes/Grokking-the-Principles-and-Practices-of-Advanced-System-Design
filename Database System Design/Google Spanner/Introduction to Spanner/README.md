@@ -25,7 +25,7 @@ Most NoSQL solutions trade off strong consistency for high availability under ne
 
 - Retail: In today’s omnichannel retail environment, a retailer’s database must be able to manage online orders and returns as well as in-store pickups, loyalty programs, retail supply chains, inventories, and more. Dynamic pricing and just-in-time delivery both make inventory management more difficult. A potential customer is lost to a rival business when one’s business runs out of goods. It is also important to anticipate seasonal volume increases. Dealing with sudden spikes in demand needs elastic scaling, which means paying for more resources only for as long as we’re using them. The billing and inventory management systems should be able to keep up with variable traffic patterns all the time (normal and spike cases).
 
-[Use cases for a strongly consistent database]
+[Use cases for a strongly consistent database](./s.png)
 
 - Requesting ride app: In today's world, technology is very advanced. It requires the algorithms and machines to perform real-time decision-making to ease the user experience. For example, Google Maps require real-time route calculation. It also needs to optimize the routes according to real-time data analysis. Moreover, delivering monitoring and performance insights data for analysis is also critical. Therefore, we need to manage a huge amount of data with availability to improve user experience. For example, Uber started using Spanner, which is a strongly consistent database with relational properties. Uber needed horizontal scalability and reduced operating overhead without sacrificing transactional integrity, and Spanner was able to facilitate them.
 
@@ -101,9 +101,9 @@ A B-Tree is a search tree that self-balances. B-Trees are useful when there's to
 
 The following illustration shows Spanner’s high-level design. The client requests Spanner. The request is routed by the load balancer to one of the servers. The spanservers are divided over zones. The spanserver that receives the request processes it, saves the data to Colossus, and returns a response to the client.
 
-[Spanner’s high-level design]
+[Spanner’s high-level design](./hld.png)
 
 ## Bird's eye view
 In the next lesson, we will discuss our strongly consistent database in detail. The following concept map is a quick summary of that.
 
-[Overview]
+[Overview](./overview.png)
