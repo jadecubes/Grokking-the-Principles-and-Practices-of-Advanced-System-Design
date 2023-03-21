@@ -4,7 +4,7 @@ Spanner provides an additional layer of abstraction over the bag of key-value ma
 
 The basic organizational structure for data is a bucket. All the bucket's data share the same replication settings. Consider the illustration below. The data is transferred between Paxos groups bucket by bucket. To minimize the load on a Paxos group, we can relocate the frequently accessed buckets into the same Paxos group or place a bucket geographically closer to its accessors. Changing a bucket's location doesn't have to interrupt service for the client. Normally, copying 50 MB of data to a new bucket would take a few seconds.
 
-[The bucket2 is being moved from Paxos group 1 to 2]
+[The bucket2 is being moved from Paxos group 1 to 2](./bucket.png)
 
 Given that a Paxos group may have several buckets, the tablet in Spanner and Bigtable differs in a way that the Spanner tablet does not need to be a single and lexicographically contiguous partition of the row space. A Spanner tablet is an enclosure containing many row-ranges. It allows co-locating numerous frequently used buckets together.
 
@@ -75,7 +75,7 @@ Consider an example where we create an interleaved table. In this table, rows ar
 The following slides are based on Corbett, James C., Jeffrey Dean, Michael Epstein, Andrew Fikes, Christopher Frost, Jeffrey John Furman, Sanjay Ghemawat et al. "Spanner: Google’s globally distributed database." ACM Transactions on Computer Systems (TOCS) 31, no. 3 (2013): 1-22.
 ```
 
-[Creating]
+[Creating](./schema)
 
 The INTERLEAVE IN declarations in database schemas are how client applications communicate the underlying hierarchies. A bucket table is the parent table in a tree structure. One can construct a bucket by joining the rows of all descendent tables that begin with the key K in lexicographic order. If you delete a row in the bucket table and use the ON DELETE CASCADE clause, all dependent entries will also be removed.
 
