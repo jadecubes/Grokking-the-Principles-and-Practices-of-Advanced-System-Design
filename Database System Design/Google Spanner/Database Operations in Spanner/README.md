@@ -6,11 +6,11 @@ A transaction's writes are buffered on the client side until the commit. Therefo
 
 The following slides explain the read and write transactions.
 
-[Transactions]
+[Transactions](./read_write)
 
 Spanner uses the wound-wait approach to prevent deadlocks during reads within read-write transactions. Whenever a client requests up-to-date information, it sends the request to the group’s designated leader replica, acquiring the necessary read locks and retrieving the data. To avoid having its transaction timed out by the participant leaders, a client periodically sends keepalive messages while a transaction is still open. Then, the client finishes all reads and writes data to its write buffer.
 
-[Transactions]
+[Transactions](./read_write2)
 
 ### Two-phase commit in Spanner
 Spanner uses a two-phase commit (2PC) to guarantee isolation and strong consistency. The 2PC begins once a client has finished all the reads and has written data to its write buffer.
@@ -19,7 +19,7 @@ If participants in a 2PC are physically nearby, the latency for data propagation
 
 If the coordinator crashes, 2PC fails. To cater to it and ensure fault tolerance of the system, all states of the 2PC for both the coordinator and participant are stored in the Paxos state machine. If one of them were to go down in the middle of a 2PC round, the new leader would have all the necessary information to complete the commit.
 
-[The leader in the partition 2 is the 2PC coordinator that communicates with the other non-coordinator leaders of the Paxos group]
+[The leader in the partition 2 is the 2PC coordinator that communicates with the other non-coordinator leaders of the Paxos group](./2pc.png)
 
 #### Non-coordinator role
 A leader who isn't the coordinator gets access to write locks. To guarantee monotonicity, it chooses a prepare timestamp after any timestamps assigned to prior transactions, and the prepared record is logged via Paxos. After that, all participants communicate their prep time to the leader.
@@ -39,7 +39,7 @@ Another constraint is commit wait. Therefore, the leader coordinator will wait t
 
 The following slides explain how Spanner applies the two-phase commit:
 
-[Two-phase commit]
+[Two-phase commit](./coord)
 
 
 ## Read-only transactions
