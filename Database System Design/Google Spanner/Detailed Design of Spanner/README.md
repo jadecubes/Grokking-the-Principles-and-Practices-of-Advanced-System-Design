@@ -66,6 +66,43 @@ The Network Time Protocol (NTP) is a networking protocol for clock synchronizati
 ```
 ### Using Paxos
 The Paxos consensus can ensure consistency. Each server implements a tablet with a single Paxos state machine, allowing for replication to take place. The metadata and logs of every state machine are stored in its tablet. The implementation of Paxos in Spanner supports time-based leader leases that enable long-lived leaders. The default lease time is 10 seconds. Spanner stores two copies of every Paxos write, one in the corresponding tablet and the other in Paxos logs. While Paxos applies writes in order of their receipt, Spanner's implementation of Paxos is pipelined to increase the database's throughput when WAN latencies are present.
+
+The Paxos algorithm defines three different roles:
+
+- Proposers: To reach a consensus, it is the proposer’s job to present values to the acceptors, which may have been obtained from client requests and try to persuade them to adopt the proposer’s value.
+
+- Acceptors: The responsibility is on an acceptor to review the proposer’s suggestions and provide feedback on whether or not the proposed value is acceptable.
+
+- Learners: The learners are accountable for acquiring knowledge about the consensus’s conclusion, storing it (in a replicated manner), and maybe acting on it by informing clients of the decision or taking some sort of action.
+
+Each server in the system can serve multiple roles.
+
+#### The basic idea behind Paxos
+The quorum is a crucial idea in the Paxos protocol. In particular, the majority of quorums are used in the Paxos protocol. In a system with 2k nodes, a majority quorum would be at least k+1 nodes. Proposers need a majority quorum to move on with a proposal.
+
+#### Paxos in real life
+In its most basic form, the Paxos protocol specifies how a network of computers in a distributed system can reach a consensus on a single value. However, the practical implications of selecting a single value are restricted as the overhead increases dramatically if each command requires its own copy of the basic Paxos protocol. Therefore, we need to run the Paxos protocol numerous times, leading to a different value being decided upon everytime. These instances need to be numbered, but they can run independently and in parallel.
+
+We can apply numerous rules depending on the required functionality, like skipping the return of an instance to the client unless all the previous instances have been entertained.
+
+#### Paxos supporting the read/write operation
+The system users learn the chosen values to track the state on their side. However, there will always be use cases where newly implemented clients require access to previously selected values.
+
+Paxos handles both the write and read operations, where the former initiates the new instances of the protocol and the latter returns the decisions of already finished instances.
+
+These reading operations must be transmitted to the system’s current leader, the node that implemented the previous proposal successfully. This leader node is unable to communicate with the client using the local copy. This is because the reply may not accurately reflect the system’s current state if another node has proposed and has become the new leader in the meanwhile.
+
+Therefore, the consensus procedures of reading and writing would not be linearizable. Proposals are examples of operations that fall into the “single-object operations” category while discussing consensus. Since this is the case, isolation is not needed to be guaranteed.
+
+To view any prospective new proposal from another node, that node must read from the majority of nodes. The performance may suffer as the reads will be executed in two phases.
+
+#### Master leases
+Lampson says that “An alternative option that works as optimization is to make use of the so-called master leases.”
+
+Through this method, a node can guarantee its position as a leader for a predetermined amount of time by running a Paxos instance and signing a lease until that time has elapsed. As a result, this node can now perform read operations locally. However, this can affect availability if the leader dies and all the participants have to wait for the lease to end. However, we can use services like Chubby to cater to this.
+
+It is important to remember that this method will only be secure if the clock skew is constrained to a certain upper bound when putting it into action.
+
 The following slides illustrate how Spanner uses Paxos:
 
 [The use]
