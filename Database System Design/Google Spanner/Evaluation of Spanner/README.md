@@ -40,6 +40,10 @@ To summarize, Google Spanner is a globally distributed, ACID-compliant, replicat
 ### System design wisdom in Spanner
 - Spanner's major innovation of TrueTime is an example of challenging conventional wisdom. While it is well understood that perfectly synchronizing different clocks in a large distributed system is almost impossible, Spanner asks what the next best thing is. Spanner's answer is that we can put a bound on the clocks' drift which we can sustain for extended periods. This realization unlocks many benefits. Spanner then shows how we can build a strongly consistent distributed database with good performance and get nice properties, such as linearization and serialization.
 
+```
+Unlocked benefits: For details see Barbara Liskov's paper: "Practical uses of synchronized clocks in distributed systems." In Proceedings of the tenth annual ACM symposium on Principles of distributed computing, pp. 1-9. 1991.
+```
+
 - To provide lower bounds on clock drifts, the TrueTime API heavily relies on Google's private network (that in itself provides nice properties in terms of controllable latency, throughput, and availability) and a carefully designed network of GPS and atomic clocks. It is an example of how a good system (a system that is working as per its service-level agreement (SLA) for extended periods and provides value to its clients) relies on other good subsystems.
 
 In summary, Spanner moved the state-of-the-art for distributed databases using the fascinating innovation of TrueTime and other abstractions on top of it.
