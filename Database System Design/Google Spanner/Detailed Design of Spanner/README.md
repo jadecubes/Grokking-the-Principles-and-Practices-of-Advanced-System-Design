@@ -82,6 +82,10 @@ Each server in the system can serve multiple roles.
 #### The basic idea behind Paxos
 The quorum is a crucial idea in the Paxos protocol. In particular, the majority of quorums are used in the Paxos protocol. In a system with 2k nodes, a majority quorum would be at least k+1 nodes. Proposers need a majority quorum to move on with a proposal.
 
+```
+A quorum is the minimum required number of nodes for a distributed operation to complete successfully on all nodes before success can be declared.
+```
+
 #### Paxos in real life
 In its most basic form, the Paxos protocol specifies how a network of computers in a distributed system can reach a consensus on a single value. However, the practical implications of selecting a single value are restricted as the overhead increases dramatically if each command requires its own copy of the basic Paxos protocol. Therefore, we need to run the Paxos protocol numerous times, leading to a different value being decided upon everytime. These instances need to be numbered, but they can run independently and in parallel.
 
@@ -100,6 +104,10 @@ To view any prospective new proposal from another node, that node must read from
 
 #### Master leases
 Lampson says that “An alternative option that works as optimization is to make use of the so-called master leases.”
+
+```
+B. W. Lampson, “How to Build a Highly Available System Using Consensus,” Proceedings of the 10th International Workshop on Distributed Algorithms, 1996.
+```
 
 Through this method, a node can guarantee its position as a leader for a predetermined amount of time by running a Paxos instance and signing a lease until that time has elapsed. As a result, this node can now perform read operations locally. However, this can affect availability if the leader dies and all the participants have to wait for the lease to end. However, we can use services like Chubby to cater to this.
 
