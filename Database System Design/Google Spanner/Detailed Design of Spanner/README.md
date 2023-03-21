@@ -30,7 +30,7 @@ The implementation of the universe master and placement driver are both singleto
 
 The following illustration shows the placement of servers in the Spanner universe:
 
-[The Spanner server organization](./server_organization.png)
+[The Spanner server organization](./server_org.png)
 
 ```
 Question 1
