@@ -41,4 +41,4 @@ Our final system (DynamoDB) shows how to build a key-value store that performs w
 
 We hope our selection of key-value systems teaches us many important lessons in system design. Let’s dive in!
 
-[Timeline of the evolution of key-value stores]
+[Timeline of the evolution of key-value stores](./timeline.png)
