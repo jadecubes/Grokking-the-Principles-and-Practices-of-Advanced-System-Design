@@ -18,8 +18,8 @@ The following calculator widgets help us change different values to see their ef
                            TilePro64 vs. Opteron: Power Consumption
       A                            B                                 C                          D                           
 1  Architecture	       Transactions Per Second (TPS)	           Power / TPS              	Power (Watt)
-2  TilePro64	                   2000000000                      	0.00002	                 40000 =B2 * C2
-3   Opteron	                        2000000000                   	0.0001	                  200000=B3* C3
+2  TilePro64	                   2000000000                      	0.00002	                  40000 =B2 * C2
+3   Opteron	                     2000000000                     	0.0001	                  200000=B3* C3
                                             
 ```                                            
 Based on the calculations above, Opteron-based servers would require 160,000 more Watts to handle 2 billion requests.
