@@ -11,6 +11,10 @@ There are multiple reasons why we’ve preferred a domain-specific system over t
 - Better opportunity for parallelization due to the availability of many cores
 
 
+
+
+
+
 **Question 2**
 What are some of the cons of using a domain-specific system?
 
