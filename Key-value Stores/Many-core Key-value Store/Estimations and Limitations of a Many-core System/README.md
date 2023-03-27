@@ -35,7 +35,7 @@ So how many nodes would Facebook need to respond to this many requests?
 
 ```
                         TilePro64 vs. Opteron: Nodes Required
-       A	                     B                            	   C	           D                        
+         A	                     B                            	   C	           D                        
 1	Architecture	    Transactions Per Second (TPS)        	Capacity / Node   	Nodes
 2	TilePro64	               2000000000                  	335000	            5971= ceil(B2 / C2)
 3	Opteron	                2000000000	                  165000	            12122 = ceil(B3/C3)                        
@@ -66,6 +66,7 @@ The version of Memcached that was used in this study is 1.2.3h. It is primarily 
 
 **Question**
 What are the differences between data parallelism and task parallelism?
+
 **Answer**
 Data parallelism vs. task parallelism
 Data parallelism can occur when many data items can be independently worked on at the same time.
