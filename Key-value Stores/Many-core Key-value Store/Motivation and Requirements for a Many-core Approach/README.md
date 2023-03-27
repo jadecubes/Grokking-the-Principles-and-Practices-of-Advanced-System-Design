@@ -3,7 +3,7 @@
 ## we use key-value stores
 Memcached is a key-value store that is used by large platforms like Facebook and LinkedIn to read and write data quickly. Applications that require repeated fast reads and writes are ideal for a caching layer, which can be implemented using key-value stores.
 
-[Traditional architecture (left) vs. architecture with key-value store (right)]
+[Traditional architecture (left) vs. architecture with key-value store (right)](./1.png)
 
 The image above shows how Memcached comes between the frontend and database to provide faster response time. Web architecture that uses a memory resident key-value store can be many folds faster than disk-based stores (typical RAM access takes 100 nanoseconds, while typical hard disk access takes four milliseconds). Key-value stores can be used to store:
 
@@ -64,7 +64,7 @@ PowerConsumption ∝ ClockSpeed^3
  
 This means that the power consumption will increase manifolds, making it harder to cool the processor from its surface when we try to increase the clock speed. The industry shifted to multi-core processors to get around this performance ceiling. However, multi-core processors require programmers to use multiple execution units to actually realize any higher performance.
 
-[Relationship between the clock rate and CPU power]
+[Relationship between the clock rate and CPU power](./2.png)
 
 As you can see in the image above, the power consumption increases as the clock speed increases.
 ```
@@ -76,7 +76,7 @@ In a multi-core setup, Intel processors with x86 architectures have higher energ
 
 As you can see from the image below, an ARM-based many-core processor can achieve better performance at lower power consumption. While an x86-based processor needs a lot more power to achieve the same performance, we want to maintain a lower power consumption with moderate performance even though the x86 processor has the capability to go above that performance.
 
-[Performance of APM XGene vs. Intel Xeon (2011)]
+[Performance of APM XGene vs. Intel Xeon (2011)](./3.png)
 
 ```
 Abdurachmanov, David & Bockelman, Brian & Elmer, Peter & Eulisse, G. & Knight, Robert & Muzaffar, Shahzad. (2014). Heterogeneous High Throughput Scientific Computing with APM X-Gene and Intel Xeon Phi. Journal of Physics: Conference Series. 608. 10.1088/1742-6596/608/1/012033.
