@@ -38,7 +38,7 @@ So how many nodes would Facebook need to respond to this many requests?
        A	                     B                            	   C	           D                        
 1	Architecture	    Transactions Per Second (TPS)        	Capacity / Node   	Nodes
 2	TilePro64	               2000000000                  	335000	            5971= ceil(B2 / C2)
-3	Opteron	                 2000000000	                  165000	            12122 = ceil(B3/C3)                        
+3	Opteron	                2000000000	                  165000	            12122 = ceil(B3/C3)                        
 
 ```
 
