@@ -122,4 +122,4 @@ In our design space, we have capital expense items (CAPEX) such as the dollar co
 ## Bird's eye view
 In the next few lessons, we will dive into the design of the many-core key-value stores. The following concept map is a quick summary of this chapter.
 
-[Overview]
+[Overview](./overview.png)
