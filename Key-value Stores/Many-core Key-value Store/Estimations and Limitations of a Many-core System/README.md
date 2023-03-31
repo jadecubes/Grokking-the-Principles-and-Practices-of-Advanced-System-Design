@@ -73,14 +73,14 @@ Data parallelism can occur when many data items can be independently worked on a
 
 Task parallelism can occur when tasks are created that can be executed independently of one another. For example, when each incoming client request to get/put a key is handled by a different thread.
 
-[Comparison]
+[Comparison](./comparison.png)
 
 
 
 
 In the image below, we show a multi-threaded version of Memcached where every operation requires a global lock to safely access the shared hash table. Only a single thread can access the key-value store at any one time.
 
-[Multi-threaded architecture for a standard version of Memcached]
+[Multi-threaded architecture for a standard version of Memcached](./thread.png)
 
 
 ```
