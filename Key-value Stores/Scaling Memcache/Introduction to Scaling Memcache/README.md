@@ -124,3 +124,5 @@ Consistency          Read-your-write consistency at the server level    Read-you
 
 ## Bird's eye view of Scaling Memcache
 In the next few lessons, we will dive into scaling the Memcache key-value store. The following concept map is a quick summary of this chapter.
+
+[Overview]
