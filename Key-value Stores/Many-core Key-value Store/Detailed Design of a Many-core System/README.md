@@ -39,7 +39,7 @@ After implementing the new multi-process version of Memcached, the following is 
 
 5. The shard process can then directly send the reply back to the client.
 
-[Flow]
+[Flow](./design)
 
 ```
 Question
@@ -90,7 +90,7 @@ High (200k)                75k                          > 1.2
 ```
 Next, we can check how packet size affects latency when using our system. We can fix the read rate and vary the packet size from a few bytes to a few hundred bytes. In real-life scenarios, the packet size is usually less than 100 bytes.
 
-[After a certain point the latency increases many folds]
+[After a certain point the latency increases many folds](./increase.png)
 
 
 The graph above shows a spike around the 1200 byte packet size—at a read rate of 100,000 transactions per second (TPS) means a bit rate of 960Mbps—which reaches the theoretical limit of the 1Gbps channel. Let's move on to how network protocols can affect our latency.
@@ -111,7 +111,7 @@ Moving on, we'll need to allocate roles to the cores present in our processor. S
 
 We will need to evaluate different core allocations to optimize performance systematically. In the following slides, UDP capacity means UDP transactions per second.
 
-[Evaluating]
+[Evaluating](./config)
 
 ```
 The parametric search space is large where we need to find out the optimal core allocation (64 of them) to five different functions. At times, domain-specific heuristics help us reduce the search space. Other times, we might not need the absolute best configuration—good enough might work. At times, adding more cores does not further improve the performance and performance plateaus (we will see that trend with network workers in our case). Such cases provide us an upper bound for core allocation for a specific resource, and once that number of resources has been assigned, we can remove them from further consideration. (There are more complicated scenarios where allocation changes to one function interfere with the others. For those cases, we might not be able to exclude some functions from further allocation decisions.)
