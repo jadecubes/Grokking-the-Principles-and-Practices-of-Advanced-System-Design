@@ -70,7 +70,7 @@ Problem: Incast congestion occurs when a large number of responses to requests o
 
 Solution: Use a sliding window mechanism—similar to what TCP uses to implicitly manage congestion.
 
-[The sending rate increases when successful acknowledgments are received, and decreases when data gets lost]
+[The sending rate increases when successful acknowledgments are received, and decreases when data gets lost](./winsize.png)
 
 We do not want to overload a server or the network with multiple parallel requests. To do this, we can use a sliding window mechanism. As shown in the illustration above, the sliding window mechanism grows its window size when a successful response is received from the server. This mechanism takes into consideration Little's law to change the window size. Little's law helps us to find the average number of requests in a system in a steady state. The law is provided below.
 
