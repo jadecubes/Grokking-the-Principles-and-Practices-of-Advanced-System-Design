@@ -61,7 +61,7 @@ In key-value stores, we have the usual requirements for the set, get and delete 
 When we have multiple key-value (Memcached) servers throughout the world, how can we replicate data and maintain its consistency while balancing the tradeoffs (for example, between consistency and latency)?
 
 
-[We have four levels where we can focus our attention to improve our system]
+[We have four levels where we can focus our attention to improve our system](./four.png)
 
 When providing service worldwide, considerations must be made on different levels as each level has different requirements. Because a component of latency is directly related to the distance (propagation delay), we make different tradeoffs as the distance between Memcache nodes changes.
 
@@ -80,7 +80,7 @@ We can analyze and optimize at four different levels.
 The image below compares the architecture of a single-node Memcached system with the architecture used to scale Memcached into a distributed key-value store.
 
 
-[Scaling Memcached to manage a worldwide network]
+[Scaling Memcached to manage a worldwide network](./scaled.png)
 
 At different levels, we encounter different tradeoffs, as mentioned below.
 
@@ -125,4 +125,4 @@ Consistency          Read-your-write consistency at the server level    Read-you
 ## Bird's eye view of Scaling Memcache
 In the next few lessons, we will dive into scaling the Memcache key-value store. The following concept map is a quick summary of this chapter.
 
-[Overview]
+[Overview](./overview.png)
