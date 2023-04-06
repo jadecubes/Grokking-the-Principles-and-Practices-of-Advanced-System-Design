@@ -45,7 +45,7 @@ The second option is to use the storage layer to inform the Memcache about any u
 
 When a web server updates data on a storage cluster, it sends an invalidation to its own Memcached clusters. This way, Memcached servers have to re-request updated items from the database to maintain read-after-write semantics. However, when dealing with updates from the replica clusters, we can use an invalidation daemon at the database that checks SQL statements for invalidations to then broadcast those invalidations from the storage cluster to other Memcached clusters. SQL statements that modify the primary SQL database are modified to contain the Memcached key that needs to be invalidated.
 
-[Invalidations]
+[Invalidations](./invalidations)
 
 
 However, this method of sending invalidations to all Memcached servers causes another problem. When many storage clusters communicate with many Memcached servers, it can cause unmanageably high packet rates (many-to-many communication patterns). To reduce packet rates, our invalidation daemons can batch deletes into fewer packets and send them to Mcrouter instances, which then unpack the deletes and send them to the correct Memcached server. As mentioned in this study, when batching our deletes, we see an 18-fold increase in the median number of deletes per packet.
@@ -57,14 +57,14 @@ Source: Rajesh Nishtala, Hans Fugal, Steven Grimm, Marc Kwiatkowski, Herman Lee,
 ## Controlling the degree of replication via regional pools
 The important question to consider is, in how many places should keys be replicated. On one end of the spectrum, we can choose that each cluster independently caches and replicates within-cluster as per the client's requests, which are carefully routed to specific clusters. The second end of the spectrum is that we distribute the clients' requests uniformly and randomly to any Memcached cluster. Doing so will replicate keys at many clusters, and hence, taking out one (or a few) of the clusters will not adversely affect the hit rate. Such a high degree of replication will use memory inefficiently because not every key has the same access rate. We can borrow the idea of pools from the cluster level and use different clusters for keys with different access characteristics.
 
-[Regional pools]
+[Regional pools](./controlling)
 
 A regional pool is created when multiple front-end clusters share the same set of Memcached servers. If a cluster stores large items that are accessed rarely, then instead of having multiple replica Memcached servers, we can have fewer Memcached servers serving to a larger number of front-end clusters. This reduces unnecessary key replications. The decision to move certain keys to certain pools is made using heuristics based on the total data set size, the required access rates for those set of items, and the number of unique users accessing those items.
 
 ## Bringing new clusters online
 Due to scaling needs and failures, new clusters are added to a Memcache system. However, if such an addition is done without care, it can incur a substantial load on the storage layer to fill the empty cache.
 
-[New clusters]
+[New clusters](./bringing)
 
 When a new cluster is added, it will have very poor hit rates since it won't have any cached data. This means that there will be a significant load on the databases. To insulate our storage clusters, we can gradually bring them online. To "warm up" a "cold" cluster, we can route a cold cluster's cache misses to other already active clusters that have normal hit rates instead of our storage clusters.
 
