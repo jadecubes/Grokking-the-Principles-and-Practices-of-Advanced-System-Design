@@ -14,7 +14,7 @@ We'll improve certain aspects of Memcached by modifying its internal mechanisms 
 ### Hashtable with separate chaining
 The hashtable uses hash functions to look up items using the key quickly. As illustrated below, the hashtable is an array of buckets, where each bucket is a linked list.
 
-[Hashtable with separate chaining]
+[Hashtable with separate chaining](./hash.png)
 
 ### Memcached items
 A Memcached item is an object that holds data for the key-value pair. This item is what we store in a single chunk. The item stores metadata like the max key length, time till expiration and more.
@@ -24,7 +24,7 @@ A Memcached item is an object that holds data for the key-value pair. This item 
 The slab allocator is a memory management mechanism used to decrease memory fragmentation.
 
 
-[Using the slab allocator in Memcached]
+[Using the slab allocator in Memcached](./slaballocator.png)
 
 #### Slabs
 Slabs are lists of memory sections containing objects (pages) categorized by the memory size range they fall into. By default, the memory is split into 42 slabs. The first slab is for items less than 96 bytes, the second is for items from 96 to 120 bytes, and so on until the 42nd slab. The motivation to use these slabs is to reduce memory fragmentation as items of similar sizes are in the same slab, which leads to more efficient memory usage.
@@ -40,7 +40,7 @@ A chunk contains data of size less than the slab's maximum size range. Chunks co
 ### The least recently used (LRU) list
 Memcached uses an LRU list to evict the oldest and least used items. Whenever an item is requested from the LRU list, the item is removed from its position and added at the head of the list.
 
-[A LRU Least Recently Used list–a doubly linked list]
+[A LRU Least Recently Used list–a doubly linked list](./lru.png)
 
 ## Requirements
 The following are the server-level requirements:
@@ -84,7 +84,7 @@ Once a needy slab has been identified, we can free up the least recently used sl
 
 ### The transient item cache–increasing memory efficiency
 
-[buffer]
+[buffer](./circular)
 
 Items that receive a burst of usage are not memory efficient because they will remain in the cache until they reach the end of the LRU list. To solve this, we can proactively remove short-lived keys. We can place short-lived items in a circular buffer of linked-list based buckets. The buffer is indexed by the seconds till expiration. Every second, the bucket at the head gets evicted.
 
