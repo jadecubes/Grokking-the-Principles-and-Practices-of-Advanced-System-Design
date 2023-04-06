@@ -32,7 +32,7 @@ Mcrouter layer: Mcrouters are used to route requests to multiple Memcached serve
 
 Memcached server layer: Stores and serves the actual key-value items.
 
-[Design]
+[Design](./single_server)
 
 Let's discuss cluster-level optimizations we can make to improve our caching system.
 
@@ -94,7 +94,7 @@ Sometimes we repeatedly face unnecessary cache misses. Let's see why this happen
 ### Causes of high load
 Problem: What causes the unnecessary load to build up? Stale sets and thundering herds cause excess load on the system.
 
-[Illustrating a stale set and a thundering herd]
+[Illustrating a stale set and a thundering herd](./highload.png)
 
 As illustrated above, we can have two problems when multiple clients are using a cache.
 
@@ -127,7 +127,7 @@ Solution: We can use leases to manage stale sets. We can "lease" the key-value i
 Load-linked and store-conditionals are OS level instructions used to achieve synchronisation in multi-threaded programs. They are used together to allow for lock free atomic read-modify-write operations. Source: en.wikipedia.org/wiki/Load-link/store-conditional
 ```
 
-[External data structure to manage concurrency on the Memcached server]
+[External data structure to manage concurrency on the Memcached server](./lease.png)
 
 Slightly modifying this leasing system allows us to handle thundering herds. Leases get allotted, by default, for 10 seconds. During those 10 seconds, other requesting clients receive a notification to try again later. Usually, a lease gets released within a few milliseconds.
 
@@ -159,7 +159,7 @@ So, when the request rate is too high for one server to manage alone, replicatin
 ## Handling failures
 Failures are common when dealing with large distributed systems. Some node in some data center is always crashing. Let's see what we can do to mitigate it's adverse affects.
 
-[Handling failures]
+[Handling failures](./failures)
 
 ### Smaller outages
 Problem: A remediation system is used to manage small outages, but it can take several minutes to start in response to a failure.
