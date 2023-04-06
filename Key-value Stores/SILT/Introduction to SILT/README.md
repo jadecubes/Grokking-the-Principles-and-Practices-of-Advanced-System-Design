@@ -29,15 +29,15 @@ Let’s categorize and declare the following design goals.
 
 1. Efficient use of resources
 
-I. Minimize the use of memory (RAM) per key (for quick access, we want to keep key indices and at least some of the data in the RAM)
+    I. Minimize the use of memory (RAM) per key (for quick access, we want to keep key indices and at least some of the data in the RAM)
 
-II. Computation efficient indexing (bytes needed per key for indexing a key should be low)
+    II. Computation efficient indexing (bytes needed per key for indexing a key should be low)
 
 2. High performance with low latency
 
-I. Quick lookups and writes
+    I. Quick lookups and writes
 
-II. Low read and write amplifications
+    II. Low read and write amplifications
 
 It might be tempting to keep all the indices and data (keys and values) in RAM. However, the data volume is often many orders of magnitude bigger than the available memory. Additionally, DRAM-based memory is eight times more expensive (in dollar terms) and uses 25 times more power than flash-based storage. Therefore, we must use both RAM and disk storage to optimize the overall performance.
 
