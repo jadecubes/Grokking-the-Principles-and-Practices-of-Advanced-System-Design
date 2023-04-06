@@ -25,7 +25,7 @@ When data centers are available worldwide, we must manage the lag between them f
 
 The source of both problems stems from the storage layer lag.
 
-[Overview]
+[Overview](./overview)
 
 One region holds the primary databases, while the other regions contain the read-only replicas. This replication is implemented using MySQL's replication mechanism. Writes, cache misses, and invalidations are sent to the primary region.
 
