@@ -123,8 +123,8 @@ The illustration above shows our model. A few key things to notice are:
 
 3. The second point does not mean that the design will return old values since our GET requests are processed such that,
 
-  I. The system searches for the key in the store that receives DELETE and PUT requests first (write-friendly store), intermediary stores (newest to oldest), and the memory-efficient store.
-
-  II. If the store currently being searched has the key at any point, the request will end, returning the found value. This way, our system ensures that it returns the latest value.
+    I. The system searches for the key in the store that receives DELETE and PUT requests first (write-friendly store), intermediary stores (newest to oldest), and the memory-efficient store.
+ 
+    II. If the store currently being searched has the key at any point, the request will end, returning the found value. This way, our system ensures that it returns the latest value.
 
 In this lesson, we gained a general understanding of our design. The following lessons will explore the design in detail.
