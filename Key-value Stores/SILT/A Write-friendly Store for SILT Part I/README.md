@@ -59,6 +59,6 @@ We cannot afford a linear search in this store for all GET requests and we need 
 
 To solve the above problem, we will maintain an in-memory hash table that will map keys to their offset in the log; an entry in the hash table is added right after a successful entry in the in-storage log. Now we can access all our keys in the store in O(1) time.
 
-This hash table also serves as an in-memory filter. The hash function will give us the hash value for the key we are looking for, and if that hash value does not exist in the hash table, the key is not present in this store. This eliminates any storage seeks required for keys that do not exist in the write-friendly store, resulting in lower read-amplification. We will explore this further in the GET request lesson.
+This hash table also serves as an in-memory filter. The hash function will give us the hash value for the key we are looking for, and if that hash value does not exist in the hash table, the key is not present in this store. This eliminates any storage seeks required for keys that do not exist in the write-friendly store, resulting in lower read-amplification. We will explore this further in the GET request lesson in A Memory-efficient Store for SILT: Part III.
 
 [Log in storage with an in-memory hash table to store offset.]
