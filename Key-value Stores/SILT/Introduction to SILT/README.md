@@ -18,7 +18,7 @@ The costs (for example, performance penalties regarding disk seeks and dollar co
 
 Key-value stores are distributed hash tables (DHTs) that map a key to a value in a short time. We can engineer key-value stores to meet our application's requirements with acceptable costs.
 
-[A key-value store is a distributed hash table. Only three nodes are shown in the illustration above. In an actual system, there can be thousands]
+[A key-value store is a distributed hash table. Only three nodes are shown in the illustration above. In an actual system, there can be thousands](./brief.png)
 
 Like the illustration above, for a key-value store, nodes in a distributed network (servers) contain values for disjoint keys. For example, the first key, 001, is mapped to a URL, the second key, 002, is mapped to an image, and so on.
 
@@ -98,7 +98,7 @@ Here, the application initiates the request (read or write). The application onl
 
 We’ll aim for a near 1 read amplification. We will see later that our design cannot have write amplification lower than 2. This is because we are trading this higher write amplification for lazy writes and deletes in our pursuit of efficiency.
 
-[For key-value stores, reliability, availability, and fault tolerance are assumed as goals. We will call these general goals. However, our main focus is efficiency, speed, and scalability.]
+[For key-value stores, reliability, availability, and fault tolerance are assumed as goals. We will call these general goals. However, our main focus is efficiency, speed, and scalability.](./req.png)
 
 ## Solution sketch
 While our design objectives give us a good idea about the characteristics of the solution we seek, we need to be more specific when designing a system. In this section, we will list specific requirements of our key-value store.
@@ -115,7 +115,7 @@ The fast lookup requirement is useful in keeping read amplification low. We will
 
 We’ll use more than one data structure–each prepped for a specific purpose. Furthermore, we will use hash filters to probabilistically determine if a key is stored before allowing a read request to memory, thus reducing the number of memory reads. We will aim for a near 1 read amplification.
 
-[Diagram]
+[Diagram](./amp.png)
 
 The diagram above shows the design space. Our desirable solution should have low memory overhead and should need a low number of reads in storage per lookup.
 
@@ -130,4 +130,4 @@ We will use an intermediary data structure to move our new entries and delete re
 ## Bird's eye view
 The following concept map summarizes our work in this chapter. In the next lesson, we will start designing our system that we call the SILT (small index large table) system.
 
-[Overview]
+[Overview](./birdsview.png)
