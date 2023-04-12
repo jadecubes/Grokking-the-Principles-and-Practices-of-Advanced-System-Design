@@ -35,14 +35,14 @@ To insert a new key, K1, we will compute its candidate buckets h1(K1) and h2(K1)
 
         iii. We will repeat the process in 3(II) for K3 until we find an empty bucket for a limited number of displacements. If we reach our allowed number of displacements and cannot find an empty bucket, we will initialize a new write-friendly store and store the displaced key in one of its candidate buckets in the new store.
 
-[Algorithm]
+[Algorithm](./partialkey)
 
 
 We will repeat the process of displacing keys for a limited number of attempts. When that number is reached, we will initialize a new write-friendly store and move all entries in the current store to the next key-value store in the pipeline. From this point onwards, the new write-friendly store will cater to arriving PUT and DELETE requests. The configured limit of the number of keys displaced is our way of determining the level of occupancy we would want for our hash table. The number of displacements required to insert a key increases as the occupancy of the hash table increases and becomes very high in the late range (90%+). Based on our hardware and other configurations, we can determine an acceptable number of attempts before we declare the current write-friendly store too occupied to allow for an acceptable cost of inserts.
 
 Let's look at how limiting the number of displacements works. In the example below, the number of allowed displacements to insert a key is 3.
 
-[Algorithm]
+[Algorithm](./partialkey2)
 
 #### Partial-key hashing
 We will save memory by not storing the entire key in the hash table. Instead, we will use a tag for each key in the hash table. We will mark a key's entry in the hash table with its tag by storing the tag along with its offset (position in the storage log). Every key-value entry in the write-friendly store will have the following:
@@ -73,6 +73,7 @@ We can overcome the above problem by storing the tag for the alternate bucket in
 
 Let’s look at how this will look using our first displacement example.
 
+[Algorithm](./partialkey3)
 
 
 
