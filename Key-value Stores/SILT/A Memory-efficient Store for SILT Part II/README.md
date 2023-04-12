@@ -53,7 +53,7 @@ The method to indicate an empty subtree or leaf node depends on the implementati
 
 Running the code above without entering a different K (lines 2–11) yields the result 5421!!1!!!21!!1!1!!. The slide deck below shows how the algorithm provides this value.
 
-[Algorithm]
+[Algorithm](./example)
 
 5421!!1!!!21!!1!1!! is the compact recursive representation of the of the tree for keys from our example presented in the previous lesson. Let's look at its interpretation given below:
 
@@ -141,7 +141,7 @@ Our implementation has a helper function with an algorithm to drop the next left
 
 The slide deck below gives us a step-by-step understanding of how the above algorithm works.
 
-[Algorithm]
+[Algorithm](./example2)
 
 We can see in the above slide deck (slide 3) that at the time of traversing to the right subtrie, we have added the value of ∣L∣ of the node at which we traverse right. The value of ∣L∣
  gives us the number of leaf nodes we skipped while traversing right—the number of nodes in the left subtrie.
