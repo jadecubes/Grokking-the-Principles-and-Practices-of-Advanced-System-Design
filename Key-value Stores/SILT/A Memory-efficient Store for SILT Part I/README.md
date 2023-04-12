@@ -79,3 +79,6 @@ How does ignoring bits lead to reduced per-key memory consumption? Ignoring a si
 
 Although we have kept memory consumption low by ignoring the maximum number of bits in keys in our index, a general tree implementation with pointers is still too expensive. We will improve our design in the next lesson to represent a prefix trie compactly.
 
+```
+Pointers are stored in nodes and point to their children nodes
+```
