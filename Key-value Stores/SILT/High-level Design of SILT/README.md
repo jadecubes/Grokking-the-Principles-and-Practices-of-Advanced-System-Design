@@ -13,7 +13,9 @@ Our experience with key-value store designs shows that it is challenging to get 
 The single-store approach uses only one key-value store with features to improve performance. Generally, a single-store key-value pair has three main components:
 
 A filter, stored in memory, reduces disk reads by checking if a key is stored or not. Read requests that pass the filter result in disk reads.
-
+```
+This filters requests and only allows those requests to pass through for which keys are stored in the key-value store
+```
 An in-memory index to provide the address of a key in storage.
 
 A storage data layout that contains all of our key-value entries.
