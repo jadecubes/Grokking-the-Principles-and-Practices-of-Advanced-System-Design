@@ -10,6 +10,10 @@ Since we are using a partial key, it is important to note how this will affect G
 
 - Upon a successful match in either of the two cases above, it looks up the key-value pair (in the storage log) at the offset marked with the computed tag: (Ks, Vs). It then matches the key Ks from the key-value pair returned from storage with Kg to confirm that we have looked up the correct key.
 
+```
+Successful match: computed tag matches tag in bucket
+```
+
   - If the keys match (Kg equals Ks), we check the value Vs in the key-value pair returned from storage.
 
     - If Vs is not the special DELETE indicator (Vs does not equal to DELETE), the write-friendly store signals that the GET request should terminate and return that Vs is the value stored against Kg.
@@ -20,6 +24,9 @@ Since we are using a partial key, it is important to note how this will affect G
 
 - Upon an unsuccessful match in both candidate buckets, the write-friendly store signals that Kg is not present inside the write-friendly store, and the GET request should continue in the intermediary stores. This is the case where our hash table acts as an in-memory filter. We have returned that Kg is not stored inside the write-friendly store without checking the storage log.
 
+```
+Unsuccessful match: computed tag does not match tag in bucket
+```
 
 ## Improving design for memory efficiency
 We can further improve our design using the techniques mentioned below.
