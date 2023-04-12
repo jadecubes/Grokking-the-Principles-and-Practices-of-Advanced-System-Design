@@ -45,7 +45,7 @@ Our memory-efficient store will store most of our entries. It is essential to de
 
 A trie, also called a prefix tree, stores keys such that a path from the root to a leaf node is unique. An internal node represents the longest common prefix—represented by the path from the root to the internal node—that all its descendant nodes have.
 
-[The illustration represents an example of a trie. The term "trie" comes from the word retrieve.]
+[The illustration represents an example of a trie. The term "trie" comes from the word retrieve.](./indexing.png)
 
 To sort keys on storage, we will distinguish them using a trie of their shortest unique prefix as the index. The shortest unique prefix of a key is its shortest prefix, which is different from all other keys. Looking for the key in the trie only requires reading up to its shortest unique prefix, at which point we will find a leaf node pointing to the key's index in storage.
 ```
@@ -53,7 +53,7 @@ Note: We are assuming fixed-length entries. Furthermore, we will also store entr
 ```
 Let's look at an example. Here’s how our memory-efficient store will look.
 
-[An example of our memory-efficient store's memory and storage use]
+[An example of our memory-efficient store's memory and storage use](./memeff.png)
 
 In the illustration above:
 
@@ -71,7 +71,7 @@ Our keys are sorted as shown in the storage section. Now for this set of keys, w
 
 Let's look at the key on index 4. A lookup of the key 01000110 takes us to index 4 because there are four leaf nodes before the key's leaf node. However, it is important to note that we only need the first two bits (01) to reach the relevant leaf node. Now, we only need to skip four fixed length entries in storage to reach index 4.
 
-[Indexing]
+[Indexing](./example)
 
 Another important thing to note is that all keys starting with 01 will take us to this leaf node (at index 4). Therefore, this index is not a filter. We will always look for a key in storage for all GET requests in this store. We will match the key from storage with the lookup. We will return the value only if we get an exact match. Otherwise, we will return that the lookup key is not stored in this store.
 
