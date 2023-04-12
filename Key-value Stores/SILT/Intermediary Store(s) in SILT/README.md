@@ -86,6 +86,10 @@ We will process GET requests for the intermediary store in the same manner as we
 
 - Upon a successful match in either of the above two cases, it looks up the key-value pair (in the storage log) at the position where the computed tag is stored in the hash table: (Ks, Vs). It then matches the key Ks from the key-value pair returned from storage with Kg to confirm that we have looked up the correct key.
 
+```
+Successful match: computed tag matches tag in bucket
+```
+
     - If the keys match (Kg equals to Ks), we check the value Vs in the key-value pair returned from storage.
 
         - If Vs is not the special DELETE indicator (Vs is not equal to DELETE), the intermediary store signals that the GET request should terminate and return that Vs is the value stored against Kg.
@@ -95,6 +99,10 @@ We will process GET requests for the intermediary store in the same manner as we
     - If the keys do not match (Kg is not equal to Ks), the intermediary store signals that Kg is not present inside this intermediary store, and the GET request should continue in the next intermediary store.
 
 - Upon an unsuccessful match in both candidate buckets, the intermediary store signals that Kg is not present inside this intermediary store, and the GET request should continue in the next intermediary store. Like we saw with the write-friendly store, this is the case where our hash table acts as an in-memory filter. We have returned that Kg is not stored inside this intermediary store without checking the storage log.
+
+```
+Unsuccessful match: computed tag does not match tag in bucket
+```
 
 - Suppose this intermediary store is the last intermediary store, and the GET request needs to continue in the next intermediary store. In such a case, the GET request will continue in the memory-efficient store.
 ```
