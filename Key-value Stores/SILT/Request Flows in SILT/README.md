@@ -8,7 +8,7 @@ In storage, the write-friendly store has sequentially maintained a log to which 
 
 In memory, the write-friendly store starts looking for a candidate bucket using partial-key cuckoo hashing on the key for the request, and as soon as it finds a candidate bucket, it stores the offset in that bucket.
 
-[The write-friendly store initially receives PUT and DELETE requests. Note that both PUT and DELETE requests are saved in the same format. The difference is that DELETE request entries have a special DELETE indicator instead of a value]
+[The write-friendly store initially receives PUT and DELETE requests. Note that both PUT and DELETE requests are saved in the same format. The difference is that DELETE request entries have a special DELETE indicator instead of a value](./putdelete.png)
 
 Both PUT and DELETE requests remain stored in this state until a new request:
 
@@ -18,13 +18,13 @@ Both PUT and DELETE requests remain stored in this state until a new request:
 
 When any one of the conditions above is satisfied, it initializes a new write-friendly store that caters to new PUT and DELETE requests.
 
-[Algorithm]
+[Algorithm](./example)
 
 Our design then converts the old write-friendly store into an intermediary store. The conversion happens in memory and storage (but does not add latency to the client's new requests as they go to the new store while the older one is being transformed into an intermediate one in parallel).
 
 The conversion in storage involves reordering the log that our write-friendly store was maintaining. The in-memory hash table of the write-friendly store contains values ordered by hash values. Our design traverses the in-memory hash table: for each entry, it finds the corresponding key-value pair in the storage log and places it in the intermediary store's storage. By the end of the conversion process, values have the same order as the write-friendly log's in-memory hash table.
 
-[This diagram shows the changes that occur during the conversion of a write-friendly store to a memory-efficient store]
+[This diagram shows the changes that occur during the conversion of a write-friendly store to a memory-efficient store](./changes.png)
 
 
 In memory, the conversion is simple. Our design only drops the offset of the in-memory hash table of the write-friendly store, as it is no longer required.
@@ -38,7 +38,7 @@ Note: A DELETE request is not completed as soon as the write-friendly store rece
 Our design also handles PUT requests during the merging process. If the key for a PUT request already exists in the old memory-efficient store, the new memory-efficient store will have the value from the PUT request (in the intermediary store). If there is no key for a PUT request, our design will add it to the new memory-efficient store.
 
 
-[Intermediary and old memory-efficient stores are merged to form a new memory-efficient store]
+[Intermediary and old memory-efficient stores are merged to form a new memory-efficient store](./merged.png)
 
 ## GET requests
 While most of the entries are stored in the memory-efficient store, we need to query stores in an order that ensures our design returns the latest value. We will have to query stores in the same order as the flow of a PUT or a DELETE request.
@@ -51,7 +51,7 @@ Note: If we encounter a DELETE request against a key in the write-friendly store
 ```
 Lastly, if a key is not in all intermediary stores, our design looks it up in the sorted, memory-efficient store. This process is quick since data in the memory-efficient store is sorted.
 
-[A GET request might go from write-friendly store to intermediate stores to the memory-efficient store]
+[A GET request might go from write-friendly store to intermediate stores to the memory-efficient store](./gofrom.png)
 
 ## Moving forward
 We have explained our design in detail. Let's evaluate our design goals in the next lesson.
