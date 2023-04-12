@@ -54,7 +54,7 @@ Writing sequentially to storage and keeping addresses in memory solves the probl
 
 While a single-store approach keeps things simple, it limits our ability to achieve a better design.
 
-[A single-store approach generally produces a trade-off between high performance and memory efficiency]
+[A single-store approach generally produces a trade-off between high performance and memory efficiency](./tradeoff.png)
 
 Here’s how this trade-off exists. Let’s start with HashCache–a simple design with no in-memory index. HashCache does not work well with random writes since its main hash table is in storage. Here, we are compromising on a higher performance for memory efficiency. For our system to be fast, it needs to write sequentially to storage—since writing sequentially to storage is faster. Using a log-based approach—a sequential write to storage and keeping the offset in memory with hashing—improves our performance. However, as the number of keys grows, so does memory consumption and our cost. This trade-off makes it hard to achieve all our design goals simultaneously.
 
@@ -115,7 +115,7 @@ The general flow of new entries will be from write-friendly to memory-efficient 
 Note: The worst case does not mean anything negative like slow reads or degraded performance. Here, worst case means that the search did not find the key in the stores that are not memory-efficient. The probability of that happening is already very high since we will store the largest proportion of keys in the memory-efficient store—we will design our system to behave well in the worst case. And therefore, we need to optimize its performance in the worst case.
 ```
 
-[Multiple individual stores work collectively to achieve our goals of memory efficiency and read/write performance]
+[Multiple individual stores work collectively to achieve our goals of memory efficiency and read/write performance](./multi.png)
 
 The illustration above shows our model. A few key things to notice are:
 
