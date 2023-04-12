@@ -28,7 +28,7 @@ Note: A key's entry is a DELETE request if it contains the special DELETE charac
 ```
 Here’s a visual representation of our bulk merge.
 
-[Merge]
+[Merge](./merge)
 
 The new log represents our new memory-efficient store. It is ready for the construction of its compact prefix tree representation for the in-memory index. When this is complete, we can route new requests to this store and drop the intermediary stores used in its creation and the older version of the memory-efficient store.
 
