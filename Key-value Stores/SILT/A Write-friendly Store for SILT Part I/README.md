@@ -44,7 +44,7 @@ Based on the information above, we can think of the number of IOPS in the sequen
 ### Writing sequentially
 We’ll write sequentially to storage. Our write-friendly store will append all PUT and DELETE requests to an in-storage log making the writing process fast.
 
-[Sequential writing to the in-storage log]
+[Sequential writing to the in-storage log](./seqwriting.png)
 
 ## In-memory hash table
 The process above presents a problem. Accessing a key would require O(n) time, where n is the number of key-value entries stored in the key-value store. We’ll have to search for the key in the unsorted log for its entry. The following reasons require us to have faster access to specific keys.
@@ -61,4 +61,4 @@ To solve the above problem, we will maintain an in-memory hash table that will m
 
 This hash table also serves as an in-memory filter. The hash function will give us the hash value for the key we are looking for, and if that hash value does not exist in the hash table, the key is not present in this store. This eliminates any storage seeks required for keys that do not exist in the write-friendly store, resulting in lower read-amplification. We will explore this further in the GET request lesson in A Memory-efficient Store for SILT: Part III.
 
-[Log in storage with an in-memory hash table to store offset.]
+[Log in storage with an in-memory hash table to store offset.](./inmem.png)
