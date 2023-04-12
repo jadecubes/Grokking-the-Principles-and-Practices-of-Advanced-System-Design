@@ -19,7 +19,7 @@ Transforming a write-friendly store to an intermediary store requires reordering
 
 Here is the conversion from the write-friendly store to the intermediary store in storage.
 
-[The storage log before (above) and after (below) conversion from a write-friendly store to an intermediary store. Both data structures are the same and store key-value pairs sequentially in storage.]
+[The storage log before (above) and after (below) conversion from a write-friendly store to an intermediary store. Both data structures are the same and store key-value pairs sequentially in storage.](./reduced.png)
 
 There are two things to notice here:
 
@@ -31,7 +31,7 @@ Now, we can locate entries in storage using only the first column of the in-memo
 
 In memory, we drop the empty buckets and the offset column.
 
-[The memory hash table before (left) and after (right) conversion from a write-friendly store to an intermediary store. Both data structures have the same hash functions, which we can see from the identical mapping of keys to buckets.]
+[The memory hash table before (left) and after (right) conversion from a write-friendly store to an intermediary store. Both data structures have the same hash functions, which we can see from the identical mapping of keys to buckets.](./trans.png)
 
 Notice how a key's hash's position represents its offset in storage. To clarify, h1(K1) is less than h2(K2), which is lesser than h2(K9), and so on.
 ```
@@ -63,7 +63,7 @@ We will traverse the hash table from the start to the end. For every entry in th
 
 The slide deck below demonstrates the conversion from a write-friendly store to an intermediary one.
 
-[Process]
+[Process](./memefficient)
 
 ```
 Note: We lazily update or delete keys' values. Remember that in our write-friendly store, we sequentially append all operations, even if an already present key's value was updated or deleted. We didn't try to update (or remove keys) right away because it would have required random reading and writing (a slow operation), so we traded disk space for writing speed.
