@@ -26,9 +26,45 @@ Note: For a detailed comparison of RDBMS and NoSQL, visit Types of Databases les
 
 ## Table structure
 In our NoSQL design, we will store data in tables, similar to other database systems where the table abstraction is built on top of the underlying key-value store. Every table is a collection of data. Our tables have data stored as items.
-### Single item
-### Attributes
-### Primary key
-### Secondary indexes
-## API
 
+[Partition and sort key in action to locate required data row]
+
+
+### Single item
+Our tables can be empty, or have one or more items. A single item is a set of attributes that we can identify uniquely. We will identify an item using a primary key.
+
+### Attributes
+Every item comprises one or more attributes. An attribute is a unit of information that does not require further simplification. We can think of attributes as fundamental data types, such as a string or a number.
+
+### Primary key
+The primary key uniquely identifies items in tables. Its schema is configured at the time of table creation. The primary key can be one of the following:
+
+1. A partition key
+
+2. A partition key and a sort key
+
+In both cases, inputting the partition key into a hash function returns the location where the item is stored. For the second case, there are two important things to keep in mind:
+
+1. The sort key, along with the output of the hash function, is used to determine the item's location.
+
+2. It is permited for a primary key to identify more than one item, however, such items cannot have the same sort key.
+```
+Note: We will provide more detail about how the primary key is used in the next lesson.
+```
+### Secondary indexes
+Our design allows for querying a table using an alternative key in addition to querying with the primary key. This provides developers with programmable options to query a single table.
+
+
+## API
+Now that we have an understanding of our database system, let's look at the functions provided by our API.
+
+- PutItem: Inserts an item when no item exists for the input key and replaces the item otherwise.
+
+- UpdateItem: Updates an existing item if it exists for the input key. It adds a new item otherwise.
+
+- DeleteItem: Given a primary key, this deletes the relevant item from the table.
+
+- GetItem: Given a primary key, this returns the set of attributes for the relevant item.
+
+## What's next?
+Now that we know how our database system is structured, we will discuss partitioning and spreading it across nodes in a distributed network in the next lesson.
