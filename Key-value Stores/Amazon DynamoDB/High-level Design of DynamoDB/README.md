@@ -32,3 +32,5 @@ We will primarily rely on data replication for higher availability. Tables (or t
 
 [High availability is crucial to build a reliable service]
 
+## What's next?
+Next, we will explore the characteristics above to develop a deeper understanding of our design.
