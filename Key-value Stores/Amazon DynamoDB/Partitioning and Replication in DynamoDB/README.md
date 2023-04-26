@@ -53,7 +53,7 @@ first schema: partition key only
 In the schema below, items cannot have the same partition key.
 ```
 
-[The partition key in this example is "ClothesType". It is used to determine the partition that the item belongs to using the hash function.]
+[The partition key in this example is "ClothesType". It is used to determine the partition that the item belongs to using the hash function.](./partitionkey.png)
 
 #### Composite key schema: partition key and sort key
 For the second schema, it is permitted for a primary key to identify more than one item. Our design stores such items in the same partition in ascending or descending order by sort key and physically close to each other. Such items must have different sort keys.
@@ -73,7 +73,7 @@ Let’s summarize the second schema as follows:
 Note: For updates, lookups, and deletes, in a table with the second schema, both the partition key and sort key from the function arguments must match the values in the item for the operation to be carried out on the item.
 ```
 
-[The partition key in this example is "ClothesType," and the sort key is "Size." Only the partition key is used to determine the partition the item belongs to; the sort key is not used yet. The sort key is used to determine the position of the item among other items with the same partition key.](./partitionkey.png)
+[The partition key in this example is "ClothesType," and the sort key is "Size." Only the partition key is used to determine the partition the item belongs to; the sort key is not used yet. The sort key is used to determine the position of the item among other items with the same partition key.](./composite.png)
 
 ## Replication
 Modern cloud service providers have data centers dispersed around the world. These have been clumped together in zones since they provide similar latency to the same user. Our design needs replicas in each availability zone to take advantage of these zones for high availability and durability. Replication allows to cater to the different throughput and storage requirements of tables, even partitions. Furthermore, we require replicas for partitions that require frequent read access. A single replica in a zone might be overwhelmed by the requests from that zone.
