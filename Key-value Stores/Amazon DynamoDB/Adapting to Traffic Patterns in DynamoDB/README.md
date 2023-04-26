@@ -15,7 +15,7 @@ Continuing this example, let's consider dividing our table into ten partitions w
 
 - If the table has provisioned throughput changes, the new throughput would be equally divided amongst the table's partitions. For example, doubling the table's provisioned throughput would double the throughput of each partition.
 
-[In the illustration above, we've added another partition to a table. We did this because there was za request to insert an item with the key ("ClothesType") and the value "Shorts." This key is in the key range covered by the partition (old partition), and the partition was full. Now, the table has two partitions, and its throughput is equally divided among its partitions. Half of the old partition's key range is covered by new partition 1 and the other half by new partition 2.]
+[In the illustration above, we've added another partition to a table. We did this because there was za request to insert an item with the key ("ClothesType") and the value "Shorts." This key is in the key range covered by the partition (old partition), and the partition was full. Now, the table has two partitions, and its throughput is equally divided among its partitions. Half of the old partition's key range is covered by new partition 1 and the other half by new partition 2.](./add.png)
 
 In practice, customers or applications disproportionately access keys—some keys are accessed more frequently than others. Suppose we allocate throughput to partitions uniformly, in that case, applications might access some partitions more frequently than others—since some keys are accessed more frequently than others. There are two key things to notice here.
 
@@ -45,7 +45,7 @@ We can allow a partition to burst for an arbitrarily short period, say 300 secon
 
 We can allow a partition to burst for an arbitrarily short period, say 300 seconds. We cannot allow bursting to permanently use the unused throughput of a co-resident partition since the co-resident partition belongs to another customer and that user has provisioned that throughput for their partition. We also cannot reserve throughput for bursting since that results in underutilizing the node's resources.
 
-[Without bursting, when the number of incoming requests per second (black line) exceeds the number of requests a partition can handle with its provisioned throughput (red line), the difference of requests is rejected because the partition cannot handle such requests. With bursting, we can acquire extra throughput for short periods of increased traffic.]
+[Without bursting, when the number of incoming requests per second (black line) exceeds the number of requests a partition can handle with its provisioned throughput (red line), the difference of requests is rejected because the partition cannot handle such requests. With bursting, we can acquire extra throughput for short periods of increased traffic.](./bursting.png)
 
 Bursting is a good solution to absorb temporary spikes in traffic for a partition on a best-effort basis. Our design must be careful only to allow a partition to burst if unused throughput is available. This is a form of workload isolation. Workload isolation between co-resident partitions means that the workload of one partition does not interfere with the workload of any of its co-resident partitions.
 
@@ -63,7 +63,7 @@ We can maintain a token bucket system at the node level to enforce workload isol
 
         ii. Otherwise, the request is rejected.
         
-[Tokens in the allocation bucket indicate that a partition has provisioned throughput available. The allocation bucket is empty when a bucket's provisioned throughput is being used. Tokens in the burst bucket of a partition indicate if the partition can burst while providing workload isolation. If it is empty, then the partition's node does not have burst capacity: no available throughput without sacrificing workload isolation.]        
+[Tokens in the allocation bucket indicate that a partition has provisioned throughput available. The allocation bucket is empty when a bucket's provisioned throughput is being used. Tokens in the burst bucket of a partition indicate if the partition can burst while providing workload isolation. If it is empty, then the partition's node does not have burst capacity: no available throughput without sacrificing workload isolation.](./token.png)        
 
 The system above executes read requests if tokens are available. For write requests, the system needs to check for token availability of buckets in nodes of the entire replication group. This information can be stored and maintained by the leader replica of the replication group. By doing so, we are prioritizing writes over reads, which benefits a write-heavy workload. However, if traffic is read-heavy, we can allow reads to use any free token from the entire replication group.
 
@@ -100,7 +100,7 @@ One solution is to always allow the partition to burst while providing workload 
 - The GAC allocates tokens that are available to the user's overall tokens.
 
 
-[GAC replenishes tokens in request router buckets. Requests routers allow requests to pass through to partitions if they have tokens available.]
+[GAC replenishes tokens in request router buckets. Requests routers allow requests to pass through to partitions if they have tokens available.](./gac.png)
 
 GAC ensures that workloads that send requests only for some items, or partitions, can execute at maximum partition throughput.
 
