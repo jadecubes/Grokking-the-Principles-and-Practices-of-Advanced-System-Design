@@ -5,7 +5,7 @@ For our design, we have chosen a NoSQL database because of its flexibility with 
 
 ## NoSQL instead of RDBMS
 
-[RDBMS needs schema to be known a priori at the writing time so it can generate indexes. Traditional RDBMS fits the pattern of WORM (write-once read-many), and indexes make reading efficient. For NoSQL, schema can wait until the read time. Hence there is more flexibility for NoSQL solutions.]
+[RDBMS needs schema to be known a priori at the writing time so it can generate indexes. Traditional RDBMS fits the pattern of WORM (write-once read-many), and indexes make reading efficient. For NoSQL, schema can wait until the read time. Hence there is more flexibility for NoSQL solutions.](./sql.png)
 In an RDBMS, data is stored in tables that are related to one another. NoSQL (not only SQL) describes any database with no relational structure of RDBMS. Our choice of NoSQL over RDBMS is motivated by the following reasons:
 
 - Flexibility: The NoSQL model allows unstructured and semi-structured data, something RDBMS does not allow. Including these in our design allows for various use cases. Compared to an RDBMS, we can store data from multiple tables (of a normalized RDBMS) in a single document. This simplicity makes writing our API's codes easier, resulting in more functional APIs. For this reason, NoSQL allows flexibility.
@@ -27,7 +27,7 @@ Note: For a detailed comparison of RDBMS and NoSQL, visit Types of Databases les
 ## Table structure
 In our NoSQL design, we will store data in tables, similar to other database systems where the table abstraction is built on top of the underlying key-value store. Every table is a collection of data. Our tables have data stored as items.
 
-[Partition and sort key in action to locate required data row]
+[Partition and sort key in action to locate required data row](./structure.png)
 
 
 ### Single item
