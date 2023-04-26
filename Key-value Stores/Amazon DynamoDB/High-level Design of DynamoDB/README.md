@@ -10,7 +10,7 @@ The illustration above gives some details about our design. We will explain it i
 ## No fixed schema
 We aim to provide a service that caters to all use cases with easy horizontal scaling. We will allow our database to function without a set schema. This gives users easy access to data and they do not need to declare a schema before using the database. It also keeps our design simple. We'll be using a NoSQL-based database system.
 
-[No fixed schema required](./no-fixed-schema.png)
+[No fixed schema required](./no_fixed_schema.png)
 
 ## Partitioning tables across nodes
 We have decided to use a multi-tenant architecture to better utilize resources in a distributed network. To do this, we will partition our database based on tables so multiple nodes can host them. Later, we will see that this helps us achieve horizontal scalability and high availability. We will discuss the partitioning of our tables and the replication of partitions across our distributed network in a later lesson.
