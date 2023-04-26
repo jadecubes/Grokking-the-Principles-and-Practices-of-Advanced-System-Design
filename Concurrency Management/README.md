@@ -30,3 +30,5 @@ Chubby is Google’s distributed locking service that can provide concurrency co
 The ZooKeeper system takes a different approach. Instead of directly providing locks, it provides some primitives on which more complicated abstractions can be built. To speed up operations, clients have the choice to read from the replicas if clients can live with a somewhat stale state. In other words, this system provides an option for the clients to speed up operations at the expense of looser consistency guarantees or get strong consistency at a higher delay. It has been a recurrent theme for many data stores, but it is interesting to see it again in the context of concurrency control systems.
 
 We hope our selection of concurrency control systems teaches us many important lessons in system design. Let’s dive in!
+
+[Timeline of the evolution of concurrency management systems](./2pl.png)
