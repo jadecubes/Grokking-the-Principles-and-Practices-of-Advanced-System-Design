@@ -10,6 +10,7 @@ One way to maintain write availability is for the leader replica to add another 
 ```
 A log replica only stores the write-ahead log. Log replicas are like acceptors in Paxos.
 ```
+[Write availability](./tx)
 
 In the example above, we still have two-thirds of the nodes available when the node in replication group four becomes faulty. Does that mean the replication group has enough healthy nodes to maintain quorum? No. One of the nodes in the replication group is the leader, and the replicas that can form a quorum is just one. So, if one of them is down, the quorum is lost; half of the nodes are available. If a node in replication group one becomes faulty, the replication group can still form a quorum since two-thirds of the nodes that can form a quorum are available.
 
@@ -38,7 +39,7 @@ In all these cases, there is a higher chance of a false positive in detecting th
 
 One solution for gray failures is to enable communication between replicas in the replication group such that they can confirm that the leader replica can communicate with the rest of the replication group. The follower replica can confirm from enough (a simple majority) of its fellow members of the replication group that communication with the leader is happening before deciding to start an election. If it cannot get confirmation from enough member replicas that they can communicate with the leader replica, then it will trigger a leader election.
 
-[Failure detection]
+[Failure detection](./detection)
 
 ## Tracking availability
 To better track the availability of our designed system, we can have nodes outside of the replication network continuously measuring the availability at service and table levels. As soon as a table's or service's availability falls below the SLA issued to the customer, they trigger alarms that there could be a problem. We can have automated checks to generate a report as soon as an alarm is triggered. Such alarms are called customer-facing alarms (CFAs).
