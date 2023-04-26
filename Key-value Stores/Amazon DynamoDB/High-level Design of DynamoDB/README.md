@@ -3,7 +3,7 @@ There are numerous components in the system, but we will focus on some salient o
 ```
 Note: DynamoDB is a feature-rich database and it is not our goal to cover all of its details here. We will discuss some of the most important design aspects.
 ```
-[High-level architecture of the system]
+[High-level architecture of the system](./hld.png)
 
 The illustration above gives some details about our design. We will explain it in the coming lessons. Our design will have the following key characteristics.
 
