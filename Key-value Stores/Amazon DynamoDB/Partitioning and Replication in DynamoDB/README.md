@@ -11,7 +11,7 @@ The purpose of partitioning is to distribute the load of read and write requests
 Vertical partitioning is the splitting of a table by columns. The illustration below demonstrates vertical sharding.
 
 
-[Vertical partitioning splits tables by columns]
+[Vertical partitioning splits tables by columns](./vertical.png)
 
 In the example above, we have partitioned a table into two tables. Note how both tables have the same primary key.
 
@@ -19,7 +19,7 @@ In the example above, we have partitioned a table into two tables. Note how both
 ### Horizontal
 Horizontal partitioning is the partitioning of rows in a table. This is useful for large tables since it allows us to partition a table with many rows; the partitions of the table will have fewer rows. Different from vertical partitioning, all partitions will have the same number of rows. There are better ways to partition when the number of rows is expected to be large that is partitioning horizontally. Read-write access to a large table stored on a single server is limited to the throughput capabilities of that server. If we split the entries in the table equally and store them on two different servers, the same table will have higher availability. The illustration below demonstrates horizontal partitioning.
 
-[Horizontal partitioning splits tables by rows]
+[Horizontal partitioning splits tables by rows](./horizontal.png)
 
 Here, we can see that the resultant tables have the same schema. We've only split the entries in the original table into two tables with the same schema.
 
@@ -73,7 +73,7 @@ Let’s summarize the second schema as follows:
 Note: For updates, lookups, and deletes, in a table with the second schema, both the partition key and sort key from the function arguments must match the values in the item for the operation to be carried out on the item.
 ```
 
-[The partition key in this example is "ClothesType," and the sort key is "Size." Only the partition key is used to determine the partition the item belongs to; the sort key is not used yet. The sort key is used to determine the position of the item among other items with the same partition key.]
+[The partition key in this example is "ClothesType," and the sort key is "Size." Only the partition key is used to determine the partition the item belongs to; the sort key is not used yet. The sort key is used to determine the position of the item among other items with the same partition key.](./partitionkey.png)
 
 ## Replication
 Modern cloud service providers have data centers dispersed around the world. These have been clumped together in zones since they provide similar latency to the same user. Our design needs replicas in each availability zone to take advantage of these zones for high availability and durability. Replication allows to cater to the different throughput and storage requirements of tables, even partitions. Furthermore, we require replicas for partitions that require frequent read access. A single replica in a zone might be overwhelmed by the requests from that zone.
@@ -105,7 +105,7 @@ A consensus problem is as follows:
 #### Multi-Paxos
 Multi-Paxos is one of the most popular algorithms for solving a consensus problem. We will skip the original Multi-Paxos algorithm and explain the salient features of our implementation instead. We will use a leader-election implementation of Multi-Paxos, where all our nodes (members of the replication group) carry out all three roles in the algorithm—proposer, acceptor, and learner.
 
-[Multi-Paxos]
+[Multi-Paxos](./mp)
 
 In the example above, nodes play different roles: leader, acceptor, and learner. We have done this for simplicity. In reality, a node can play all three roles. At any one point, a replication group has one leader. All the rest of the nodes are both acceptors and learners.
 
