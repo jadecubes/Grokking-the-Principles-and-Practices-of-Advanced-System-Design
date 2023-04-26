@@ -9,7 +9,7 @@ A commodity computer is easily available and at an attractive price point for an
 ```
 A write-ahead log is very important in our design. It is a log-based (sequential writing in storage with index in memory) data structure that allows us to store large incoming data. The log stored in the storage is essentially the complete data received from incoming requests. The in-memory index helps to access that data in constant time. Even if we lose the in-memory index due to memory failure, we can still use the write-ahead logs to recreate the index.
 
-[The in-memory index can be recreated using the write-ahead log from storage. By regularly backing up the write-ahead log, we can minimize data loss and recreate the write-ahead log in case the storage of a node fails.]
+[The in-memory index can be recreated using the write-ahead log from storage. By regularly backing up the write-ahead log, we can minimize data loss and recreate the write-ahead log in case the storage of a node fails.](./d.png)
 
 We will regularly archive our write-ahead logs. So, in the event of a node failure, we can recreate the partition using the archived write-ahead log.
 
