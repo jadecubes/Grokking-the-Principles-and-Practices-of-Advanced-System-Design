@@ -71,4 +71,4 @@ Catering to a wide market requires our service to be adaptable to an equally wid
 
 The following concept map summarizes our work in this chapter. In the next lesson, we will start designing our system, which is called DynamoDB. We will explore the high-level design of our service and list its characteristics. We will explain these characteristics from a system design perspective.
 
-[Overview]
+[Overview](./overview.png)
