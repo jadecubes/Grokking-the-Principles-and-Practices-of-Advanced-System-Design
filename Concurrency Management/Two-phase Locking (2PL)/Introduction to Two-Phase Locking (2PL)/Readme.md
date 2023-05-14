@@ -71,7 +71,9 @@ Phase 2: Shrinking/Contraction: Here, the transaction releases all the locks and
 
     - This phase is the transaction’s first step after releasing its first lock.
     - Only locks that the transaction previously acquired may be released. During this phase, it cannot acquire new locks.
-    
+
+[Rules]
+
 ```
 Question 1
 What goes wrong if a lock manager does not follow 2PL rules?
@@ -103,5 +105,59 @@ If the overall schedule of the two transactions’ execution had followed 2PL ru
 8. Once the lock manager has received the commit2 and the database manager processes it, the lock manager releases all the locks held by T2.
 The schedule above can be shown like this: readlock1[a], read 1[a], writelock1[b], write1[b], commit1, readunlock1[a], writeunlock1[b], writelock2[a], write2[a], writelock2[b], write2[b], commit2, writeunlock2[a], writeunlock2[b].
  ```
+ 
+ ```
+Question 2
+How will it impact if one client does not follow 2PL’s third rule while the others do?
+
+Answer
+Since the lock manager has all the records for current locks, it ensures that no client acquires/releases a lock in violation of the basic rules of 2PL. It is solely the lock manager’s responsibility to ensure that the clients follow these rules.
+
+Hypothetically speaking, if the lock manager misses a client avoiding the 2PL rules, it can cause correctness issues for the client who is not following rules, while others might be safe. However, it will indirectly impact the remaining clients if one client makes inconsistent changes to some data.
+```
 ### Requirements
+Before listing down the requirements for 2PL, let’s first understand that in a database, we can block the reading and writing of transactions by introducing two modes of locks— shared or exclusive.
+
+- Shared lock: This lock is termed as “shared” because it can be shared among multiple transactions reading data from an object in the database. It is also known as a read-only lock, since transactions can only read the object by acquiring this lock and can’t update it.
+
+[Shared lock]
+
+- Exclusive lock: An exclusive lock allows a single transaction to read and write from an object in the database. No two transactions are allowed to interact with the same object simultaneously.
+
+[Exclusive lock allowing just one transaction to access object x]
+
+Using the aforementioned lock modes, the 2PL must have the following requirements:
+
+1. Shared lock for reading: A transaction must acquire the lock in the shared mode to read an object from the database. Since it’s a shared lock, many other transactions might be reading the same object simultaneously, which is acceptable.
+
+The only limitation is if there is already an exclusive lock placed on the object, the transactions trying to access that object must wait for the completion (commit or abort) of the previous transaction.
+
+[Shared lock for reading]
+
+2. Exclusive lock for writing: A transaction must acquire the lock in the exclusive mode to write to an object in the database. If the object already has a lock placed on it, either shared or exclusive, the transaction must wait until the previous transaction finishes, since this phase doesn’t allow more than one transaction to hold the lock for the same object.
+
+[Exclusive lock for writing]
+
+3. Lock upgrade: A transaction needs to upgrade its lock from shared to exclusive if it reads and then writes an object. This shift is similar to acquiring an exclusive lock altogether. The transaction has to wait for another transaction that has already placed the lock on the object.
+
+```
+Question
+In which phase would the lock upgrade happen?
+
+Answer
+Since we set the condition that the lock upgrade is similar to acquiring a new exclusive lock, it must happen in the expansion phase of the two phases described earlier.
+```
+
 ### Architecture
+To implement 2PL, we essentially need two main components:
+
+1. A database that supports transactions: Currently, most of the relational and a few non-relational databases support transactions, following the style of the first relational database—IBM’s System R. Others like MySQL, PostgreSQL, Oracle, SQL Server, etc., have close similarities with System R.
+
+2. A lock manager: This is the central managing component for all the locking and unlocking approvals. Transactions will request the lock manager to acquire locks and inform it while releasing them, so the lock manager must have a global state of each active lock in the database. Once a transaction requests a lock, the lock manager must be able to look into its table of existing locks for a match. If found, it must also queue the new requests to entertain them afterward, in the designated way.
+
+The lock manager implementation varies from database to database and from application to application. We can either have a central lock manager or a distributed lock manager, each with its pros and cons.
+```
+Most of our chapters have a bird’s eye view section to summarize the chapter and also as a milestone in our learning journey. Due to the shorter size of this chapter, we haven’t included that bird’s eye view section here.
+```
+In the next lesson, we’ll discuss the scenarios of deadlocks in acquiring locks and analyze the limitations of 2PL.
+
