@@ -72,7 +72,7 @@ Phase 2: Shrinking/Contraction: Here, the transaction releases all the locks and
     - This phase is the transaction’s first step after releasing its first lock.
     - Only locks that the transaction previously acquired may be released. During this phase, it cannot acquire new locks.
 
-[Rules]
+[Rules](./violation)
 
 ```
 Question 1
@@ -120,11 +120,11 @@ Before listing down the requirements for 2PL, let’s first understand that in a
 
 - Shared lock: This lock is termed as “shared” because it can be shared among multiple transactions reading data from an object in the database. It is also known as a read-only lock, since transactions can only read the object by acquiring this lock and can’t update it.
 
-[Shared lock]
+[Shared lock](./shared_lock)
 
 - Exclusive lock: An exclusive lock allows a single transaction to read and write from an object in the database. No two transactions are allowed to interact with the same object simultaneously.
 
-[Exclusive lock allowing just one transaction to access object x]
+[Exclusive lock allowing just one transaction to access object x](./exclusive.png)
 
 Using the aforementioned lock modes, the 2PL must have the following requirements:
 
@@ -132,11 +132,11 @@ Using the aforementioned lock modes, the 2PL must have the following requirement
 
 The only limitation is if there is already an exclusive lock placed on the object, the transactions trying to access that object must wait for the completion (commit or abort) of the previous transaction.
 
-[Shared lock for reading]
+[Shared lock for reading](./shared_lock_reading)
 
 2. Exclusive lock for writing: A transaction must acquire the lock in the exclusive mode to write to an object in the database. If the object already has a lock placed on it, either shared or exclusive, the transaction must wait until the previous transaction finishes, since this phase doesn’t allow more than one transaction to hold the lock for the same object.
 
-[Exclusive lock for writing]
+[Exclusive lock for writing](./exclusive_lock_for_writing)
 
 3. Lock upgrade: A transaction needs to upgrade its lock from shared to exclusive if it reads and then writes an object. This shift is similar to acquiring an exclusive lock altogether. The transaction has to wait for another transaction that has already placed the lock on the object.
 
