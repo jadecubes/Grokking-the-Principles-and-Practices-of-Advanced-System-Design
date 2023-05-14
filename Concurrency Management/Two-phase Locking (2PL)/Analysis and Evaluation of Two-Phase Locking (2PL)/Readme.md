@@ -2,7 +2,8 @@
 ## Handling of deadlocks
 A situation might arise where transaction A is waiting for a long time for transaction B to finish, since we use a lot of locks simultaneously. In general, we refer to the situation where a cycle of transactions waits for one another to release locks as a deadlock.
 
-[A deadlock]
+[A deadlock](./deadlock.png)
+
 The database automatically identifies deadlocks among the transactions. To resolve them, it relies on two approaches—detection and prevention.
 
 ### Deadlocks detection
