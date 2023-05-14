@@ -10,7 +10,7 @@ The database management system (DBMS) produces a waits-for graph, where transact
 ```
 wats-for graph: A directed graph used for deadlock detection.
 ```
-[Detection]
+[Detection](./detection)
 
 - The DBMS will choose a victim transaction to roll back when it notices a deadlock to break the loop.
 - Depending on how the application invoked the transaction, the victim transaction will either restart or abort.
@@ -38,7 +38,7 @@ Wound-wait can provide low latency for high-priority transactions because they d
 ```
 Only the younger transaction (the one entering the system with a later timestamp) may be terminated and restarted in both scenarios. When a transaction restarts, its old timestamp becomes its (new) priority. This ensures that some transaction is not disadvantaged by always waiting or aborting when there is a flurry of high-priority / old transactions, and gets executed.
 
-[Prevention]
+[Prevention](./prevention)
 
 ## Shortcomings
 Even though 2PL has been in practice for decades and serving well, it has some associated limitations. Let’s analyze a few of them.
