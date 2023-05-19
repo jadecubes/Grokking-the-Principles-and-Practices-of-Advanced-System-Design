@@ -7,7 +7,7 @@ Let’s assume that thousands of clients are trying to access the nodes in the m
 - What happens when clients are reading from a file, and a write request comes in and updates the data?
 
 This lesson addresses the above-mentioned concerns in Chubby's design. The table below summarizes the goals of this lesson.
-                                              
+```                                              
            Lesson Summary
 Section                     Purpose
 
@@ -18,7 +18,7 @@ Sequencer/lock delay        These methods provide support for the complexity of 
 Events                      This allows master to report any changes in the database to the clients.  
 
 API design of Chubby        This gives the commands that are used to perform several different operations in Chubby.
-
+```
 
 ## Locking
 Chubby's files and directories (nodes) can act as a reader or writer lock. Clients can hold these locks in exclusive and shared modes.
