@@ -118,4 +118,4 @@ The "ls" used in the paths stands for lock service, it is a prefix that is commo
 ## Bird’s eye view
 In the next few lessons, we will design and evaluate Chubby. The following concept map is a quick summary of the problems Chubby solves and its novelties.
 
-[Overview]
+[Overview](./overview.png)
