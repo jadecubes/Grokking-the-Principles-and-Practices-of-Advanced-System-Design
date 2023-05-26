@@ -53,6 +53,39 @@ Differences: Chubby varies from distributed file systems regarding performance a
 Since Chubby’s database is relatively small, we can maintain multiple copies (usually five replicas and a few backups) online. We perform full backups frequently throughout the day and compare the replicas with checksums of the database state every few hours. Due to the lower file system performance and storage requirements, a single Chubby master can handle serving tens of thousands of clients.
 
 ### Chubby and Boxwood
+Since Chubby is technically a locking service, it’s more logical to compare it to a locking service—Boxwood. The infrastructure of Boxwood is similar to Chubby in that it was intended to function in a system where components were not closely connected. However, its design differed from Chubby in various ways. Let’s discuss this in detail.
+
+- Underlying infrastructure: Broadly speaking, this refers to the systems and structures that support the functioning of an organization or society. Chubby combines lock systems, small file storage, and session/lease management into a single service, while Boxwood separates these functions into three separate services: a lock service, a Paxos service for storing state information, and a failure detection service.
+
+These three construction pieces are used together in the Boxwood system, although we may use them separately in another system.
+
+- Interface: Chubby often offers a more advanced interface than Boxwood in various situations. Chubby merges the file names and the locks, while Boxwood’s lock names are simply sequences of bytes. By default, Chubby clients store file states in their cache, but Boxwood’s Paxos service clients may use the lock service for caching or may choose to utilize Boxwood’s own caching system.
+
+- Default parameters: The default parameters for the two systems are noticeably different, mainly because of their different expectations.
+
+    - The clients communicate with the Boxwood failure detectors every 200 milliseconds, with a maximum waiting time of 1 second. Chubby’s default lease duration is 12 seconds, and it sends KeepAlives every 7 seconds.
+    - Boxwood’s subcomponents achieve availability with two or three replica servers, but Chubby typically needs five replicates per cell.
+Although these options may seem like they involve different designs, they actually just refer to the adjustments we need to make in these systems to accommodate more clients or deal with unpredictable aspects of a project.
+
+- Introduction of a grace period: The inclusion of Chubby’s grace period, which Boxwood lacks, is a more interesting contrast. The Boxwood grace period is similar to Chubby’s session lease, which is a separate concept. The difference between the two is based on different assumptions about the size and probability of failure in each system. While master failovers are not common, losing a Chubby lock can be expensive for clients.
+
+- Different functions: In summary, the locks in the Chubby system are more robust and used to protect external resources, while the locks in the Boxwood system are lightweight and only used within that system.
+
+
 ## Throughput
+Chubby’s infrastructure ensures that a single Chubby cell can handle thousands of machines. As Chubby is read-heavy, it also has to ensure that the read throughput is high to sustain its performance under heavier load. The design choice of multiple clients getting read access to a specific file (for example, the use of client-side caching and proxies) ensures high throughput and allows a Chubby cell to handle thousands of clients simultaneously.
+
 ## Conclusion
+Chubby is a tool that helps coordinate and synchronize actions within Google’s distributed systems. It can also be used as a name service and configuration information store. Its design is built on several key features, including:
+
+1. Using multiple replica servers to ensure reliability
+2. Caching on the client side to reduce server strain
+3. Timely notifications about updates
+4. A user-friendly interface resembling a file system
+We use caching and protocol-conversion servers, as well as load adaption, to handle a large number of client processes for each instance of Chubby. We anticipate future scaling via proxies and partitioning.
+
+Storage systems such as GFS and Bigtable utilize Chubby to choose a primary server among redundant replica servers, and they use Chubby to bootstrap their systems. It is a standard storage for storing files that require high accessibility, such as ACLs. Moreover, Chubby is now the main internal name service for Google.
+
 ### System design wisdom in Chubby
+Redirecting all reads and writes via a single node was the primary way Chubby provided strong consistency. Such a design might have drastically reduced the read and write scalability had Chubby not taken care of it. Chubby uses extensive client-side caching and the introduction of proxies to mitigate the impact of having all reads and writes go through one node. A common theme in system design is that while there are trade offs between different aspects, it is often that more can be done to mitigate (or reduce) the negative impacts of our earlier choices.
+
