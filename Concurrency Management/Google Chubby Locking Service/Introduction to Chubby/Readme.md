@@ -25,7 +25,7 @@ correctness: We can define the correctness of a system in terms of its complianc
 liveliness: A liveness property defines something that must eventually happen in a correct system.
 ```
 
-[Problems with the Paxos library implementation]
+[Problems with the Paxos library implementation](./paxos.png)
 
 Since Paxos only maintains safety without timing assumptions (asynchronous consensus), we can’t deploy it because of the visible limitations related to asynchronization discussed above.
 ```
@@ -44,7 +44,7 @@ Chubby handles two essential requirements of a distributed system more sophistic
 1. Primary election: Chubby reduces the computing power required to perform an ad hoc operation.
 2. Availability: Chubby significantly improves the system’s fault-handling capabilities and ensures availability by eliminating human intervention in failures.
 
-[Chubby service's main responsibilities]
+[Chubby service's main responsibilities](./resp.png)
 ## Applications of Chubby
 Google has a lot of internal services that need to divide work (at a coarse grain) among multiple servers. These services—Google File System (GFS) and Bigtable—use Chubby as a core part. Let’s explore Chubby’s role in these two services.
 
@@ -87,7 +87,7 @@ In addition to the functional requirements, our service has some non-functional 
 - Easy-to-understand semantics: Achieving synchronization is a daunting task in the distributed system world. Hence our service should overcome this limitation and provide an easy-to-understand interface to the developers.
 - Throughput: Even though this isn’t a primary goal of our service, it should ensure high throughput for overall better performance.
 
-[Non-functional requirements of Chubby]
+[Non-functional requirements of Chubby](./req.png)
 
 ## High-level design
 The illustration below depicts the high-level design composed of two main components in Chubby that are briefly explained.
@@ -105,7 +105,7 @@ Access Control List: A list that tells which processes or people can be given wh
 ### The Chubby library
 Communication between clients and servers in a Chubby cell is mediated by the Chubby library. It takes a request from a client who wants to use Chubby service and then finds the relevant cell, directs the request to that cell via remote procedure calls (RPCs), and then reports any changes made in the namespace, data, or metadata (which can also be known as events) back to the client.
 
-[High-level design of Chubby]
+[High-level design of Chubby](./hld.png)
 
 ```
 Note: It’s important to consider the following two things in Chubby’s high-level design:
