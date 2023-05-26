@@ -4,14 +4,14 @@ Communication between clients and servers happens through the client library lin
 ```
 Note: Chubby also has another component called a proxy server (this is an optional component that we discuss later).
 ```
-[Client application using Chubby service via Chubby's client library]
+[Client application using Chubby service via Chubby's client library](./rpc.png)
 
 If we look at the illustration above, there is a single server providing the Chubby service. If that server fails, the service will be down. To handle this, Chubby deploys a set of servers called a Chubby cell. A Chubby cell usually consists of five servers placed in different racks to reduce correlated failures. The servers placed in the same rack may share the electric power. For example, in case of a short circuit, the whole rack will be unavailable, and if we keep all the servers of a Chubby cell in the same rack, all of them will be unavailable. So, the servers are placed in different racks to reduce the system's unavailability. We may distribute replicas across data centers to guard against the full data center failure. However, doing so makes data consistency trickier and adds latency.
 
 ### Servers
 All the servers in the Chubby cell are replicas of each other and maintain copies of Chubby's database. Out of all the servers in the Chubby cell, one is elected as the master using a consensus protocol. The rest of the servers in the Chubby cell are called replica servers.
 
-[A Chubby cell]
+[A Chubby cell](./cell.png)
 
 - Master: The master has to get the votes of most replicas and a guarantee from those replicas that they won't choose a different master for a small period (a few seconds). This guarantee is known as the master lease. Under the condition that the master continues to receive a majority of the vote, the replicas periodically renew the master lease.
 
@@ -50,17 +50,17 @@ Chubby’s design is shown in the following illustration. There are client proce
 
 The list of servers in the Chubby cell is placed on the Chubby DNS server. Clients get this list from the DNS and send the master location request to all servers in that list. All the non-master servers return the location of the master (probably the IP address) in response to such requests because they know the master. After finding the master’s location, the client then directs all its requests to the master. It continues to do so until the master stops responding or it indicates that it is no longer a master.
 
-[The client finding the master]
+[The client finding the master](./finding.png)
 
 There are two types of requests–write and read.
 
 - When a master receives a write request, it propagates the request via the consensus protocol to all replica servers. Write requests are asynchronous and are only acknowledged until they are propagated to the majority of replica servers. Making sure that the write request has propagated to the majority of replica servers signifies that most replica servers are updated and can be elected as a new master in case of failure. Chubby does not wait for the propagation of requests to all the replica servers because these can fail and not respond for a few hours, which can stall a write request for too long.
 
-[write]
+[write](./write)
 
 - The read requests are satisfied by the master.
 
-[Read request]
+[Read request](./read.png)
 
 ## Inside a server
 Let's go through the design details of the server.
@@ -109,13 +109,13 @@ The namespace contains files and directories. Each file or directory is known as
 
 Ephemeral nodes are there to show that a client is alive to other clients and permanent files are there to advertise data/metadata of a service. Both of these nodes can be specifically deleted. However, ephemeral nodes can also get deleted when no client has them open.
 
-[Nodes and their metadata]
+[Nodes and their metadata](./nodes.png)
 
 Access control lists (ACLs) are files in the ACL directory of the namespace. These files contain a simple list of authorized clients’ names. They are readily available for services that want to use similar authorizing mechanisms. Therefore, the users are authorized by mechanisms built into the RPC system.
 
 Each node has metadata, including ACL file names. There are three ACL names because we need to keep track of the read ACL names, write ACL names, and changed ACL names. A node uses them to keep a check on writing, reading, and modifying ACL names. When a new node is created, it inherits the ACLs of its parent directory unless they are overridden. For example, if a file A's write ACL name is foo, there is a file named foo in the ACL directory, and it contains an entry user_1, then user_1 has permission to write A.
 
-[Write the ACL of file_A]
+[Write the ACL of file_acl](./write)
 
 
 Other metadata: Each node also has four monotonically increasing numbers of 64 bits that help clients detect changes in files and directories. Whenever a node is created, all these numbers start from 0. These numbers include:
