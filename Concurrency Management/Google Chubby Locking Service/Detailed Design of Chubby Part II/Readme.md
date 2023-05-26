@@ -151,7 +151,9 @@ The Chubby handle appears as a pointer that supports multiple operations to Chub
 - The client can open a file or directory with the following options:
 
     - How to use the handle, i.e., read, write, lock or change an ACL. The handle can only be created by the client with appropriate permissions.
-
+```
+ACL: Access control list
+```
     - Which events to deliver
 
     - Lock delay
