@@ -12,7 +12,7 @@ We can employ three methods to be realistic about Chubby’s availability achiev
 2. We can rely on additional libraries executing various high-level activities, isolating application developers from Chubby’s downtime.
 3. We can analyze each Chubby malfunction to find ways to prevent similar issues in the future and make applications less reliant on Chubby, ultimately leading to an increase in the overall system’s availability.
 
-[Methods to achieve realistic availability for Chubby]
+[Methods to achieve realistic availability for Chubby](./availability.png)
 Let’s also evaluate how Chubby handles different failure scenarios to ensure availability.
 
 ### Master failure
@@ -34,7 +34,7 @@ If a failed replica is not recovering for a few hours, the following steps occur
 ## Reliability
 Chubby’s design places a lot of emphasis on replication. This ensures consistent, reliable services. The replication of each server within a cell ensures that no data is lost, and we have proper reliable data backups in case of any failures.
 
-[Evaluation of non-functional requirements of Chubby]
+[Evaluation of non-functional requirements of Chubby](./matrics.png)
 
 ## Easy-to-understand semantics
 Many features in Chubby were inspired by already existing systems, ensuring higher developer familiarity and smoother onboarding. One of the main factors ensuring this non-functional requirement is Chubby’s relationship with distributed file systems. Let’s analyze this in general, followed by a specific one.
