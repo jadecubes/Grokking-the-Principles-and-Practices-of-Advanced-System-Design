@@ -130,6 +130,9 @@ A wide range of activities are known as events in Chubby. Let’s go through som
 - Adding, removing, or modifying a child node: It is used to implement mirroring (discussed later). Moreover, it is also used to allow new files to be discovered and monitor ephemeral files in child nodes.
 
 - Master failover: It is used to alert other clients that some events might be lost so that they can rescan the data.
+```
+The process in which a master fails and a new master is elected in place of the failed master is called a master failover.
+```
 
 - A handle becoming invalid: It is used to suggest a problem in communication.
 
