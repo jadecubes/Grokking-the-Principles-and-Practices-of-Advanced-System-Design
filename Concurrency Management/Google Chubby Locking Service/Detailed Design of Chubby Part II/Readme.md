@@ -27,7 +27,7 @@ Chubby's files and directories (nodes) can act as a reader or writer lock. Clien
 
 - A single client handle can hold a lock in writer mode (exclusive).
 
-[Client holding a lock on node 2]
+[Client holding a lock on node 2](./lock.png)
 
 Locks are advisory, meaning that holding a lock is not necessary to read a file, and it does not prevent other clients from reading that file. The clients accessing the files will have to cooperate to ensure no conflict occurs and locks are observed properly. Conflicts can occur only when other clients attempt to acquire the exclusive lock.
 
@@ -93,7 +93,7 @@ The process of passing sequencers in Chubby is as follows:
 
 - Chubby only needs to add a string to each message for sequencers.
 
-[Sequencer]
+[Sequencer](./seq)
 
 The sequencers are easy to use but are not perfect because some servers do not support them. Therefore, Chubby provides another mechanism called a lock delay, which allows them to avoid the problem of unordered messages.
 ```
@@ -112,7 +112,7 @@ A client usually releases a lock in a normal way. However, a lock can become fre
 
 A lock delay of up to 1 minute can be set. This limit is introduced to prevent faulty clients from claiming a lock and making it unclaimable for long periods. A lock delay might not be the perfect method to prevent faulty clients from holding a lock, but it protects clients from message delays and restarts.
 
-[Lock delay]
+[Lock delay](./delay)
 
 ```
 Question
