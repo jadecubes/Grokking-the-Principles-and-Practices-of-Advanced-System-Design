@@ -13,7 +13,7 @@ What if we have too many read requests? Chubby reduces the read traffic by letti
 ```
 The data is updated both in the client's cache and main memory of master.
 ```
-[Caching]
+[Caching](./caching)
 
 ### Consistency
 The master keeps a list of data that clients are caching and sends invalidations to the client to keep the cache consistent. The protocol ensures that a client can only get a consistent Chubby state or an error.
@@ -81,7 +81,7 @@ Master increases the time in a session under the following situations:
 ### KeepAlives
 KeepAlives are a series of periodic handshakes between the client and the master to literally keep the session alive. When a KeepAlive is sent to the master, it blocks the RPC and only allows it to return when the session’s time is close to being over. The returning RPC notifies the client of a new lease time-out. After receiving this new time-out, the client initiates another KeepAlive just to ensure that the master almost always has a KeepAlive call blocked from the client and the session has no chance of expiring. The default extension value of a lease time-out is 12s. However, if a master is to be overloaded with constant KeepAlives, it can increase this value so that it has to process fewer KeepAlives.
 
-[Session of a client and master]
+[Session of a client and master](./inter.png)
 
 Along with the client’s extended lease, two other components, events and cache invalidations, are also returned with the KeepAlive reply.
 
