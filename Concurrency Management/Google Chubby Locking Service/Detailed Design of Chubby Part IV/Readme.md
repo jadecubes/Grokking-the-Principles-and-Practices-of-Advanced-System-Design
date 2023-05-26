@@ -12,7 +12,7 @@ Once a client has made contact with the new master, the client library and the m
 - Acquiring state from clients
 - Making cautious assumptions
 
-[The new master recreates an approximation of the in-memory state of the old master]
+[The new master recreates an approximation of the in-memory state of the old master](./newmaster.png)
 
 ```
 Note: All sessions, held locks, and ephemeral files are recorded in the database.
@@ -21,7 +21,7 @@ Note: All sessions, held locks, and ephemeral files are recorded in the database
 ### Newly elected master proceedings
 The proceedings of the newly elected master are shown in the following slides.
 
-[new master]
+[new master](./newlyelected.png)
 
 ```
 Question 1
@@ -47,7 +47,7 @@ The following illustration depicts the progression of an extended master failove
 Note: Arrows from left to right show KeepAlive requests, and the ones from right to left show their replies.
 ```
 
-[Example]
+[Example](./example)
 
 ```
 Note: During the grace period, the client is uncertain as to whether its lease at the master has ended at this time. It does not end its session, but it does stop all API requests from applications to stop them from seeing erroneous data.
@@ -74,7 +74,7 @@ As discussed previously, a distributed consensus protocol was used to disseminat
 ## Backup
 Each Chubby cell’s master takes a snapshot of its database every few hours and uploads it to a GFS file server located in a separate building. Using a different site guarantees that the backup in GFS will endure any damages on a single site and that the backups do not incur cyclic dependencies into the system; otherwise, a GFS cell deployed at a single site may depend on the Chubby cell to choose its master.
 
-[Chubby's backup strategy]
+[Chubby's backup strategy](./backup.png)
 
 Backups offer both disaster recovery and a way to set up the database of a replacement replica without putting additional stress on active replica servers.
 
@@ -83,7 +83,7 @@ Chubby enables mirroring a group of files from one cell to another. The fact tha
 ```
 Mirroring: A technique that allows a system to automatically maintain multiple copies.
 ```
-[Mirroring a Chubby cell across five different locations]
+[Mirroring a Chubby cell across five different locations](./mirror.png)
 
 Most frequently, configuration files are copied to numerous computing clusters dispersed worldwide via mirroring. A unique cell called global has a subtree called /ls/global/master that is mirrored to every other Chubby cell’s subtree called /ls/cell/shadow. The global cell is unique because it can nearly always be reached by the organization owing to its five replica servers spread across five different geographical locations.
 
@@ -104,7 +104,7 @@ We can utilize several mechanisms to scale Chubby. A few of them are as follows:
 3. Optimizing caching: To minimize the number of calls Chubby clients make to the server, they cache file data, metadata, the absence of files, and currently open handles.
 4. Protocol conversions: We use protocol-conversion servers to convert the sophisticated Chubby protocol into other less complicated protocols like DNS. We’ll review proxies and partitioning as two such scaling mechanisms below.
 
-[Scaling mechanisms for Chubby]
+[Scaling mechanisms for Chubby](./scaling.png)
 
 ```
 Question
@@ -123,7 +123,7 @@ Proxies can positively impact different requests in the following ways:
 - At best, a proxy cache can reduce read traffic by a factor of 10 or by the average amount of read-sharing.
 However, as reads only make up around 10% of Chubby’s current load, the reduction in KeepAlive traffic is far more significant (in one of Chubby’s installations at Google, they observed 1% write traffic, 10% read traffic, and the rest for the other operations related to sessions, etc.).
 
-[Scaling Chubby using proxies]
+[Scaling Chubby using proxies](./proxy.png)
 
 ### Partitioning
 We can shard Chubby’s namespace for scalability. Doing so, a Chubby cell would consist of N partitions, each including a set of replicas and a master.
