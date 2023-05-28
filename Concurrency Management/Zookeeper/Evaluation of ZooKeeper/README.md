@@ -133,37 +133,32 @@ The create() request with 1 KB data matches our anticipated utilization better, 
 776 requests per second, so 1/776=0.0012 s =0.0012×1000 ms = 1.2ms. Similarly, for 9 servers with a single worker, we have 711 requests per second, so 1/711=0.0014 s =0.0014×1000 ms=1.4 ms=1.4 ms.
 
 ## Performance of barriers
-To check the performance of primitives we discussed in the [previous lesson](../Primitives of Zookeepers), we conducted an experiment by executing n number of barriers sequentially. As we have discussed earlier, the double-barrier is where clients have to wait for 
-�
-b
- (barrier threshold) number of clients to enter the barrier before the execution starts in enter() and the same for leave().
+To check the performance of primitives we discussed in the previous lesson, Primitives of Zookeepers, we conducted an experiment by executing n number of barriers sequentially. As we have discussed earlier, the double-barrier is where clients have to wait for b (barrier threshold) number of clients to enter the barrier before the execution starts in enter() and the same for leave().
 
-The results of this experiment are given in the table below. We have successfully entered multiple clients such as 
-50
-50
-, 
-100
-100
-, and 
-200
-200
- in 
-�
-n
- number of barriers such that 
-�
-∈
-n∈
- {
-200
-,
-400
-,
-800
-,
-1600
-200,400,800,1600
-}. ZooKeeper clients can be in thousands, but since they are frequently classified according to the characteristics of the application, only a considerably smaller fraction of clients actually participates in each coordinating activity.
+The results of this experiment are given in the table below. We have successfully entered multiple clients such as 50, 100, and 200 in n number of barriers such that n ∈ {200, 400, 800, 1600}. ZooKeeper clients can be in thousands, but since they are frequently classified according to the characteristics of the application, only a considerably smaller fraction of clients actually participates in each coordinating activity.
+
+```
+        Barrier Experiment with Time in Seconds
+Number of barriers          Number of clients	
+                            50	    100	   200	
+
+200	                       9.4	    19.8	   41.0	
+
+400	                      16.4	    34.1	   62.0
+
+800	                       28.9	   55.9	   112.1	
+
+1600	                      54.0	   102.7	   234.4
+```
+
+We have taken the following two observations from the experiment:
+
+The amount of time required to process all barriers increases fairly linearly with the number of barriers, demonstrating that unanticipated delays were not caused by concurrent access to the same area of the data tree.
+Latency is directly proportional to the number of clients.
+In reality, even when clients move forward in lock-step, we see that the throughput of barrier operations, enter() and leave() is always between 1,950 and 3,100 operations per second. If ZooKeeper is used, this translates to the throughput rates ranging between 10,700 and 17,000 operations per second. Each barrier-level construct used ZooKeeper’s primitives to implement it. The implementation has a read-to-write ratio of 4:1 (80% of read operations), which is significantly lower than the actual throughput (without read-to-write ratio) that ZooKeeper can achieve, which is 40,000 according to the graph on the left side under read/write requests. This happens because customers have to wait on other customers.
 
 ## Conclusion
+ZooKeeper provides wait-free coordination by using a simple interface for the developers. This simple interface allows ZooKeeper developers to create multiple primitives using the client API. Even though ZooKeeper is not a locking service because of the wait-free feature, it can be used to build one.
+
 ### System design wisdom in ZooKeeper
+ZooKeeper solves similar problems that Chubby solves but in a different way. This shows us that the same problem has many viable solutions with different tradeoffs. ZooKeeper’s consistency model enables its clients to choose a tradeoff between strong consistency, latency, and throughput as per need, while Chubby enforces a strong consistency model that impacted its throughput scalability.
