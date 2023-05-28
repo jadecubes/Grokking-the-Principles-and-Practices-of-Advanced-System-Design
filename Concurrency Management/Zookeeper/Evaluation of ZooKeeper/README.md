@@ -133,5 +133,37 @@ The create() request with 1 KB data matches our anticipated utilization better, 
 776 requests per second, so 1/776=0.0012 s =0.0012×1000 ms = 1.2ms. Similarly, for 9 servers with a single worker, we have 711 requests per second, so 1/711=0.0014 s =0.0014×1000 ms=1.4 ms=1.4 ms.
 
 ## Performance of barriers
+To check the performance of primitives we discussed in the [previous lesson](../Primitives of Zookeepers), we conducted an experiment by executing n number of barriers sequentially. As we have discussed earlier, the double-barrier is where clients have to wait for 
+�
+b
+ (barrier threshold) number of clients to enter the barrier before the execution starts in enter() and the same for leave().
+
+The results of this experiment are given in the table below. We have successfully entered multiple clients such as 
+50
+50
+, 
+100
+100
+, and 
+200
+200
+ in 
+�
+n
+ number of barriers such that 
+�
+∈
+n∈
+ {
+200
+,
+400
+,
+800
+,
+1600
+200,400,800,1600
+}. ZooKeeper clients can be in thousands, but since they are frequently classified according to the characteristics of the application, only a considerably smaller fraction of clients actually participates in each coordinating activity.
+
 ## Conclusion
 ### System design wisdom in ZooKeeper
