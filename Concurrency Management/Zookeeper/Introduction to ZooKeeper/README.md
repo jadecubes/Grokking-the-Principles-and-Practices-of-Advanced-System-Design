@@ -97,4 +97,4 @@ Source: Herlihy, M. (1991). Wait-free synchronization. ACM Transactions on Progr
 ### Bird’s eye view
 In the next lessons, we’ll design and evaluate ZooKeeper. The following concept map is a quick summary of the problem ZooKeeper solves and its novelties.
 
-[overview]
+[overview](./overview.png)
