@@ -52,9 +52,9 @@ The atomic broadcasting seems excessive, but the goal is to achieve reliability 
 
 Load distribution helps ZooKeeper achieve high throughput. The relaxed consistencies allowed us to distribute the load, unlike Chubby, where every client is connected with the leader (master). The graph below on the right shows the behavior of ZooKeeper acting as Chubby, with all the clients connecting with the leader (master). However, in ZooKeeper, the follower doesn’t forward any client to the leader or request the leader perform some operation for the follower. Therefore, the throughput of read-dominant workloads is much lower. As the follower only sends the write request to the leader after performing it locally, the write-dominant workload also has lower throughput.
 
-[The throughput of ZooKeeper (Source:Hunt, Patrick, Mahadev Konar, Flavio P. Junqueira, and Benjamin Reed. "{ZooKeeper}: Wait-free Coordination for Internet-scale Systems." In 2010 USENIX Annual Technical Conference (USENIX ATC 10). 2010.)]
+[The throughput of ZooKeeper (Source:Hunt, Patrick, Mahadev Konar, Flavio P. Junqueira, and Benjamin Reed. "{ZooKeeper}: Wait-free Coordination for Internet-scale Systems." In 2010 USENIX Annual Technical Conference (USENIX ATC 10). 2010.)](./request.png)
 
-[The throughput of system where all read/write requests are handled by the leader(master) only (Source: Hunt, Patrick, Mahadev Konar, Flavio P. Junqueira, and Benjamin Reed. "{ZooKeeper}: Wait-free Coordination for Internet-scale Systems." In 2010 USENIX Annual Technical Conference (USENIX ATC 10). 2010.)]
+[The throughput of system where all read/write requests are handled by the leader(master) only (Source: Hunt, Patrick, Mahadev Konar, Flavio P. Junqueira, and Benjamin Reed. "{ZooKeeper}: Wait-free Coordination for Internet-scale Systems." In 2010 USENIX Annual Technical Conference (USENIX ATC 10). 2010.)](./request1.png)
 
 If we compare both graphs, we can see that moving all the requests to the leader highly affects our performance, as the graph on the left has the behavior of ZooKeeper when the load is distributed to all the servers. However, in the graph on the right, all requests are sent to the leader. The starting and ending values of the graph on the right are taken from the table above. For 3 servers, the starting value of the graph (at 100% Write) is 21k, and its maximum value (at 100% Reads) is 87k and the same for other servers.
 ```
@@ -64,7 +64,7 @@ Note that the ending point of servers > 3 is not shown in the graph, as these va
 ### Atomic broadcast
 The atomic broadcast is a vital component of the servers but affects their performance. The graph below shows the write throughput of the atomic broadcast since it decreases with the increase in the number of servers. Since the leader is broadcasting the write request to all the followers, clients can directly connect with the leader. However, for this experiment, the clients have been configured in such a way that they can only connect with the followers, not with the leader, so the leader won’t have to respond to the clients. The atomic broadcast hits the CPU limit at maximum throughput. Theoretically, the performance of the graph below should be equal to ZooKeeper’s performance with 100% writes.
 
-[The average throughput of the atomic broadcast component in isolation (Source: Hunt, Patrick, Mahadev Konar, Flavio P. Junqueira, and Benjamin Reed. "{ZooKeeper}: Wait-free Coordination for Internet-scale Systems." In 2010 USENIX Annual Technical Conference (USENIX ATC 10). 2010.)]
+[The average throughput of the atomic broadcast component in isolation (Source: Hunt, Patrick, Mahadev Konar, Flavio P. Junqueira, and Benjamin Reed. "{ZooKeeper}: Wait-free Coordination for Internet-scale Systems." In 2010 USENIX Annual Technical Conference (USENIX ATC 10). 2010.)](./atomicbroadcast.png)
 
 However, the CPU is needed for other multiple tasks (such as the conversion of requests to transactions, access control list (ACL), which significantly decreases the throughput of the system. However, this is less than the effect on throughput by the atomic broadcast component alone. Robustness and correctness have always been the top priority while its development as ZooKeeper is a crucial production component. By removing things such as unnecessary replicas, numerous serializations of the same item, implementing highly effective data structures internally, and many more, we can considerably improve speed.
 ```
@@ -92,7 +92,7 @@ System failures are the expected phenomena for which we have studied the ZooKeep
 
 6. Recovery of the leader
 
-[The throughput upon failure (Source: Hunt, Patrick, Mahadev Konar, Flavio P. Junqueira, and Benjamin Reed. "{ZooKeeper}: Wait-free Coordination for Internet-scale Systems." In 2010 USENIX Annual Technical Conference (USENIX ATC 10). 2010.)]
+[The throughput upon failure (Source: Hunt, Patrick, Mahadev Konar, Flavio P. Junqueira, and Benjamin Reed. "{ZooKeeper}: Wait-free Coordination for Internet-scale Systems." In 2010 USENIX Annual Technical Conference (USENIX ATC 10). 2010.)](./throughput.png)
 
 The following two observations are very important:
 
