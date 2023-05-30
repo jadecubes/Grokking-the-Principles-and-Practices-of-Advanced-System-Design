@@ -5,6 +5,9 @@ We have discussed the ZooKeeper architecture at a high level in the previous les
 The client API provides a set of functions allowing the client to communicate with the ZooKeeper server. The following are the functions/methods provided in the client API:
 
 - create (path, data[], mode, flag): This method creates a znode. path specifies the location in the coordination data tree at which the znode is to be created. For example, /app1/ in the coordination data tree maintained in the ZooKeeper server’s memory is a path at which we can create a znode. data[] specifies the data to be stored in the created znode, and mode allows the client to choose whether the znode should be regular or ephemeral. create() returns the name of the created znode. If the sequential flag is set, the number from the monotonically increasing counter will be appended to the name of the znode.
+```
+znode: A ZooKeeper in-memory node on which data is being stored.
+```
 
 ```
 The regular mode gives full control of the znode to the client. Only the client can create and delete such znodes. These znodes exist even after the client is disconnected. All the znodes in the ZooKeeper are, by default, regular unless specified otherwise. The ephemeral mode is created by the client, but the system has the right to delete it if the session has expired.
