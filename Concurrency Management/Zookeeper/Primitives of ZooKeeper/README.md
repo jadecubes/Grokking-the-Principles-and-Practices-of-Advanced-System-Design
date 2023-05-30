@@ -192,9 +192,9 @@ Leaving is easy, and for that, we’ll perform the following steps:
 1. We’ll check if the process that is leaving is the last process. If yes, we will delete Zb as shown in lines 5 to 7 of the Leave procedure.
 2. If the process that wishes to leave is the process that has other processes as siblings under the path, it will have to wait for the other processes to be ready to leave, as shown in lines 8 and 9 of the Leave procedure.
 
-[Double barrier]
+[Double barrier](./barrier)
 The behavior of the double barrier, as shown in the illustration above, shows that we have achieved linearizability.
 
-[The namespace of primitives]
+[The namespace of primitives](./namespace.png)
 
 In this lesson, we learned that, for each primitive, we have a znode created under it which can be used to solve our specific issues, as shown in the illustration above. In the next lesson, we’ll evaluate ZooKeeper and see how it solves the problems we mentioned in the introduction of ZooKeeper.
