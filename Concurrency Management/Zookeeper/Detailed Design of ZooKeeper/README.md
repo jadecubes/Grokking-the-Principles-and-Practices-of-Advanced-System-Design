@@ -10,11 +10,17 @@ The client API provides a set of functions allowing the client to communicate wi
 The regular mode gives full control of the znode to the client. Only the client can create and delete such znodes. These znodes exist even after the client is disconnected. All the znodes in the ZooKeeper are, by default, regular unless specified otherwise. The ephemeral mode is created by the client, but the system has the right to delete it if the session has expired.
 ```
 
+```
+monotonically increasing: A set of numbers that are only increasing.
+```
 - setData (path, data[], version): This method sets the data[] in the znode at the specified path and with the specified version.
 
 - getData(path, watch): This method returns data[], which was set through setData() and the metadata of the znode at the specified path. The watch flag allows the client to set a watch on that znode.
 
 - getChildren (path, watch): This method returns all the children names of the znode at the specified path, and the watch flag allows the client to set a watch on that znode’s children.
+```
+A notifying mechanism which notifies the registered client if any data has been updated in that znode so that the client can get updated data. A client can only register for watches during the read operation.
+```
 
 - exists (path, watch): This method checks whether there exists a znode at the specified path and returns its metadata information. The watch flag allows the client to set a watch on that znode.
 ```
