@@ -193,6 +193,7 @@ Leaving is easy, and for that, we’ll perform the following steps:
 2. If the process that wishes to leave is the process that has other processes as siblings under the path, it will have to wait for the other processes to be ready to leave, as shown in lines 8 and 9 of the Leave procedure.
 
 [Double barrier](./barrier)
+
 The behavior of the double barrier, as shown in the illustration above, shows that we have achieved linearizability.
 
 [The namespace of primitives](./namespace.png)
