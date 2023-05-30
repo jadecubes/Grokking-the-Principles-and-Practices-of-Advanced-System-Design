@@ -54,7 +54,7 @@ Load distribution helps ZooKeeper achieve high throughput. The relaxed consisten
 
 [The throughput of ZooKeeper (Source:Hunt, Patrick, Mahadev Konar, Flavio P. Junqueira, and Benjamin Reed. "{ZooKeeper}: Wait-free Coordination for Internet-scale Systems." In 2010 USENIX Annual Technical Conference (USENIX ATC 10). 2010.)](./readreq.png)
 
-[The throughput of system where all read/write requests are handled by the leader(master) only (Source: Hunt, Patrick, Mahadev Konar, Flavio P. Junqueira, and Benjamin Reed. "{ZooKeeper}: Wait-free Coordination for Internet-scale Systems." In 2010 USENIX Annual Technical Conference (USENIX ATC 10). 2010.)](./reqreq1.png)
+[The throughput of system where all read/write requests are handled by the leader(master) only (Source: Hunt, Patrick, Mahadev Konar, Flavio P. Junqueira, and Benjamin Reed. "{ZooKeeper}: Wait-free Coordination for Internet-scale Systems." In 2010 USENIX Annual Technical Conference (USENIX ATC 10). 2010.)](./readreq1.png)
 
 If we compare both graphs, we can see that moving all the requests to the leader highly affects our performance, as the graph on the left has the behavior of ZooKeeper when the load is distributed to all the servers. However, in the graph on the right, all requests are sent to the leader. The starting and ending values of the graph on the right are taken from the table above. For 3 servers, the starting value of the graph (at 100% Write) is 21k, and its maximum value (at 100% Reads) is 87k and the same for other servers.
 ```
