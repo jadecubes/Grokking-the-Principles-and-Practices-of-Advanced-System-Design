@@ -28,4 +28,4 @@ While Spark’s processing engine can enable low latency processing, the latency
 
 We hope our selection of big data systems teaches us many important lessons in system design. Let’s dive in!
 
-[Timeline of the evolution of big data processing systems]
+[Timeline of the evolution of big data processing systems](./timeline.png)
