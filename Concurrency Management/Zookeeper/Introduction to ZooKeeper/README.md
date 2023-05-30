@@ -35,7 +35,7 @@ The main contributions of ZooKeeper are as follows:
 - Custom coordination service: Instead of limiting application developers to a predefined collection of coordination primitives/services, it enables the developers to create their own coordination primitives based on their application needs.
 - Wait-free service: It moves away from blocking primitives like locks, which provide strong consistency guarantees but slow down the performance of fast clients due to slow/faulty clients. Instead it proposes a wait-free service with relaxed consistency guarantees.
 
-[Traditional coordination systems vs. ZooKeeper]
+[Traditional coordination systems vs. ZooKeeper](./vs.png)
 
 The coordination kernel refers to the wait-free, relaxed consistency-guaranteed service offered by ZooKeeper. With the help of the ZooKeeper coordination kernel, numerous crucial applications can implement different coordination primitives without changing the underlying service core.
 
@@ -56,7 +56,7 @@ The functional requirement for ZooKeeper is to coordinate processes. As discusse
 ## ZooKeeper
 ZooKeeper is a system that helps application developers build coordination services through its client API. ZooKeeper's client API combines components from distributed lock services, shared registers, and group messaging into a replicated centralized coordination service.
 
-[The services used by ZooKeeper to design its coordination service]
+[The services used by ZooKeeper to design its coordination service](./zookeeper.png)
 
 Let's understand ZooKeeper’s high-level design.
 
@@ -69,7 +69,7 @@ ZooKeeper’s high-level design is shown in the following illustration. It mainl
 Note: Zookeeper API resembles the API of file systems. The API signature looks like Chubby without lock methods (open and close).
 ```
 
-[The high-level design of the ZooKeeper coordination kernel]
+[The high-level design of the ZooKeeper coordination kernel](./hld.png)
 
 - ZooKeeper server: The server represents a process that provides the ZooKeeper coordination service. It stores all the coordination data from different applications and their processes in memory. The namespace for applications/clients and their coordination data are organized in a hierarchy (in the form of a tree). The client application processes store their coordination data on znodes. These processes can perform all the operations provided in the ZooKeeper client API. Each znode can be accessed through its path in the standard UNIX notation (like having / for the root directory). A single server is shown in the illustration above, but there is a set of ZooKeeper servers called the ZooKeeper ensemble. All are replicas. One is elected as the leader, while others become the followers. The detail on leader-follower servers is in the next lesson.
 
