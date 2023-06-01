@@ -95,6 +95,6 @@ Note: Usually, fault tolerance is a characteristic that we classify as a non-fun
 ## Bird’s eye view
 The following concept map summarizes this chapter. We will now dive deep into designing and evaluating the MapReduce system in the upcoming lessons.
 
-[The mind map for MapReduce design problem]
+[The mind map for MapReduce design problem](./overview.png)
 
 Now that we have introduced the MapReduce system and defined its requirements, let’s discuss its design in the next lesson.
