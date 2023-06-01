@@ -82,7 +82,7 @@ for each word w in value:
 
 The Map function emits the count of occurrences associated with each word. The associated count is simply 1 for each word in this example.
 
-```
+```python
 reduce(String key, Iterator values): 
 // key: a word
 // values: a list of counts
