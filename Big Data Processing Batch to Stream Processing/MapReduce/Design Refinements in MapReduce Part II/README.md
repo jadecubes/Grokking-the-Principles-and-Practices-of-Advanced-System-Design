@@ -43,6 +43,42 @@ When aggregating the counter values, the master avoids double counting by elimin
 Note: The users can also see the current counter value by accessing the master’s status page.
 ```
 ### Applying the counters
+This counter facility enables the sanity checking of the MapReduce job behavior. For example, a user may want to ensure that the number of output pairs of the map phase and the number of processed input pairs of the reduce phase is precisely equal or that the percentage of processed German documents lies within a reasonable range of the total number of processed documents.
+
+The following refinement can help the system’s error handling capabilities.
+
 ## Skipping bad records
+We might have to deal with faulty datasets, causing our program to deterministically crash on some records. These are referred to as bad records. Bugs like these halt the completion of MapReduce jobs.
+
+We can attempt to fix the bug, but sometimes this is not feasible. The error might be caused by a third-party library that we cannot access. The bug might be in a third-party library, the source code of which we don’t have access to. The only feasible method in such cases is identifying and ignoring faulty records.
+```
+Note: While analyzing a large dataset, it might be acceptable to ignore a few records if doing so does not affect the outcome.
+```
+The MapReduce library provides an optional execution mode to detect records causing deterministic crashes and skips them to process the remaining records.
+
+
 ### Process of skipping bad records
+Each worker has an installed signal handler to catch segmentation failures and bus errors. Before a record gets processed by a Map or Reduce function, the MapReduce library saves the argument in a global variable.
+
+If a specific argument causes an error, the signal handler sends the last gasp UDP packet to the master containing the sequence number. If the master receives higher than threshold error signals against a particular record, it initiates the protocol for its elimination from future executions of the corresponding Map or Reduce tasks.
+
+```
+last gasp UDP: A message (or signal) sent by a worker to the master to indicate that a specific record is causing errors and the worker is finally deciding to exclude it, as a last resort.
+```
+
+[Skipping]
+
+The following refinement enables the user to perform program testing and debugging.
+
 ## Local execution
+Since MapReduce is mainly a distributed system on several thousand machines centrally controlled by a master, tracing and fixing the errors can be trickier. To overcome this challenge and facilitate users with debugging, profiling, and small-scale testing, we provide them with an alternative local execution that executes all the tasks on a single machine.
+
+```
+Profiling: It is a form of dynamic program analysis to measure the space or time complexity of a program, the usage of particular instructions, or the frequency and duration of function calls.
+```
+
+[Advantages of local execution]
+
+It gives full autonomy to the users so they can limit the Map tasks to a specific number. Users can execute their programs with a special debugging flag or testing utility to test their desired functionality. Once tested locally, users can utilize the same program on a full scale.
+
+In this lesson, we’ve discussed our refinements to the design. In the next lesson, we’ll evaluate our system.
