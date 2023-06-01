@@ -14,11 +14,116 @@ In our design, we’ll have to specify the number of workers required to achieve
 Note: In this chapter, we’ll refer to workers as machines. Even though our design automatically handles the differences in workers’ memories and computation resources and the cases of faultiness, these calculations remain independent of these points.
 ```
 
-
 ### Estimating the Map tasks (M)
+We can estimate the number of Map tasks required using the following formula:
+Number of map tasks (M)= File size in MBs / 64 MB
+
+Using the file size under the assumptions section, we can estimate the number of Map tasks: 
+
+M = 12800000 MB / 64 MB =200000
+ 
 ### Workers estimation
+Based on the number of Map tasks (M), we can estimate the number of workers (W) as well, making each worker perform 100 Map tasks.
+
+Number of workers (W)= Number of map tasks / 100
+
+Using the number from the previous calculation for Map tasks, this estimation is as follows: 
+W= 200000/100 =2000
+
+
 ### Estimating the Reduce tasks (R)
+Mainly, the number of Reduce tasks (R) are user-defined as each task produces its separate output file. We usually estimate this number as a small multiple of the available workers in the cluster, 2.5 as an example.
+
+Number of reduce tasks (R)=Number of workers available∗2.5
+
+Based on the number of workers above, we can estimate R as follows:
+
+R=2000∗2.5=5000
+
+You may change the input file size in the following calculator widget to see how it impacts M, worker count, and the R values.
+
+```
+                        MapReduce Estimations Calculator
+          A                 B
+1	Input file size (MB)	    12800000
+2	Map tasks estimation—M	  =B1/64=200000
+3	Workers estimation—W	    =B2/100=2000
+4	Reduce tasks estimation—R	=B3*2.5=5000
+````
+Now that we have a basic estimation of the number of various worker types, let’s formally define the system’s components.
+
 ## Components
+We can implement this MapReduce system in a distributed and parallel manner on a cluster of commodity machines with basic hardware capabilities. This execution will follow the master-worker pattern with the help of a MapReduce library that handles the internal workings automatically. Here is a detailed design describing all the components of such a system:
+
+1. Cluster: To achieve our target of parallelization, we use a cluster of commodity machines. We divide the cluster members into two types based on their functions, along with a master that controls them.
+
+    - Master: It controls all the subordinate workers, assigns them tasks, and acts as a relay for intra-worker communications. It stores the identity (a unique identifier for each worker) and state (idle, in-progress, or finished) of each worker to check each worker’s progress.
+
+    - Mapper: These workers operate on the input data splits to produce intermediate key-value pairs using a user-defined Map function. The master handles the number of Map tasks required, M, to perform a particular job. Typically, one Map worker will run many Map tasks in a MapReduce job.
+
+    - Reducer: These workers process the intermediate key-value pairs to produce the output file using a Reduce function. The number of Reduce tasks inside the system, R, is user-defined depending on the number of output files a user wishes to produce. Typically, one reducer worker will run many Reduce tasks in a MapReduce job.
+```
+The number of workers assigned for a Map or Reduce task will change over the life cycle of a MapReduce job. Initially, most of the workers will perform the Map tasks. When we have sufficient Map tasks completed, workers can be moved to do the Reduce tasks in parallel.
+```
+
+```
+Question 1
+Is there a need to run all Map workers simultaneously?
+
+Answer
+Since one of the functional requirements of our system is parallelization, running all available mappers simultaneously, at least in the first iteration of Map tasks, is the only logical approach. Moreover, one mapper will perform more than one Map task, so the master assigns the next iteration of the Map tasks based on availability.
+
+Note: The Map workers are the actual servers that run one or more Map tasks over time.
+```
+
+```
+Question 2
+Can reducer workers run before mappers?
+
+Answer
+In our design, we first complete all the Map tasks and then perform the Reduce tasks. So, reducers can’t run before mappers.
+
+But practically, we perform several pre-reduce tasks (discussed later in the chapter) in parallel with the Map tasks to minimize the overhead of the overall MapReduce job during Reduce tasks.
+```
+
+```
+Question 3
+Are there any practical bounds on the size of M and R?
+
+Hide Answer
+We estimated the M and R earlier in this lesson. The practicality of their exact number depends on the number of map-reduce states we have to store at the master for the whole operation.
+
+We need approximately one byte of data to save the state of each map-reduce job pair inside the master. So, the total space complexity required for this at the master is O(M∗R). Hence, based on the RAM availability at the master, we can have practical bounds on the size of M and R.
+```
+
+[High-level cluster design]
+
+2. The MapReduce library: This library handles the abstractions for parallelization, data splitting, dynamic load balancing, and fault tolerance. To achieve the processing tasks, this library inquires two user-specified functions, Map and Reduce. Both are discussed in detail later in this lesson.
+
+It also allows users to fine-tune the parameters and tweak the processing. We’ll describe some of these refinements later in the chapter.
+
+3. Network: We need network bandwidth for communication between the master and workers and to read input and write output operations. Moreover, the system has an intense phase that requires considerable network bandwidth. It involves communication among the workers since a piece of each Map task goes to all the reducers (such communication patterns are also called all-to-all communication patterns). Despite all these daunting network requirements, even commodity network infrastructure serves the purpose well for our system.
+
+Ideally, we don’t need network bandwidth for the mappers, as the input data splits are stored on them locally using GFS. They process those splits and store the intermediate key-value pairs locally. In the worst-case scenario, if the master can not schedule a Map function on a server where its input split is residing, the Map function’s instance will need to fetch the data over the network.
+
+In the Reduce phase, since the reducers have to do a lot of writing to the output disks, we need a considerable network bandwidth. A commodity network will suffice for our system to achieve these writing tasks.
+
+4. File storage system: To store the input data splits and the output of Reduce tasks, we use GFS, which stores multiple copies of the same split on multiple servers, primarily three. We’ll explain the purpose of having multiple copies in the Locality section of this lesson.
+
+After processing the input data splits, the mappers store the results of their intermediate key-value pairs in local disks (and not on GFS). The master then reads the locations of these intermediate key-value pairs from the local disks of mappers and passes them on to reducers.
+
+[GFS creating multiple copies of each split on different workers]
+
+```
+Question
+Why don’t we store intermediate data (the output of Map tasks) in GFS?
+
+Answer
+We store intermediate data on local disks because it’s faster and conserves network bandwidth. We don’t necessarily need multiple copies of intermediate data since we can quickly regenerate it in case of disk failures or data loss.
+```
+
+5. Scheduler: To perform Map and Reduce tasks on multiple machines in parallel, we need a scheduler inside the master to schedule tasks for the workers. It keeps checking the engaged and available workers and assigns a pending task to an available worker.
+
 ## Execution flow
 ## Locality
 ## Task granularity
