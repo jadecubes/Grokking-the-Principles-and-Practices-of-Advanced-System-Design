@@ -66,4 +66,38 @@ Note: It is important to note that the domain of the Map input data keys and val
 ```
 
 ### Word count example
+Let’s understand the above functions with the help of a simple word counting problem with the following problem statement: “Count the number of occurrences of each unique word in a large set of documents.”
+
+The user needs to define two functions, Map and Reduce, corresponding to the two main stages of the MapReduce operation. Let’s look at the pseudocode for both of them.
+
+```python
+map(String key, String value): 
+// key: document name
+// value: document contents 
+for each word w in value:
+  EmitIntermediate(w, "1");
+  
+              The pseudocode for the Map() function
+```
+
+The Map function emits the count of occurrences associated with each word. The associated count is simply 1 for each word in this example.
+
+```
+reduce(String key, Iterator values): 
+// key: a word
+// values: a list of counts
+int result = 0;
+    for each v in values:
+      result += ParseInt(v);
+    Emit(AsString(result));
+    
+       The pseudocode for the Reduce() function
+ ```
+The Reduce function sums up a particular word (an intermediate key) count and emits it as an output.
+```
+Note: One Reduce call typically produces zero or more output values for an intermediate key (depending on the specific use case). For in the word count example, Reduce generates one output for each word, for example, <the 100> output from Reduce will mean that there were 100 instances of the word the in the text.
+```
+
 ### The MapReduce specification object
+In addition to the Map and Reduce functions, the user needs to provide the code for a MapReduce specification object with the names (URLs to the files in GFS) of the input and output files and the additional tuning parameters. The MapReduce library passes this specification object to the MapReduce function at invocation and is responsible for linking all the segments of the user code.
+
