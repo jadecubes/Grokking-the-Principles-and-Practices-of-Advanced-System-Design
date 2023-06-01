@@ -9,7 +9,7 @@ Let’s analyze the supported input and output types by the MapReduce library.
 ### Input types
 By default, the MapReduce library supports reading a limited set of various input data types. Each input type implementation automatically handles the data splitting into meaningful ranges for further processing by the Map tasks.
 
-#### Example
+#### Examples
 As we know, the data gets partitioned into key-value pairs before it is processed by the Map tasks. The “text” mode input processes each line as a key-value pair, such that:
 
 - The key is an offset in the input file.
@@ -40,7 +40,7 @@ Instead of using the default partitioning function of hash(key), such use cases 
 Note: The user can define a customized function to partition the data across R partitions of the output file.
 ``` 
 
-#### Example
+#### Examples
 An example scenario can be where the output keys are URLs, and we want to partition the URLs from a single host to a separate partition of the output file. If we use the default partitioning function of hash(URL), we wouldn’t be able to generate separate files per hostname. To achieve the desired output, we can modify the partitioning function to hash(Hostname(URLkey)).
 
 Let’s assume we have the following URL to a course on the Educative platform: https://www.educative.io/courses/grokking-modern-system-design-interview-for-engineers-managers. Instead of taking the hash of this URL, we first resolve its hostname, which will be www.educative.io in this case, and then take the hash of that hostname. This way, all the Educative URLs will map to just one Reduce partition instead of going to various partitions if we had taken the hashes of URLs.
@@ -55,7 +55,7 @@ Note: The Reduce function is commutative and associative, so adding the combiner
 commutative: A function is commutative if changing the order of the operands does not change the result. (Source: W. E. Weihl. “The impact of recovery on concurrency control”, Proceedings of the eighth ACM SIGACT-SIGMOD-SIGART symposium on Principles of database systems - PODS '89, 1989)
 associative: A function is associative if rearranging the parentheses in its input expression doesn’t change the result.
 ```
-#### Example
+#### Examples
 Let’s take the example of the word count problem. The Map function produces millions of records of the form  <the,1>. Instead of sending these records individually to the Reduce function, we can partially merge them by doing a local sum and sending that result instead. It will avoid the unnecessary network bandwidth being burnt and save a lot of time by the Reduce function, which would have to merge these records individually otherwise.
 
 [Merging <key, value> pairs with the same keys using the combiner function]
