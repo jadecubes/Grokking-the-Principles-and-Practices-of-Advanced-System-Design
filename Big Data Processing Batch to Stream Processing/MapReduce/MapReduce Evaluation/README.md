@@ -11,7 +11,7 @@ Since we deal with large datasets, fault tolerance is critical. Faults can happe
 
 In case of a reducer failure, the master reassigns its failed tasks to another reducer and provides the new reducer with all the required information for data fetching.
 
-[Worker failure]
+[Worker failure](./faulttolerance)
 
 2. Master failure: Remember that when a MapReduce job starts, one worker takes on the role of a master. Each user-spawned job will have its own master. Therefore, the failure of a master will only have a limited impact (on a specific user job). We should note that many MapReduce jobs are prolonged (for example, processing a crawl of the WWW), and master failure can impact them badly. The MapReduce library does not deal with the master’s failure and leaves it to the end users.
 
@@ -30,18 +30,18 @@ The program achieves this property by relying on the atomic nature of the commit
 
 1. A Map task writes its output to R temporary files, which is equivalent to the number of Reduce tasks. Once completed, the Map task sends the names of these R temporary files to the master. After verifying that there is no duplication in these files, the master confirms the completion of the task and saves the names of these R files into a master data structure.
 
-[A Map() task on completion. A mapper only sends the local file paths to the master]
+[A Map() task on completion. A mapper only sends the local file paths to the master](./maptask.png)
 
 2. Unlike the Map task, a Reduce task yields one output file. Similar to the Map task, it writes its output to a temporary file in GFS and atomically renames it to an output file after the task’s completion. Multiple workers performing the same Reduce task results in multiple rename calls for the same output file. GFS’s atomic rename operation ensures that the final file system contains the output file of just one execution of the Reduce task, excluding the possibility of repetition. Here, we’ll use GFS’s metadata atomicity.
 
-[A Reduce() task on completion. The files are on the GFS]
+[A Reduce() task on completion. The files are on the GFS](./reducetask.png)
 
 ##### Non-deterministic functions
 In the case of the non-deterministic Map and Reduce functions, there is no direct correlation between a distributed execution and a single sequential execution, which results in weaker semantics for failures.
 
 Consider a Map task M and two Reduce tasks R1 and R2. Let e(Ri) be the execution of a Reduce task that is committed. The weaker semantics arise because e(R1) might have fetched the output of a different sequential implementation of M than e(R2). The programmers will need to deal with these cases.
 
-[Non-deterministic]
+[Non-deterministic](./nondeterministic)
 
 ### Throughput
 Our system ensures high throughput by engaging the maximum number of available workers and dynamic load balancing among them.
@@ -76,7 +76,7 @@ We can analyze the performance of our system on three different configurations f
 ### Normal execution
 Let’s show the behavior of our program for this configuration with the help of a graph.
 
-[Normal execution (Source: Dean, Jeffrey, and Sanjay Ghemawat. “MapReduce: Simplified Data Processing on Large Clusters.” Communications of the ACM 51, no. 1 (2008): 107–13. https://doi.org/10.1145/1327452.1327492.)]
+[Normal execution (Source: Dean, Jeffrey, and Sanjay Ghemawat. “MapReduce: Simplified Data Processing on Large Clusters.” Communications of the ACM 51, no. 1 (2008): 107–13. https://doi.org/10.1145/1327452.1327492.)](./normalexe.png)
 
 - Part (a) of the graph shows the input read rate. The rate peaks after the initialization and dies out quickly as all the Map tasks finish.
 - Part (b) of the graph shows the rate at which the system sends over the data from Map tasks to the Reduce tasks. The shuffling starts after the system completes its first batch of Map tasks. The two humps in the graph represent two batches of the shuffled data sent over the network, followed by one another. The shuffling for the second batch starts right after a reducer completes its assigned task.
@@ -92,14 +92,14 @@ We can deduce some interesting observations by comparing the above three parts o
 ### No backup tasks
 Our normal execution includes implementing the backup tasks for stragglers. Let’s see a graph for the case where we disable this functionality.
 
-[Execution with backup tasks disabled (Source: Dean, Jeffrey, and Sanjay Ghemawat. “MapReduce: Simplified Data Processing on Large Clusters.” Communications of the ACM 51, no. 1 (2008): 107–13. https://doi.org/10.1145/1327452.1327492.)]
+[Execution with backup tasks disabled (Source: Dean, Jeffrey, and Sanjay Ghemawat. “MapReduce: Simplified Data Processing on Large Clusters.” Communications of the ACM 51, no. 1 (2008): 107–13. https://doi.org/10.1145/1327452.1327492.)](./exebackup.png)
 
 The behavior of this configuration is similar to the normal execution except for a long tail in the output graph, part (c), where hardly any writing activity is happening. This delay is because of stragglers that take unnecessarily long to finish the last of their Reduce tasks at the end of the MapReduce operation. The entire computation in this scenario takes 1225 seconds compared to 850 seconds for the normal execution, adding a latency of almost 44%.
 
 ### Failures/terminated tasks
 Let’s see how our system’s performance behaves when some of the cluster machines malfunction. To mimic the machine failures, we intentionally disengage 200 workers. The master automatically assigned these failed tasks to the readily available workers.
 
-[Execution with worker failures (Source: Dean, Jeffrey, and Sanjay Ghemawat. “MapReduce: Simplified Data Processing on Large Clusters.” Communications of the ACM 51, no. 1 (2008): 107–13. https://doi.org/10.1145/1327452.1327492.)]
+[Execution with worker failures (Source: Dean, Jeffrey, and Sanjay Ghemawat. “MapReduce: Simplified Data Processing on Large Clusters.” Communications of the ACM 51, no. 1 (2008): 107–13. https://doi.org/10.1145/1327452.1327492.)](./exeworkerfailures.png)
 
 Because of the worker failures, this graph’s input and shuffling parts show negative rates encircled in red. This is because the failures wasted some work that was already done, which causes dips. The re-execution of the failed Map tasks happens so swiftly that this configuration’s overall completion time is 890 seconds—just an increase of 5% compared to the normal execution, which fails within a reasonable range.
 
