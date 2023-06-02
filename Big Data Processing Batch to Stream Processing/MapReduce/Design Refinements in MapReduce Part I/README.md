@@ -16,7 +16,7 @@ As we know, the data gets partitioned into key-value pairs before it is processe
 - The value is the content of that line.
 This mode ensures that the partitioning happens only at the line boundaries.
 
-[Data processing in the text mode]
+[Data processing in the text mode](./textmode.png)
 
 #### Support for new input types
 Based on the desired functionality, the users can also define a new reader interface to add functionality for a new input type. For example, we can define a reader to read data from a database or a memory-mapped data structure.
@@ -30,7 +30,7 @@ Using custom types for data is a powerful extension that enables end programmers
 ## Partitioning function
 The distribution of the intermediate data to each of the user-defined R partitions is handled by the partitioning function. By default, the MapReduce library provides a hash(key) mod R partitioning function.
  
-[The default partitioning function]
+[The default partitioning function](./partitioning.png)
 
 ### Customization of the partitioning function
 The partitioning for many computations can be reasonably uneven in the real world, resulting in poor speed-up because only a few workers do most of the work (because the hash function sends most of the data to a few buckets). To achieve linear speed-up, it is critical that each partition gets roughly the same amount of data so that all the available servers can be employed to do the work in parallel.
@@ -45,7 +45,7 @@ An example scenario can be where the output keys are URLs, and we want to partit
 
 Let’s assume we have the following URL to a course on the Educative platform: https://www.educative.io/courses/grokking-modern-system-design-interview-for-engineers-managers. Instead of taking the hash of this URL, we first resolve its hostname, which will be www.educative.io in this case, and then take the hash of that hostname. This way, all the Educative URLs will map to just one Reduce partition instead of going to various partitions if we had taken the hashes of URLs.
 
-[Example]
+[Examples](./example)
 
 ## The Combiner function
 As established earlier, a reducer gets input from all the Map tasks, with each mapper incarnation contributing a portion (a bucket out of R buckets). When received on the reducer, this input might contain a significant repetition having multiple batches of similar output keys. All these repetitions waste the network bandwidth and should be dealt with before sending them out on the network. The user can define a customized combiner function to merge the similar output keys’ data before sending it out to the Reduce function, noticeably saving the network bandwidth and speeding up certain MapReduce operations at the reducer.
@@ -74,7 +74,7 @@ The MapReduce library ensures that the intermediate <key,value> pairs are proces
 
 A sorted order of intermediate keys might help to simplify the Reduce function. For example, for word counting, when the keys starting with the finish, the Reduce function knows that it will not get the key the after that and can emit its output. If intermediate data was not sorted on the keys, the Reduce function would have to keep the partial sums in memory until it processes all of its data.
 
-[Sorting the intermediate <key, value> pairs in increasing order in a partition]
+[Sorting the intermediate <key, value> pairs in increasing order in a partition](./sorting.png)
 
 ## Side effects
 In addition to having only the program-generated output files for Map or Reduce tasks, the user can also produce additional auxiliary output files (side-effects) for both these functions (possibly for debugging purposes).
@@ -85,7 +85,7 @@ By default, in such an added functionality, the MapReduce library outputs to a t
 
 Let’s see the process of an auxiliary file generation using the slide deck below:
 
-[Restrictions]
+[Restrictions](./restrictions)
 
 Sometimes, the users wish to produce multiple files from a single task. The MapReduce library does not support atomic two-phase commits in this case. Therefore, the tasks producing several output files while ensuring consistency should be deterministic.
 
