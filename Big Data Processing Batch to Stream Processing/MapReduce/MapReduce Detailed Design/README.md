@@ -55,6 +55,10 @@ Now that we have a basic estimation of the number of various worker types, let�
 ## Components
 We can implement this MapReduce system in a distributed and parallel manner on a cluster of commodity machines with basic hardware capabilities. This execution will follow the master-worker pattern with the help of a MapReduce library that handles the internal workings automatically. Here is a detailed design describing all the components of such a system:
 
+```
+master-worker pattern: The approach to simultaneously processing data on multiple machines.
+```
+
 1. Cluster: To achieve our target of parallelization, we use a cluster of commodity machines. We divide the cluster members into two types based on their functions, along with a master that controls them.
 
     - Master: It controls all the subordinate workers, assigns them tasks, and acts as a relay for intra-worker communications. It stores the identity (a unique identifier for each worker) and state (idle, in-progress, or finished) of each worker to check each worker’s progress.
@@ -96,7 +100,7 @@ We estimated the M and R earlier in this lesson. The practicality of their exact
 We need approximately one byte of data to save the state of each map-reduce job pair inside the master. So, the total space complexity required for this at the master is O(M∗R). Hence, based on the RAM availability at the master, we can have practical bounds on the size of M and R.
 ```
 
-[High-level cluster design]
+[High-level cluster design](./cluster.png)
 
 2. The MapReduce library: This library handles the abstractions for parallelization, data splitting, dynamic load balancing, and fault tolerance. To achieve the processing tasks, this library inquires two user-specified functions, Map and Reduce. Both are discussed in detail later in this lesson.
 
@@ -112,7 +116,7 @@ In the Reduce phase, since the reducers have to do a lot of writing to the outpu
 
 After processing the input data splits, the mappers store the results of their intermediate key-value pairs in local disks (and not on GFS). The master then reads the locations of these intermediate key-value pairs from the local disks of mappers and passes them on to reducers.
 
-[GFS creating multiple copies of each split on different workers]
+[GFS creating multiple copies of each split on different workers](./split.png)
 
 ```
 Question
@@ -167,7 +171,7 @@ To reduce the latency of the job, some riders can start early on, though they mi
 7. The reducer writes its output to the respective output file on GFS.
 8. Once all data splits are processed using the Map and Reduce functions, the master returns to the user code’s next instruction by waking up the user program.
 
-[Execution]
+[Execution](./execution)
 
 ```
 Question
@@ -189,7 +193,7 @@ GFS creates copies of each split on multiple workers. The master initiates the M
 
 Since the approach is to perform all the MapReduce operations utilizing a fraction of network bandwidth in the cluster, we can perform all the input data reading operations locally.
 
-[Locality]
+[Locality](./locality)
 
 ## Task granularity
 Not all the machines in a cluster behave in the same manner, and that performance difference plays an integral role in the system’s overall performance. While creating splits for the input and intermediate data, we keep the values of M and R significantly larger than the number of workers, making each worker perform several tasks.
@@ -213,7 +217,7 @@ Some machines, commonly referred to as stragglers, take unnecessarily long to co
 
 To overcome this problem of stragglers, the master, near the end of MapReduce completion, assigns the tasks (that straggler in-progress tasks are currently doing) to multiple other workers. It marks the pending tasks as completed as soon as it gets a confirmation message from the original or backup workers and ends the remaining tasks.
 
-[Backup]
+[Backup](./backup)
 
 ```
 Note: We have to adjust this mechanism such that it doesn’t increase the computational resources by more than a few percent while ensuring a considerable decrease in the overall time completion.
