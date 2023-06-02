@@ -25,7 +25,7 @@ Each worker writes their output to an output file using key-value pairs produced
 Note: The cornerstone of our programming interface is that the programmer only needs to provide us with the two functions, Map and Reduce. The system handles the rest of the details automatically.
 ```
 
-[High-level implementation]
+[High-level implementation](./hld.png)
 
 ## Programming model
 As we outlined earlier, MapReduce is a restricted programming model that requires less effort from its users. Hence, internal implementations of this model automatically ensure the following requirements:
@@ -46,7 +46,7 @@ map(input_key, input_value) ->  list(output_key, intermediate_value)
 ```
 Note: The MapReduce library consolidates all the intermediate  values associated with an output key and passes them to the Reduce function.
 ```
-[The Map() function]
+[The Map() function](./mapfunc.png)
 
 ### The Reduce function
 The Reduce function accepts an input pair of the form <output_key, list(intermediate_value)> and returns an output pair of the form <output_key, list(output_value)>.
@@ -54,7 +54,7 @@ The Reduce function accepts an input pair of the form <output_key, list(intermed
 reduce(output_key, list(intermediate_value)) -> list(output_value)
 ```
 
-[The Reduce() function]
+[The Reduce() function](./reduce.png)
 
 ```
 Question
