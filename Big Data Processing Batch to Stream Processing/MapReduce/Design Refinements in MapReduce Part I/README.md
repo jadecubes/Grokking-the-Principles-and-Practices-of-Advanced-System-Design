@@ -58,7 +58,7 @@ associative: A function is associative if rearranging the parentheses in its inp
 #### Examples
 Let’s take the example of the word count problem. The Map function produces millions of records of the form  <the,1>. Instead of sending these records individually to the Reduce function, we can partially merge them by doing a local sum and sending that result instead. It will avoid the unnecessary network bandwidth being burnt and save a lot of time by the Reduce function, which would have to merge these records individually otherwise.
 
-[Merging <key, value> pairs with the same keys using the combiner function]
+[Merging <key, value> pairs with the same keys using the combiner function](./merging.png)
 
 ### Comparison of the Combiner function and the Reduce function
 Functionality wise, there is no difference between the Combiner function and the Reduce functions. Typically, we use the same code for both these functions. The only difference is their implementation location and the handling of their outputs by the MapReduce library.
