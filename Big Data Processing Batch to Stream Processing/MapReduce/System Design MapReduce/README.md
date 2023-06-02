@@ -19,7 +19,7 @@ As the volume of one data source increases, there is also a growing variety of n
 
 The graph below shows the trendline of processing power, data growth, and storage cost since 2000.
 
-[A graph representing the trend of processing power, data growth, and storage cost since 2000]
+[A graph representing the trend of processing power, data growth, and storage cost since 2000](./cost.png)
 
 Although the trendline for storage cost shows support for storing this enormous amount of data generation, it’s important to note that the trendline representing the processing power is not increasing at the rate according to Moore’s law. To keep up with the era of big data, we need to develop systems capable of processing the data in a distributable and parallel manner.
 
@@ -34,7 +34,7 @@ The following illustration depicts how the process works.
 restricted programming model: A programming model where the programmer is expected to adhere to a specific way of programming but, in return, gets some benefits
 ```
 
-[An overview of the MapReduce system]
+[An overview of the MapReduce system](./mapreduceoverview.png)
 
 ```
 Note: We’ll design this MapReduce system in detail in the following lessons.
@@ -81,7 +81,7 @@ The functional requirement for our system is to provide us with an adaptable pro
 ```
 Note: Usually, fault tolerance is a characteristic that we classify as a non-functional requirement. We have kept it in the functional requirements here because for MapReduce to properly work on commodity clusters, fault tolerance is critical.
 ```
-[The functional requirements for an adaptable programming model of MapReduce]
+[The functional requirements for an adaptable programming model of MapReduce](./functional.png)
 
 #### Non-functional requirements
 - Throughput: Our system should have a high throughput ensuring maximum data processing in a given time.
@@ -90,7 +90,7 @@ Note: Usually, fault tolerance is a characteristic that we classify as a non-fun
 - Reliability: Our system should be reliable in performing the assigned tasks. Although we’ve defined fault tolerance as a functional requirement, dealing with non-MapReduce-specific faults in our system can be added as an additional non-functional requirement.
 - Availability: Our system should ensure high availability. This non-functional requirement is a by-product of two functional requirements mentioned above: fault tolerance and dynamic load balancing. We can say that if our system is fault-tolerant, it’ll automatically ensure high availability.
 
-[The non-functional requirements for MapReduce]
+[The non-functional requirements for MapReduce](./nonfunctional.png)
 
 ## Bird’s eye view
 The following concept map summarizes this chapter. We will now dive deep into designing and evaluating the MapReduce system in the upcoming lessons.
