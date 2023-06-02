@@ -7,6 +7,9 @@ Let’s list the main components we need to design the MapReduce system.
 - Distributed file system: We’re using the Google File System (GFS) as our distributed file system for storing the input data. We’ll explain the detailed functionality of this distributed system, concerning our system, in the detailed design lesson of this chapter.
 - Cluster: We need a cluster of machines to process the data in parallel.
 - User program: We need the user program, mainly the Map and Reduce functions, to run on all the workers for data processing.
+```
+workers: A worker is one commodity machine inside a cluster capable of achieving the system’s functionality independently. It gets its share of the work through a master.
+```
 - Scheduler: Before starting the MapReduce operation, the user program gets installed on all the workers with which they can perform the dedicated task assigned to them. We need a scheduler to manage the job assignment for various workers. It mainly optimizes the workers’ usage in the cluster.
 
 ## High-level implementation
