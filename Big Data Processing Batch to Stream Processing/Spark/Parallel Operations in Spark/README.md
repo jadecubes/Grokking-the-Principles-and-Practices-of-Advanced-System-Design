@@ -104,26 +104,21 @@ When an RDD is created, its relationship with the parent data can be classified 
 - Wide dependency: When a wide transformation is used to create an RDD, it results in wide dependency.
 
 ```
-Comparison of Dependencies
-Narrow dependency
+                                           Comparison of Dependencies
+Narrow dependency                                                                                 Wide dependency
 
-Wide dependency
+At most, one partition of a child RDD is dependent on each partition of a parent RDD.           Each partition of a parent RDD is used to compute multiple partitions of a child RDD.
 
-At most, one partition of a child RDD is dependent on each partition of a parent RDD.
+Narrow dependencies allow pipelined execution to compute all parent and child partitions        Wide dependencies shuffle the data across the cluster and needs data from all the partitions to be 
+on a group of machines in a single cluster. Users can apply any operations on a parent RDD      present to compute the child partitions.
+on an element-by-element basis.                                                    
 
-Each partition of a parent RDD is used to compute multiple partitions of a child RDD.
+It also allows easy partition recovery, since the lost child partition needs to recompute       It results in relatively complex partition recovery because the loss of a single partition will 
+data from only one partition of the parent RDD, in parallel, on a separate node.                cause computation at multiple partitions of the parent RDD, and if they are not present, those                                                                                                     parent partitions will also need recomputation.
 
-Narrow dependencies allow pipelined execution to compute all parent and child partitions on a group of machines in a single cluster. Users can apply any operations on a parent RDD on an element-by-element basis.
 
-Wide dependencies shuffle the data across the cluster and needs data from all the partitions to be present to compute the child partitions.
 
-It also allows easy partition recovery, since the lost child partition needs to recompute data from only one partition of the parent RDD, in parallel, on a separate node.
-
-It results in relatively complex partition recovery because the loss of a single partition will cause computation at multiple partitions of the parent RDD, and if they are not present, those parent partitions will also need recomputation.
-
-Map, filter and union operations result in narrow dependencies.
-
-Both groupByKey and join operations whose inputs are not co-partitioned result in wide dependencies.
+Map, filter and union operations result in narrow dependencies.                                  Both groupByKey and join operations whose inputs are not co-partitioned result in wide                                                                                                            dependencies.
 
 ```
 
