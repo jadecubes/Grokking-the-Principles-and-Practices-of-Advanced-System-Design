@@ -122,8 +122,32 @@ Map, filter and union operations result in narrow dependencies.                 
 
 ```
 
+[Dependencies]
+
 ## Actions
+The transformations let Spark build up a logical plan of execution. Actions are operations that trigger the execution of that logical plan. These are the operations that return non-RDD values. Actions are performed when we want to extract information from the data. Spark supports actions such as count(), reduce(), collect(), and lookup(). Some of the actions are explained below.
+
 ### The count() function
+This operation is used to get the count of elements in the dataset.
+```python
+val no_of_elements = rdd.count()
+```
 ### The reduce() function
+This operation is used to aggregate the dataset with the help of a function.
+```python
+val reduced = rdd.reduce((x,y) => x*y)
+```
 ### The collect() function
+This operation returns all the data in an RDD as a list.
+```python
+val data = RDD.collect()
+```
 ### The lookup() function
+This operation looks up a certain key in data inside an RDD and returns a grouped list of values against that key.
+```python
+val data = rdd.lookup("Human")
+```
+
+All of these actions, when executed in Spark, initiate parallel processing on the RDD level. Each transformation is applied one by one on their respective unique RDD's workers in parallel, unless multiple transformations are being applied to a single RDD. Those can be executed simultaneously.
+
+In this lesson, we learned about the parallel operations in Spark, how they could help create new RDDs, and extract meaningful information from them, and how partitioning of RDDs can effect the dependencies of the resulting RDDs.
