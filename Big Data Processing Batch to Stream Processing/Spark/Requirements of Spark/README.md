@@ -80,6 +80,8 @@ The total number of workers needed for these operations will be 1000 + 500 + 500
 One worker fails for every 100 workers, so the percentage of total workers is 0.1%. The total number of workers, including the replaced workers, will be 2000 + 2000 / 100 =2020
 
 ```
+                Spark Estimations Calculator
+
    A                                              B
 1 Input file size (MB)                    	25600000
 2 Tasks estimation	                        =B1/256 = 100000
