@@ -83,7 +83,7 @@ One worker fails for every 100 workers, so the percentage of total workers is 0.
    A                                              B
 1 Input file size (MB)                    	25600000
 2 Tasks estimation	                        =B1/256 = 100000
-3 RAM size (MB)	                              25600
+3 RAM size (MB)	                                25600
 4 Partition estimation in a filter worker  	 =B3/256 = 100
 5 Workers estimation                      	 =B2/B4+2*B2/(B4*2)+(B2/B4+2*B2/(B4*2))/100 = 2020
 ```
