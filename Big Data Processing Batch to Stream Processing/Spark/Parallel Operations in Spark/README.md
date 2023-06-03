@@ -114,11 +114,11 @@ on a group of machines in a single cluster. Users can apply any operations on a 
 on an element-by-element basis.                                                    
 
 It also allows easy partition recovery, since the lost child partition needs to recompute       It results in relatively complex partition recovery because the loss of a single partition will 
-data from only one partition of the parent RDD, in parallel, on a separate node.                cause computation at multiple partitions of the parent RDD, and if they are not present, those                                                                                                     parent partitions will also need recomputation.
+data from only one partition of the parent RDD, in parallel, on a separate node.                cause computation at multiple partitions of the parent RDD, and if they are not present, those  parent partitions will also need recomputation.
 
 
 
-Map, filter and union operations result in narrow dependencies.                                  Both groupByKey and join operations whose inputs are not co-partitioned result in wide                                                                                                            dependencies.
+Map, filter and union operations result in narrow dependencies.                                  Both groupByKey and join operations whose inputs are not co-partitioned result in wide  dependencies.
 
 ```
 
