@@ -69,8 +69,64 @@ The reduced results in the newRDD would look like this:
 
 
 #### The join() function
+This operation is similar to the join operation we used in narrow transformations. However, the only difference is that two non-copartitioned RDDs, meaning that RDDs with a different number of partitions or RDDs made by different partitioning techniques, are joined. This kind of join would cause a shuffling of data that will result in multiple partitions of an RDD, contributing to make a single partition in the child partition. So, the resulting transformation would be a wide transformation.
+```python
+val rdd = spark.sparkContext.parallelize(Seq(("Human",2),("Lion",3),("Cat",1)))
+val otherRDD = spark.sparkContext.parallelize(Seq(("Human","Omnivore"),("Lion","Carnivore"),("Deer","Herbivore"),("Cat","Omnivore")))
+val newRDD = rdd.join(otherRDD)
+```
+The output of this operation is as follows:
+```
+(Human,2,Omnivore)
+(Lion,3,Carnivore)
+(Cat,1,Omnivore)
+```
 #### The groupByKey() function
+This operation receives key/value pairs, shuffles, and groups the key/value pairs based on their keys.The following code groups the data in rdd with respect to their keys.
+```python
+val rdd = spark.sparkContext.parallelize(Seq(("Human",2),("Lion",1),("Human",1),("Lion",3),("Cat",1)))
+val newRDD = rdd.groupByKey()
+```
+The grouped results in the newRDD will look like this:
+```
+(Human,(2,1))
+(Lion,(1,3))
+(Cat,1)
+```
+
+[GroupByKey operation]
+
 ## Dependencies
+When an RDD is created, its relationship with the parent data can be classified into two types depending on the type of transformation used to create it. Dependencies are important in Spark because they help define the program's execution stages in the scheduler section of Spark (for example, the Spark scheduler might be able to combine many narrow transformations into one).
+
+- Narrow dependency: When a narrow transformation is used to create an RDD, it results in narrow dependency.
+
+- Wide dependency: When a wide transformation is used to create an RDD, it results in wide dependency.
+
+```
+Comparison of Dependencies
+Narrow dependency
+
+Wide dependency
+
+At most, one partition of a child RDD is dependent on each partition of a parent RDD.
+
+Each partition of a parent RDD is used to compute multiple partitions of a child RDD.
+
+Narrow dependencies allow pipelined execution to compute all parent and child partitions on a group of machines in a single cluster. Users can apply any operations on a parent RDD on an element-by-element basis.
+
+Wide dependencies shuffle the data across the cluster and needs data from all the partitions to be present to compute the child partitions.
+
+It also allows easy partition recovery, since the lost child partition needs to recompute data from only one partition of the parent RDD, in parallel, on a separate node.
+
+It results in relatively complex partition recovery because the loss of a single partition will cause computation at multiple partitions of the parent RDD, and if they are not present, those parent partitions will also need recomputation.
+
+Map, filter and union operations result in narrow dependencies.
+
+Both groupByKey and join operations whose inputs are not co-partitioned result in wide dependencies.
+
+```
+
 ## Actions
 ### The count() function
 ### The reduce() function
