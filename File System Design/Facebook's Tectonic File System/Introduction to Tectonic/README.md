@@ -82,7 +82,7 @@ Following are our non-functional requirements:
 ## High-level design
 Tectonic will primarily be within a data center file system running on a cluster of servers. A typical cluster can span from hundreds to thousands of servers. A tectonic system consists of three major types of components—a Metadata Store, many Chunk Stores, and some stateless background services. The high-level architecture is shown in the illustration below (we’ll discuss every component of the architecture in detail in the coming lessons).
 
-[The architecture of Tectonic](./tectonic.jpg)
+[The architecture of Tectonic](./arch.jpg)
 
 - The client application uses a Client Library through which the end users perform the file and data operations.
 
