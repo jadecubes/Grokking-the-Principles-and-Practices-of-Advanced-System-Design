@@ -118,7 +118,7 @@ data from only one partition of the parent RDD, in parallel, on a separate node.
 
 
 
-Map, filter and union operations result in narrow dependencies.                                  Both groupByKey and join operations whose inputs are not co-partitioned result in wide  dependencies.
+Map, filter and union operations result in narrow dependencies.                                  Both groupByKey and join operations whose inputs are not co-partitioned result in wide dependencies.
 
 ```
 
