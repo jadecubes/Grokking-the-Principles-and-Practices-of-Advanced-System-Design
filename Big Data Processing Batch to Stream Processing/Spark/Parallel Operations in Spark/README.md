@@ -1,0 +1,78 @@
+# Parallel Operations in Spark
+The main focus of this lesson is to know how we would perform operations on an RDD's workers in parallel to transform it into another RDD, and how we would extract information from these distributed datasets. Spark provides parallel operations solely for this purpose. The users don't have to extract or transform data from each worker separately. The Spark system applies each function simultaneously across all the workers in an RDD. Parallel operations can transform RDDs to get new RDDs. There are generally two types of operations we can perform on RDDs––transformations and actions.
+
+## Transformations
+These are the operations applied on an RDD to get a new RDD. Transformations are lazy operations, i.e., they get executed only when an action is called. Instead of modifying the data immediately, Spark waits until action is called and builds an execution plan to make all the transformations run efficiently whenever they are executed, possibly pipelining many transformations. Since RDDs are immutable, the input RDD remains the same. Spark supports many transformations, such as map(), ﬂatMap(), mapValues(), ﬁlter(), groupByKey(), reduceByKey(), union(), join(), cogroup(), crossProduct(), sample(), partitionBy(), and sort(). Making another RDD from an RDD and then applying a transformation on it again to get another RDD makes a transformation chain or pipeline. Spark provides a graph-based representation for RDDs called a lineage graph to track the lineage of transformations.
+
+The lineage graph shown below contains a series of transformations in MMA fights. First, UFC fights are filtered out from the data, then the winners of each fight are mapped with an integer 1. Finally, all the wins of each fighter are reduced to give out the total wins of each fighter.
+
+[Lineage graph of RDD transformations]
+
+When a transformation is applied to an RDD, it gets applied to all the partitions of the RDD. A partition in the parent RDD can be used to create one or more RDD partitions in the child RDD. Based on these facts, Spark provides narrow transformations and wide transformations.
+
+### Narrow transformations
+An RDD transformation that results in each partition contributing to build only one partition in the child RDD is called a narrow transformation. Two or more partitions can also lead to the formation of only one partition in the child RDD, provided all the parent RDD partitions are in different RDDs. Some of the narrow transformations are explained below.
+
+#### The map() function
+This operation is a one-to-one mapping. It can be used to transform each RDD element into an element of a new RDD. The following code takes names in rdd and maps it with the value 1 to get a newRDD.
+```python
+val newRDD = rdd.map(name => (name,1))
+```
+
+#### The filter() function
+This operation is used to filter out specific elements of an RDD partition. The following code filters david from the names in RDD and makes a new RDD of names that only include david.
+```python
+val newRDD = rdd.filter(name => name.contains("david"))
+```
+
+#### The join() function
+This operation is only available at RDDs with key-value pairs. It is used to combine two RDDs' elements based on their keys. If two co-partitioned RDDs (those RDDs with the same number of partitions are made with the same technique) are joined, it will not cause any data shuffling. Therefore, the resulting transformation would be a narrow transformation. The join type is specified by an argument in the command, which in this case, is inner. Let's say we have two co-partitioned RDDs with data in the form of key/value. In the following code, an inner join is applied, returning only the pairs with common keys in both RDDs.
+```
+inner join: The resultant RDD contains only the rows that are present in both input RDDs.
+```
+```python
+val rdd = spark.sparkContext.parallelize(Seq(("Human",2),("Lion",3),("Cat",1)))
+val otherRDD = spark.sparkContext.parallelize(Seq(("Human","Omnivore"),("Lion","Carnivore"),("Deer","Herbivore"),("Cat","Omnivore")))
+val newRDD = rdd.join(otherRDD)
+```
+The output of this operation is as follows:
+```
+(Human,2,Omnivore)
+(Lion,3,Carnivore)
+(Cat,1,Omnivore)
+```
+#### The union() function
+This operation is used to create an RDD by combining two RDDs.
+```python
+val newRDD = rdd.union(otherRDD)
+```
+
+[Union operation]
+
+### Wide transformations
+An RDD transformation that results in each partition contributing to building multiple partitions in the child RDD is called a wide transformation.
+
+#### The reduceByKey() function
+This operation performs the aggregation of data. It receives key/value pairs and aggregates the values of elements with the same keys with the help of a function. The following code reduces the data in rdd by applying + operator on their values.
+
+```python
+val rdd = spark.sparkContext.parallelize(Seq(("Human",1),("Lion",1),("Human",1),("Deer",1),("Cat",1)))
+val newRDD = rdd.reduceByKey( _ + _ )
+```
+The reduced results in the newRDD would look like this:
+```
+(Human,2)
+(Lion,1)
+(Deer,1)
+(Cat,1)
+```
+
+
+#### The join() function
+#### The groupByKey() function
+## Dependencies
+## Actions
+### The count() function
+### The reduce() function
+### The collect() function
+### The lookup() function
