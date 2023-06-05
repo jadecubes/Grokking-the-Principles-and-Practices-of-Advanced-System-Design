@@ -18,18 +18,18 @@ Spark stores RDD elements as Java objects directly in memory to avoid all these 
 
 In the first iteration of the K-means algorithm performed for 10 iterations on 100 machines, Spark completes the first iteration in 82 seconds. Hadoop is a bit slower than Spark because of its heartbeat protocol. HadoopBinMem completes its first iteration in 182 seconds and Hadoop in 115 seconds. HadoopBinMem is the slowest because it has to perform an additional MapReduce job to convert data into binary format and write it in an instance of in-memory HDFS.
 
-[First iteration times on different frameworks in K-means algorithm]
+[First iteration times on different frameworks in K-means algorithm](./firstiteration.png)
 
 In subsequent iterations, Hadoop completes each iteration in 106 seconds, HadoopBinMem in 87 seconds, and Spark in 33 seconds. Surprisingly, Spark is still a lot better than HadoopBinMem even when it performs no extra jobs, and that is because HDFS makes multiple copies in memory and a checksum to serve each block.
 
-[Subsequent iteration times on different frameworks in K-means algorithm]
+[Subsequent iteration times on different frameworks in K-means algorithm](./subsequent.png)
 
 ## Fault tolerance
 Spark recomputes RDD partitions of a failed node using lineage graphs. For example, if we are executing an algorithm performed in iterations like the K-means algorithm on 75 machines and a worker node fails in, let’s say, the sixth iteration of the algorithm, this results in a loss of tasks and data partitions on it.
 
 Spark reruns these tasks on another worker node in parallel, which computes the lost RDD partitions from the relevant input data via lineage. This process consumes 22 extra seconds as opposed to the time normally taken by the iterations experiencing a 38% percent increase in time, which is about 58 seconds. However, it does not affect the execution of further iterations.
 
-[Difference in iteration times of K-means algorithm due to failure of a worker node]
+[Difference in iteration times of K-means algorithm due to failure of a worker node](./diff.png)
 
 Suppose the recovery is wholly based on checkpointing. In that case, Spark might have to perform several iterations again to recover the lost partitions depending on the checkpointing frequency. It would have to keep tracking back in the lineage graph until it finds a checkpointed RDD.
 
@@ -39,7 +39,7 @@ However, lineage graphs of RDDs only consume a negligible of memory.
 ## Data locality
 The Spark scheduler assigns tasks based on data locality. Let’s suppose a task has to process an RDD that resides in memory on several specific nodes. In that case, the scheduler directly sends it to those nodes, and if a certain partition is missing, it will be computed at the preferred locations provided by the RDD. In the illustration below, the scheduler sends the task that has to be applied on RDD1 exactly on the machines where RDD1 is kept.
 
-[Driver sending task to Worker 1 and 2]
+[Driver sending task to Worker 1 and 2](./locality.png)
 
 ## Memory management
 RDDs are an abstraction of memories spread across a set of worker nodes. If, under any circumstances, the machines run out of memory, Spark removes a partition of the least recently used RDD to fit in the newly computed partition. However, some tweaks can be used to avoid memory shortages.
@@ -56,11 +56,11 @@ Let’s study some experiments that include the execution of logistic regression
 
 - If we keep all the 100 GB data inside the memories of 25 machines, Spark completes an iteration in 11.5 seconds. However, if we do not keep any data in the memory, it takes 68.8 seconds to complete an iteration.
 
-[Spark’s performance with different volumes of data in memory]
+[Spark’s performance with different volumes of data in memory](./1.png)
 
 - If we use a different number of machines for executing the logistic regression algorithm, we’ll have a different amount of memory available. If the execution is done on 25 machines, Spark takes 15 seconds for each iteration after the first iteration, and if it is done on 100 machines, Spark takes 3 seconds for each iteration.
 
-[The Spark technique’s performance with different number in memory]
+[The Spark technique’s performance with different number in memory](./2.png)
 
 ## Conclusion
 In this chapter, we learned about a framework that can store and perform operations on a large dataset in memory. Spark provides two simple data abstractions RDDs and shared variables. These abstractions are significantly better at expressing a lot of applications that the previous cluster computing frameworks were unable to. Unlike existing cluster computing frameworks that need to replicate data to provide fault tolerance, Spark provides a lineage graph-based recovery method for data, and that, too, with coarse-grained transformations. Spark also outperforms the existing frameworks in iterative applications and applications that need to query a large dataset.
