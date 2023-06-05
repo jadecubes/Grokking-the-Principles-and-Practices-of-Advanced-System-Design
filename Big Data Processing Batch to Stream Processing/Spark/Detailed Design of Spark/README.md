@@ -15,14 +15,14 @@ The cluster managers that Spark can use include Mesos, YARN, and Spark’s stand
 
 - The executor memory
 
-[Detailed architecture of Spark](./1.png)
+[Detailed architecture of Spark](./arch.png)
 ```
 Note: While a Spark cluster is capable of running multiple Spark jobs, often relatively smaller clusters are configured to utilize all the resources for one job. It usually reduce latency due to reduced contention for node-specific resources such as memory.
 ```
 ## Workflow of Spark
 The driver gets the user program, on top of which it builds the RDD lineage graph by parsing the user program. Spark creates multiple tasks to process each data partition whenever an action is invoked. Now, it needs a certain number of workers to execute its tasks. It gets these workers from the cluster manager and then sends these tasks directly to worker nodes for execution and gets results from them.
 
-[Workflow](./2.png)
+[Workflow](./workflow)
 
 As is evident from the illustration above, Spark keeps a map of RDDs and does not execute them until an action is called. When an action is called, the execution of the Spark job is started.
 
@@ -38,7 +38,7 @@ A job can include one or several transformations. A stage can also include one o
 ### Task
 A stage comprises multiple tasks, which is the smallest unit of execution in Spark. All the tasks execute the same code but on different partitions of RDD, so the number of tasks in a stage are equal to the number of partitions in the output RDD of the stage. One task cannot be executed on more than one worker. However, a worker can allocate memory slots to multiple tasks simultaneously.
 
-[Spark’s execution hierarchy]
+[Spark’s execution hierarchy](./exe.png)
 
 ```
 Question
@@ -70,7 +70,7 @@ delay scheduling: To address the conflict between locality and fairness, a simpl
 
 - Suppose the partition is not cached in any worker node, and the task is processing a partition for which an RDD provides preferred locations. In that case, the scheduler seeks that RDD to provide its preferred location (for example, an HDFS file assuming that each partition of an RDD is made from a block of the file in HDFS) and sends the task to that location.
 
-[Scheduler]
+[Scheduler](./lineage)
 
 The illustration above shows a lineage graph on top of which the scheduler makes the DAG. This can be seen on slide 2. In slide 3, we see two persistent RDDs, and also see that RDD4 is missing a partition. The scheduler, as we know, keeps track of the partitions in the persistent RDDs and launches tasks to recompute them. So, it launches tasks on each partition of RDD3 to recompute the missing partition of RDD4.
 
@@ -95,6 +95,6 @@ If the cost of computing an RDD partition is high, we can take advantage of the 
 
 - There are no mechanisms to recover from any driver failures in Spark. However, we can checkpoint the driver's state to a reliable data storage to recover from driver failures by extracting and using the checkpointed data in a new driver.
 
-[Intermediate records between stages]
+[Intermediate records between stages](./intermediate.png)
 
 The scheduler helps Spark execute the tasks in stages efficiently. However, Spark has no mechanism in place for any kind of scheduler failures. Though, a copy of the RDD lineage graph can be kept for starting the process again.
