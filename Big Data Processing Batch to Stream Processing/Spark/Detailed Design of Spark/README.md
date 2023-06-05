@@ -62,6 +62,9 @@ The Spark scheduler is built to perform the following functions:
 - For missing partitions, the scheduler launches tasks to compute them at each stage.
 
 - It assigns workers tasks using delay scheduling based on optimal data locality.
+```
+delay scheduling: To address the conflict between locality and fairness, a simple algorithm called delay scheduling can be useful. When the job that should be scheduled next according to fairness cannot launch a local task, it waits for a small amount of time, letting other jobs launch tasks instead. Empirical evaluations find that delay scheduling achieves nearly optimal data locality in a variety of workloads and can increase throughput by up to 2x while preserving fairness. [Source: Delay Scheduling: A Simple Technique for Achieving Locality and Fairness in Cluster Scheduling]
+```
 
 - The scheduler sends a task that needs to process a certain partition to the worker node, which has that partition cached in its memory.
 
