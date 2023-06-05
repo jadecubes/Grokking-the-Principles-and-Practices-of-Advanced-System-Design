@@ -6,7 +6,7 @@ These are the operations applied on an RDD to get a new RDD. Transformations are
 
 The lineage graph shown below contains a series of transformations in MMA fights. First, UFC fights are filtered out from the data, then the winners of each fight are mapped with an integer 1. Finally, all the wins of each fighter are reduced to give out the total wins of each fighter.
 
-[Lineage graph of RDD transformations]
+[Lineage graph of RDD transformations](./lineage.png)
 
 When a transformation is applied to an RDD, it gets applied to all the partitions of the RDD. A partition in the parent RDD can be used to create one or more RDD partitions in the child RDD. Based on these facts, Spark provides narrow transformations and wide transformations.
 
@@ -47,7 +47,7 @@ This operation is used to create an RDD by combining two RDDs.
 val newRDD = rdd.union(otherRDD)
 ```
 
-[Union operation]
+[Union operation](./union.png)
 
 ### Wide transformations
 An RDD transformation that results in each partition contributing to building multiple partitions in the child RDD is called a wide transformation.
@@ -94,7 +94,7 @@ The grouped results in the newRDD will look like this:
 (Cat,1)
 ```
 
-[GroupByKey operation]
+[GroupByKey operation](./groupbykey.png)
 
 ## Dependencies
 When an RDD is created, its relationship with the parent data can be classified into two types depending on the type of transformation used to create it. Dependencies are important in Spark because they help define the program's execution stages in the scheduler section of Spark (for example, the Spark scheduler might be able to combine many narrow transformations into one).
@@ -122,7 +122,7 @@ Map, filter and union operations result in narrow dependencies.                 
 
 ```
 
-[Dependencies]
+[Dependencies](./rdd)
 
 ## Actions
 The transformations let Spark build up a logical plan of execution. Actions are operations that trigger the execution of that logical plan. These are the operations that return non-RDD values. Actions are performed when we want to extract information from the data. Spark supports actions such as count(), reduce(), collect(), and lookup(). Some of the actions are explained below.
