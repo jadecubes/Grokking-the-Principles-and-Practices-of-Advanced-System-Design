@@ -18,7 +18,7 @@ closures can refer to variables in the scope where they are created
 
 Instead of only sending it once, it needs to be delivered with each job. This creates the need for broadcast variables.
 
-[Workflow of broadcast variables]
+[Workflow of broadcast variables](./1.png)
 
 #### Implementation of broadcast variables
 The implementation of broadcast variables is given as follows:
@@ -46,7 +46,7 @@ val dataBroadcast = spark.sparkContext.broadcast(data)
 ### Accumulators
 Accumulators are used for updating a variable in transformations and then propagating it to the driver. A possible way of doing this would be to create variables at the worker nodes and then update them in transformations and send them over to the driver. However, this can be an inefficient way of propagating them to the driver because the tasks or stages can be re-executed (tasks can be re-executed in case if a machine fails and has to recompute the partitions it had stored in it.), updating the variables more than once. This is where accumulators come in. Spark ensures that a restarted task cannot update an accumulator, and they are only updated once when a task is initially executed.
 
-[Workflow of accumulators]
+[Workflow of accumulators](./2.png)
 
 #### Implementation of accumulators
 The implementation of accumulators is given as follows:
