@@ -39,7 +39,9 @@ val RDD3 = RDD.filter(_.contains("NULL"))
     [another RDD](./rdd)
 # Representation of RDDs
 Internally, each RDD can represent five pieces of information, two of which are optional. Let's assume we have two RDDs, i.e., RDD1 and RDD2, with two partitions each.
+
 [RDDs](./rdds.png)
+
 RDD2 will have the following information.
 
 - It gives a list of partition objects, i.e., C1 or C2.
