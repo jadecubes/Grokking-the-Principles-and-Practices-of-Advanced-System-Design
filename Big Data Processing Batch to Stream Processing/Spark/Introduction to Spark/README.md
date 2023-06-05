@@ -8,7 +8,7 @@ The original MapReduce system set the stage to process a large volume of data ef
 
 While one can argue that for both of the scenarios above, we can still use the MapReduce framework where we repeatedly use Map and Reduce tasks. Though the problem is that the latency to get the result will be non-real time and fairly high because each new iteration of the MapReduce job reads input data from the replicated persistent store (that it just wrote as output in the last cycle). We need a new processing framework without the inefficiencies of the MapReduce model.
 
-[Iterative MapReduce]
+[Iterative MapReduce](./iterative.png)
 
 ```
 Note: One might argue that use of a replicated, persistent store for the final output of the Reduce phase is wasteful. However, doing so simplifies many tricky aspects of data loss and integrity. We can also see it as a trade-off between design simplicity and performance (latency). It was a plausible design point because in a typical MapReduce job, the time spent in the Map and Reduce processing is much larger than the time spent on writing. Additionally, writing is highly parallelized when a sufficient number of Reduce workers write to many different servers of GFS like file system.
@@ -34,7 +34,7 @@ The K-means algorithm is used to find k non-overlapping subclusters in a big clu
 ```
 Feature space: All possible values for features of a dataset.
 ```
-[k-means]
+[k-means](./kmeans)
 
 We will read data from the disk, perform the first iteration of computing subclusters, and then write the results into the output file. For the second iteration, we will have to re-read the data of output file from the disk and then write computations into another output file in the disk again.
 
@@ -42,7 +42,7 @@ We will read data from the disk, perform the first iteration of computing subclu
 ## Ad hoc queries on a dataset
 Suppose we have a database containing data from a shopping mall, and we have to perform a list of queries on it: how many items came in, how much we sold, how much profit we made, etc.
 
-[Performing ad hoc queries on a dataset repeatedly]
+[Performing ad hoc queries on a dataset repeatedly](./queries.png)
 
 The system will have to read data from the disk every time a query is performed on the dataset.
 
@@ -60,7 +60,7 @@ Inter job data persistence: MapReduce does not keep any data in memory for futur
 
 IO-induced latency: Every time a Map task is completed, it has to write on the local disk, and then a reduce worker has to read from that local disk. When a Reduce task is completed, it has to write results in a file again, which increases the latency due to inherent slowness in IO operations.
 
-[Disk I/Os in MapReduce]
+[Disk I/Os in MapReduce](./diskio.png)
 
 Considering the issues above with MapReduce, we need a system that keeps the data and its computations in memory for fast processing.
 
@@ -81,7 +81,7 @@ The second insight comes from the operating systems. A typical process does not 
 ## Desired processing framework
 In the early 2000s, we couldn’t load a large volume of data into memories because of its small size , so MapReduce was our best option. However, a decade later, we have memories that can contain data in excess of a few hundred GBs (servers with 128 GB to 512 GB are common in 2022). Hence, there was a need for a new framework that could keep a large volume of data in memory and use it repeatedly with inherent properties of MapReduce like fault tolerance, scalability, and scheduling.
 
-[Desired cluster computing framework]
+[Desired cluster computing framework](./clusterframework.png)
 
 The desired framework should have the following key characteristics:
 
@@ -100,4 +100,4 @@ Disclaimer: We will primarily focus on the Spark system as it was originally des
 
 ## Bird’s eye view
 The following concept map summarises our work in this chapter. In the next few lessons, we will design and evaluate our system.
-[A comprehensive guide to a fast in-memory processing system]
+[A comprehensive guide to a fast in-memory processing system](./overview.png)
