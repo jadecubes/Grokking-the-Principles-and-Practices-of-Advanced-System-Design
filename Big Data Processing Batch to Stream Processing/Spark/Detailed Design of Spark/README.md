@@ -15,14 +15,14 @@ The cluster managers that Spark can use include Mesos, YARN, and Spark’s stand
 
 - The executor memory
 
-[Detailed architecture of Spark]
+[Detailed architecture of Spark](./1.png)
 ```
 Note: While a Spark cluster is capable of running multiple Spark jobs, often relatively smaller clusters are configured to utilize all the resources for one job. It usually reduce latency due to reduced contention for node-specific resources such as memory.
 ```
 ## Workflow of Spark
 The driver gets the user program, on top of which it builds the RDD lineage graph by parsing the user program. Spark creates multiple tasks to process each data partition whenever an action is invoked. Now, it needs a certain number of workers to execute its tasks. It gets these workers from the cluster manager and then sends these tasks directly to worker nodes for execution and gets results from them.
 
-[Workflow]
+[Workflow](./2.png)
 
 As is evident from the illustration above, Spark keeps a map of RDDs and does not execute them until an action is called. When an action is called, the execution of the Spark job is started.
 
