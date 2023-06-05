@@ -6,7 +6,7 @@ The functional requirements of Spark are listed below:
 
 - Latency and throughput: Our system should achieve low latency and high throughput for the tasks, like iterative data processing (where we use the same data repeatedly) and performing ad hoc queries on the same dataset. For example, we expect our system to query many terabytes of data in a few seconds. Usually, the first run is slower than the others because our system needs to load the data from the disks that involve IO operations.
 
-[Functional requirements of Spark]
+[Functional requirements of Spark](./functional.png)
 
 ## Non-functional requirements
 Following are the non-functional requirements of Spark.
@@ -22,7 +22,7 @@ Data partition: For parallel processing data is divided into partitions called d
 
 - Memory management: There should be a fallback strategy to manage workloads bigger than the available cluster memory, where the working set can slowly change by swapping out unused data to disks so that new data can be loaded.
 
-[Non-functional requirements of Spark]
+[Non-functional requirements of Spark](./nonfunctional.png)
 
 For example, an evaluation of Spark to perform an iterative machine learning problem known as the K-means algorithm was conducted. The K-means algorithm was performed for iterations on 100 GB of data using 100 machines. Iterations of K-means are compute-intensive because they find the distance of each point in a cluster with its centroid, compute new centroids, and then partition the clusters repeatedly. Spark’s performance was compared with Hadoop, which employs MapReduce on K-means. Since this algorithm can take several iterations to converge, results have been presented for the first iterations and then all the subsequent iterations.
 ```
@@ -33,7 +33,7 @@ In the first iteration, both Hadoop and Spark read data from Hadoop Distributed 
 
 In the following iterations, Spark achieves about two times better performance than Hadoop. If we had an application that was I/O intensive, Spark could give 20 to 40 times better performance than Hadoop (because Spark will do the operations from memory instead of expensive IO).
 
-[Approximated iteration times of K-means algorithm]
+[Approximated iteration times of K-means algorithm](./comparison.png)
 
 ## Estimations
 In our design, we’ll have to specify the number of workers required to achieve a task based on the input size. There can be a lot of latency and throughput variances in the tasks performed by Spark. The reasons for such variance can be heterogeneous commodity servers with varying computational capacity, the load of the servers, potentially failing memories, disks, network interfaces, and other unforeseen failures during the processing. For coarse-grained estimates, we can ignore such sources of variance. We’ll make the following assumptions:
