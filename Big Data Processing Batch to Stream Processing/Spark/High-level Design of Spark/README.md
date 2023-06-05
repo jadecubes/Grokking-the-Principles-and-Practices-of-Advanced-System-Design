@@ -16,7 +16,7 @@ Building blocks of Spark include resilient distributed datasets, driver, and wor
 
 - Spark will keep a graph that records the sources of all the RDDs called a lineage graph.
 
-[RDDs]
+[RDDs](./rdds)
 
 - RDDs implement an interface that keeps the following details:
 
@@ -26,7 +26,7 @@ Building blocks of Spark include resilient distributed datasets, driver, and wor
 
     - A list of worker nodes where the partition can be quickly accessed ensures task scheduling on the appropriate workers
 
-[RDD consisiting of memory of two workers]
+[RDD consisiting of memory of two workers](./2workers.png)
 
 The abstraction provided by RDD resembles distributed shared memory where only a part of data is present on a node. To get good performance from this model of computation, we run processing on local nodes (instead of bringing required data to a computation on a specific node), mostly as single program multiple data paradigm (for example, running a Map function on all the data on all the cluster nodes present on the part of data held by the node).
 
@@ -59,7 +59,7 @@ Worker nodes are the workhorse of our system, where actual processing happens on
 - They can store partitions of distributed memory abstraction computation in their RAM/drive.
 
 
-[Spark architecture]
+[Spark architecture](./arch.png)
 
 ```
 Note: The network topology inside a data center (the way workers are connected with each other) has evolved over the years. Usually asymmetric bandwidths are available in a data center (more bandwidth for communication with machines that are connected via the same top-of-the-rack switch than communication between two workers who are on different racks). Usually, scheduling algotithms can take the actual network topology into account. Cluster with over-subscribed netwroks might exhibit peculiar performance artifacts on certain operations.
