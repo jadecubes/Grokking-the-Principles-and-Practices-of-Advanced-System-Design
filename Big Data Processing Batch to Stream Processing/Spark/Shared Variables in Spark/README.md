@@ -7,6 +7,11 @@ Setup work is required for some operations, like creating a random number from a
 ### Broadcast variables
 Normally, a variable used in a driver node’s tasks is simply referenced in a closure (function). This process can be very inefficient in the following cases.
 
+```
+closures can refer to variables in the scope where they are created
+```
+
+
 - If we have large variables like a machine learning model or a lookup table because they have to be deserialized on a worker node every time they are sent with a task
 
 - If a variable is used in multiple jobs
