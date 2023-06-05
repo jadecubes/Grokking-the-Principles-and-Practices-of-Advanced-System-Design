@@ -18,7 +18,7 @@ Spark provides the following three kinds of storage for persistent RDDs:
 Java object graph: A set of objects which will be automatically serialized, if the object which contains reference to them is serialized.
 ```
 
-[Managing limited memory]
+[Managing limited memory](./limited.png)
 
 ## Problem with the lineage graphs
 Lineage graphs can always be used to recover lost partitions of an RDD, but if the lineage graph becomes too long, it becomes very time-consuming to compute or recompute partitions.
@@ -30,7 +30,7 @@ Unlike the cache() operation, saving a copy of an RDD in the disk is the process
 
 - In the case of a long lineage graph with narrow dependencies, checkpointing may never be necessary. Lost partitions can be computed on different worker nodes in parallel with a fraction of the time consumed compared to computing a whole RDD.
 
-[checkpointing]
+[checkpointing](./checkpointing)
 
 Spark provides an API for checkpointing, i.e., checkpoint(). Users can choose which data needs to be checkpointed. Finally, checkpointing RDDs is very simple because of their read-only nature. The user does not have to worry about the changes made to an RDD because there are none.
 
