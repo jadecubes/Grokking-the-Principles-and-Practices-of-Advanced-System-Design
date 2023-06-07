@@ -87,6 +87,28 @@ Kafka has optimized network access when it comes to the subscription of a messag
 The whole process takes four data copying and two system calls. However, Kafka uses a sendfile API that exists in Unix and Linux operating systems. The API can directly transfer bytes of a file to a remote socket. A sendfile API can reduce a system call from steps 2 and 3 and reduces the copy operations from four to two. Kafka takes advantage of it, delivers bytes of segment files from a broker to a consumer, and avoids overhead copy and system calls.
 
 ## Stateless broker
+The features that Kafka deploys on a broker are discussed as follows.
+
 ### Information at the broker
+In Kafka, information about the amount of consumption done by the consumer is not maintained by the broker. It is maintained by the consumers themselves on ZooKeeper, which also helps in case of consumer failures, which are discussed in the next lesson. This feature decreases the overhead and complexity of the broker.
+
 ### Deletion of messages
+Maintaining consumption details by consumers creates a void of information at the broker. It makes it difficult to delete a message at the broker. The reason is that it does not know if all the consumers that were subscribed to that message’s topic have consumed it. For this sole purpose, Kafka employs a time-based service level agreement (SLA) to retain messages. Kafka saves 1 GB of data or the data of a week, whichever is small in the log segment files, and after a segment of the file has become seven days old or has 1 GB of data in it (whichever condition is met first), it is deleted and replaced by a new segment, if available.
+
+[Deleting a message]
+
+Because each consumer takes at most a day to consume messages, it can do so in a matter of hours or even in real time. The solution that Kafka employs for retaining messages works well in practice without a degradation in performance, making itself a long retention feasible framework.
+
+The rationale behind message expiry is that it is necessary to absorb any traffic spikes (where consumers might lag behind the producers). However, on average, the rate of production and rate of consumption should be equal over some time period. If that is not the case, it means data might keep piling up in Kafka indefinitely, which is not a plausible situation for the system stakeholders.
+
 ### Side benefit
+The design that we have discussed so far also has another benefit. A consumer can violate the queue principle and consume messages it already has consumed. It can rewind to an offset of a previous message and consume it. It is a very crucial feature when it comes to fault tolerance.
+
+- When an error occurs in the code of a consumer, the application can rewind the offset and consume certain messages after the error is dealt with. This is important, especially when loading data into offline consumers like Hadoop or a data warehouse.
+
+- When consumed data is being flushed to a persistent store, and a consumer fails, we no longer have a track of the unflushed data. It can be catered to by checkpointing offsets after certain gaps and start flushing the messages from the last checkpointed offset when the consumer is restarted.
+
+We will get some duplicated flushing of messages. However, the number of duplicated flushes can be decreased if we make the checkpointing more frequent. Moreover, this method is very convenient for pull methods instead of push methods because a consumer has control over the messages that it will be getting.
+
+In this lesson, we learned how keeping simple storage, transferring the data in batches in an optimized network, and keeping as less information on the broker and clearing it with time to make way for newer data can help make Kafka an efficient framework.
+
