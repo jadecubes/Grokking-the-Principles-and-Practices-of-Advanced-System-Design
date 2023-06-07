@@ -83,7 +83,7 @@ Point-to-point: A delivery method in which any member of the group of consumers 
 Publish-subscribe: A delivery model in which each consumer consumes its own copy of a topic’s messages.
 ```
 
-```
+```python
 streams[] = Consumer.createMessageStreams("topic",1)
 for (M: streams[0]){
   bytes = M.payload();
