@@ -19,7 +19,7 @@ A producer is responsible for creating new messages. They contain the following 
 
 By default, we get one partition for each topic. However, the number of partitions is a parameter that can be altered by the user (each partition gets its own ID). A good practice is to select the number of partitions equal to or a multiple of the number of brokers in the cluster. This allows equal distribution of partitions to the brokers.
 
-[Components of the Kafka producer]
+[Components of the Kafka producer](./producer.png)
 
 The producer knows which topic and partition the message should be written to after the partitioner gives out the partition. The producer then keeps these messages as batches in partitions of topics in a buffer.
 
@@ -52,7 +52,7 @@ There are some benefits we get by putting multiple brokers in a cluster.
 
 - Replication: Partitions can be replicated to provide fault tolerance in case a server fails. The number of times a partition is replicated is decided by the user.
 
-[A Kafka cluster]
+[A Kafka cluster](./cluster.png)
 
 Replicas of a topic partition can be assigned to multiple brokers. Each partition should be assigned to a different broker to ensure fault tolerance. However, only one of the brokers that has the partition interacts with each consumer and producer, and that broker is called the leader of that partition. If a leader broker fails, another broker is assigned as the partition's leader. All the producers and consumers working on that partition must be connected to the partition leader.
 
@@ -90,7 +90,7 @@ Multiple consumers operate in consumer groups. A consumer group operates in the 
 
 - A partition being consumed by a member comes under the ownership of that particular member.
 
-[Consumption of partitions]
+[Consumption of partitions](./consumers.png)
 
 ```
 Question
