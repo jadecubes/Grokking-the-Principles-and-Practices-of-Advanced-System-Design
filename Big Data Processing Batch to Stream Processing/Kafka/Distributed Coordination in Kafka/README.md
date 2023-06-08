@@ -14,7 +14,7 @@ Partitions are made to be the smallest unit of parallelism in Kafka. Each smalle
 
 If multiple consumers were allowed to consume a partition, they would have had to communicate and decide which messages would be consumed by whom, incurring a locking and state maintenance overhead.
 
-[Communication between consumers while consumption of messages]
+[Communication between consumers while consumption of messages](./comm.png)
 
 In Kafka, consumers need to coordinate only when a consumer fails, and all the other consumers need to rebalance the load. To balance the load with fewer consumers, one thing that can be done is over-partitioning a topic and assigning multiple partitions to each consumer.
 
@@ -57,7 +57,7 @@ The ZooKeeper performs the following tasks in Kafka:
 
 - Maintain the consumption from brokers and track the offset of the last consumed messages of a partition.
 
-[ZooKeeper in Kafka]
+[ZooKeeper in Kafka](./zookeeper.png)
 
 ```
 Note: Recently, there have been efforts to make Kafka independent of ZooKeeper.
@@ -96,7 +96,7 @@ The watcher can also trigger a load rebalance whenever a new consumer is initial
 #### Rebalance process
 The process of changing the ownership of a partition is called a rebalance. The rebalance process determines the partitions a consumer will be consuming. It is a crucial process because it allows the addition and removal of consumers ensuring high availability and scalability at consumer groups. However, it is not a desirable operation. It should not occur unnecessarily because it stops the consumption of messages for a short period and also causes the consumers—who are redefining their ownerships—to refresh their caches. This slows down the consumption even more.
 
-[Process]
+[Process](./rebalance)
 
 The rebalance process shown in the slides above is described as follows:
 
