@@ -11,14 +11,14 @@ Topic: A stream of particular type of messages.
 ### Batch
 Messages are exported to Kafka in batches to increase its throughput. A batch is a set of messages that exist in the same partition of a topic.
 
-[Batch of messages]
+[Batch of messages](./batch.png)
 
 Batching messages eliminates the need for each message to require a full TCP/IP roundtrip, which was detrimental to the throughput requirements of Kafka.
 
 ### Topic
 Messages are categorized into a particular type, and those particular types of messages collectively are called a topic. We can think of topics as a table in a database or a folder in a filesystem. Topics are composed of partitions. Messages can only be appended to partitions of a topic, which are read from beginning to end. Messages from a single partition are read in an orderly fashion. However, because there are multiple partitions in a topic, there is no guarantee of ordered messages across the whole topic.
 
-[Partitions in a topic (the numbering indicates the writing sequence within a partition)]
+[Partitions in a topic (the numbering indicates the writing sequence within a partition)](./topic.png)
 
 A topic provides scalability to Kafka because its partitions can be saved in different servers, making it horizontally scalable across several servers. The term stream is often used when data processing systems like Kafka are mentioned. A single topic can be referred to as a stream that is moved from producers to consumers.
 
@@ -54,7 +54,7 @@ The consumers perform the following roles:
 
 - Any consumer can interact with multiple brokers.
 
-[Kafka’s workflow]
+[Kafka’s workflow](./workflow.png)
 
 ## Kafka API
 Messaging is quite a simple concept. A sender sends a message through a channel, and then there is a receiver. The API design of Kafka described below is equally simple.
