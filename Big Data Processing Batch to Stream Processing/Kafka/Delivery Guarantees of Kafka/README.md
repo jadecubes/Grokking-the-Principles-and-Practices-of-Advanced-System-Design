@@ -4,11 +4,11 @@ Reliability in data delivery is as important as the performance of the system. T
 ## At-least-once delivery
 Kafka, by default, provides a guarantee of at-least-once delivery.
 
-[At-least-once delivery]
+[At-least-once delivery](./delievery.png)
 
 Kafka delivers each message exactly once to each consumer group. However, if a consumer breaks down, the rebalancing occurs, and another consumer takes over the partitions owned by the failed consumer. The new consumer fetches the last offset that was successfully saved in the offset registry. Let’s assume that the offset of the last message consumed by the failed consumer is greater than the last offset that is saved in the offset registry. This causes the new consumer to consume messages that were already consumed by the failed consumer, causing duplication in consumption.
 
-[Reconsumption of messages]
+[Reconsumption of messages](./reconsumption.png)
 
 In the illustration above, we can see that the last offset saved in the offset registry by the failed consumer was for the third message. However, it failed while calculating the new offset to start the consumption of messages 6 to 9, which are ahead of the saved offset, meaning that they have already consumed messages 3 to 5. The consumer that will replace this consumer checks the offset registry. It also finds the offset of the third message and starts consuming messages from that point, which have already been consumed. This causes replication in consumed messages, which creates the possibility of a more-than-once delivery of a message. If this whole process is avoided, the more-than-once delivery of a message can be avoided.
 
