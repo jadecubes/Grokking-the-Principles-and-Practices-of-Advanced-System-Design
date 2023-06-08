@@ -33,7 +33,7 @@ A consumer sends pull requests to the broker, which keeps a data buffer ready fo
 
 #### Pull request
 A pull request is composed of an offset and a number of bytes. The offset corresponds to the message from where the consumption will start, and the number of bytes corresponds to an acceptable number of bytes that must be fetched. A broker has a list of sorted offsets that includes offsets of the first messages of all the segment files. Whenever a broker receives a pull request from a consumer for a batch of messages, it searches the offset list for the potential segment file that could have those messages and then returns the messages to the consumer. After receiving the messages, the consumer computes the offset of the next message and sends another pull request.
-[List of sorted offsets in the broker]
+[List of sorted offsets in the broker](./segments.png)
 
 ```
 Question
@@ -55,7 +55,7 @@ Kafka is very efficient in transferring data in and out of it.
 
 - Although a consumer API goes through every message individually, it also gets a batch of messages in a single pull request. It gets messages up to a certain size, usually around 100s of KBs.
 
-[Data flow in batches]
+[Data flow in batches](./dataflow.png)
 ```
 Note: Batching messages helps reduce the latency for producers and consumers. This is especially useful when producers, brokers, and consumers are physically far away from each other.
 ```
@@ -82,7 +82,7 @@ Kafka has optimized network access when it comes to the subscription of a messag
 
 4. Send the data in the kernel buffer to the remote socket.
 
-[Methods for transferring data from local files to remote socket]
+[Methods for transferring data from local files to remote socket](./sendfileapi.png)
 
 The whole process takes four data copying and two system calls. However, Kafka uses a sendfile API that exists in Unix and Linux operating systems. The API can directly transfer bytes of a file to a remote socket. A sendfile API can reduce a system call from steps 2 and 3 and reduces the copy operations from four to two. Kafka takes advantage of it, delivers bytes of segment files from a broker to a consumer, and avoids overhead copy and system calls.
 
@@ -95,7 +95,7 @@ In Kafka, information about the amount of consumption done by the consumer is no
 ### Deletion of messages
 Maintaining consumption details by consumers creates a void of information at the broker. It makes it difficult to delete a message at the broker. The reason is that it does not know if all the consumers that were subscribed to that message’s topic have consumed it. For this sole purpose, Kafka employs a time-based service level agreement (SLA) to retain messages. Kafka saves 1 GB of data or the data of a week, whichever is small in the log segment files, and after a segment of the file has become seven days old or has 1 GB of data in it (whichever condition is met first), it is deleted and replaced by a new segment, if available.
 
-[Deleting a message]
+[Deleting a message](./deleting.png)
 
 Because each consumer takes at most a day to consume messages, it can do so in a matter of hours or even in real time. The solution that Kafka employs for retaining messages works well in practice without a degradation in performance, making itself a long retention feasible framework.
 
