@@ -4,7 +4,7 @@ Most big companies gather data, analyze it, and make decisions depending on the 
 
 For many use cases, it is critical to collect and process individual events in near real time. One such example is to alert a credit-card user about a suspicious transaction and to take the user's consent to proceed. Not delivering such events quickly to the user or a user unable to pay because the system hasn’t yet processed the consent provided on the mobile phone can cause a range of issues, such as potential financial losses and consumer annoyance.
 
-[Event streaming]
+[Event streaming](./streaming.png)
 
 Traditional messaging systems and more recent log aggregators have been used for event streaming, but they have shortcomings. So, there is a clear need for a streaming system that combines the advantages of both the existing log aggregators and messaging systems by being able to collect data from multiple sources, store it, and be able to supply it to any system that subscribes to it and does not have any of the shortcomings that these systems have.
 
@@ -13,7 +13,7 @@ Let’s explore the shortcomings of the currently available systems.
 ## Shortcomings in traditional messaging systems
 A messaging system is a framework that allows different applications to exchange messages.
 
-[Traditional messaging system]
+[Traditional messaging system](./traditional.png)
 
 Traditional messaging systems like ActiveMQ, IBM Websphere MQ, Oracle Enterprise Messaging Service, and TIBCO Enterprise Message Service have been used as event buses in processing asynchronous data flows. However, they have had some shortcomings when it comes to log processing.
 
@@ -32,7 +32,7 @@ Traditional messaging systems assume that messages will be consumed immediately,
 ## Shortcomings in distributed log aggregators
 A log aggregator is a system responsible for collecting log data from different sources and loading it into a data warehouse or Hadoop system for analysis. Some examples of recently employed log aggregators are Facebook's Scribe, Yahoo's Data Highway, and Cloudera's Flume. Most of these systems support distributed operations but have other shortcomings.
 
-[Log aggregation system]
+[Log aggregation system](./agg.png)
 
 ```
 Some of the recently employed log aggregators are given below:
@@ -77,7 +77,7 @@ Low latency and high throughput: It should be able to deliver high volumes of da
 
 Batch processing: Instead of just receiving one message per request, it should be able to receive and process a batch of several messages.
 
-[Functional requirements]
+[Functional requirements](./functional.png)
 
 ## Non-functional requirements
 Distribution support: It should provide integrated distributed support and be able to partition and store data in multiple nodes.
@@ -86,8 +86,8 @@ Scalability: It should be able to collect and deliver events efficiently even if
 
 Data retention: It should be able to retain data durably so that the data is not lost even if consumers are not extracting any data.
 
-[Non-functional requirements]
+[Non-functional requirements](./nonfunctional.png)
 
 # Bird’s eye view
 In the coming lessons, we’ll design and evaluate Kafka. The following concept map is a quick summary of the problem Kafka solves and its novelties.
-[Overview]
+[Overview](./overview.png)
