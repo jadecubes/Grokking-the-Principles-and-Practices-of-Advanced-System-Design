@@ -25,7 +25,7 @@ The reasons why Kafka's producer shows this improved performance are listed as f
 #### Batch processing
 Kafka’s batching is the key to its achieved improvement in performance because sending a batch of messages also reduces the remote procedure call (RPC) overhead. Moreover, if the systems are far away from each other, batching will be able to make maximum use of the RTT. The improved throughput of Kafka’s producer as compared to ActiveMQ and RabbitMQ and the magnitude of improvement in batch processing adds to its performance. This can be seen in the following illustration.
 
-[Performance of the Kafka producer]
+[Performance of the Kafka producer](./producer.png)
 If we observe the performance of a Kafka producer that is sending a batch of 50 messages, a fluctuation in its throughput can be clearly seen. There are two parameters in Kafka’s producer, configurable by the users, which can cause this variance in throughput, i.e., batch size, which in this case is 50 and linger time. Kafka’s producer has a buffer that collects messages until it has accumulated 50 messages to send them to the broker, which can affect the throughput if it is waiting long to collect these messages. Moreover, linger time is another parameter that decides the time for which the producer can wait before sending any messages it has collected to the broker. This variance can be minimized if these parameters are tuned carefully.
 
 ### Consumer throughput
@@ -38,6 +38,9 @@ The reasons why Kafka's consumption is much better are listed as follows:
 - ActiveMQ and RabbitMQ brokers maintain the delivery state of each message.
 
 - ActiveMQ's threads get busy writing KahaDB pages to the disk.
+```
+KahaDB is a persistent database inside the broker of ActiveMQ.
+```
 
 - Kafka brokers do not indulge in any disk writing activities because of the file systems page cache. (Messages will be delivered from the RAM, and as we read forward, the OS will prefetch more data ahead of time to keep the cache populated with data that will be asked next.)
 
@@ -45,7 +48,7 @@ The reasons why Kafka's consumption is much better are listed as follows:
 
 The comparison of the performance of Kafka, ActiveMQ, and RabbitMQ's consumers is shown in the illustration below.
 
-[Performance of the Kafka consumer]
+[Performance of the Kafka consumer](./consumer.png)
 
 This was a basic implementation of Kafka with a small infrastructure, but we can always scale Kafka as per our needs. It was reported in August 2020 that Tencent runs the world's largest Kafka installation, which is capable of processing trillions of messages each day.
 ```
