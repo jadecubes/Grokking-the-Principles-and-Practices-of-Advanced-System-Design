@@ -20,7 +20,7 @@ We have decided to use a multi-tenant architecture to better utilize resources i
 ## Automated adaption to traffic patterns
 We will discuss means to avoid underutilization and shortage of resources for tables. Our design will adapt to customer needs by making decisions to allocate and deallocate resources (that also affect throughput). The design will make these decisions by observing usage statistics. This will help to keep our service highly available and maintain predictable performance.
 
-[A table partition experiencing high load (left figure) is split and distributed to different nodes (right figure) to meet throughput demands]
+[A table partition experiencing high load (left figure) is split and distributed to different nodes (right figure) to meet throughput demands](./patterns.png)
 
 ## Durability and correctness
 We will also ensure that our design is fault tolerant such that committed data is verified and backed up. This is essential to build a reputable service. We will discuss several methods on how to achieve this. These will include dealing with hardware failures and silent data errors, continuous verification of data, reducing the impact and occurrence of software bugs, and regularly backing up our data.
